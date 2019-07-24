@@ -5,7 +5,7 @@
  import java.util.stream.StreamSupport;
  import javax.annotation.Nullable;
 +
-+import carpet.CarpetSettings;
++import carpet.settings.CarpetSettings;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@
  default boolean isCollisionBoxesEmpty(@Nullable Entity entityIn, AxisAlignedBB aabb, Set<Entity> entitiesToIgnore)
      {
 -        return this.getCollisionBoxes(entityIn, VoxelShapes.create(aabb), VoxelShapes.empty(), entitiesToIgnore).allMatch(VoxelShape::isEmpty);
-+        return !CarpetSettings.b_optimizeVoxelCode ?
++        return !CarpetSettings.optimizeVoxelCode ?
 +                this.getCollisionBoxes(entityIn, VoxelShapes.create(aabb), VoxelShapes.empty(), entitiesToIgnore).allMatch(VoxelShape::isEmpty) :
 +                this.createShapecaster(entityIn, entitiesToIgnore, aabb, null).isEmpty();
      }

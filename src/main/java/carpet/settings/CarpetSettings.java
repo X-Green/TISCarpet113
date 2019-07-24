@@ -5,6 +5,7 @@ import carpet.utils.Messenger;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +18,30 @@ public class CarpetSettings
     public static boolean skipGenerationChecks = false;
     public static boolean impendingFillSkipUpdates = false;
     public static final int SHULKERBOX_MAX_STACK_AMOUNT = 64;
+    
+    private static class ValidateVoxelOpt extends Validator<Boolean>
+    {
+        @Override
+        public Boolean validate(CommandSource source, ParsedRule<Boolean> currentRule, Boolean newValue, String string)
+        {
+            if (!newValue)
+            {
+                VoxelShapes.FULL_CUBE = VoxelShapes.FULL_CUBE_OLD;
+            }
+            else
+            {
+                VoxelShapes.FULL_CUBE = VoxelShapes.FULL_CUBE_NEW;
+            }
+            return newValue;
+        }
+    }
+    
+    @Rule(
+            desc = "optimizes the voxel code which is used by e.g. the entity movement",
+            category = OPTIMIZATION,
+            validate = ValidateVoxelOpt.class
+    )
+    public static boolean optimizeVoxelCode = false;
 
     @Rule(
             desc = "Fixes server crashing supposedly on falling behind 60s in ONE tick, yeah bs.",

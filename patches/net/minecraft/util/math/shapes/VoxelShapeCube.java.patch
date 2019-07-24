@@ -3,7 +3,7 @@
 @@ -1,5 +1,6 @@
  package net.minecraft.util.math.shapes;
  
-+import carpet.CarpetSettings;
++import carpet.settings.CarpetSettings;
  import it.unimi.dsi.fastutil.doubles.DoubleList;
  import net.minecraft.util.EnumFacing;
  
@@ -16,7 +16,7 @@
 +    @Override
 +    public int getClosestIndex(final EnumFacing.Axis axis, final double position)
 +    {
-+        return !CarpetSettings.b_optimizeVoxelCode ?
++        return !CarpetSettings.optimizeVoxelCode ?
 +                       super.getClosestIndex(axis, position) :
 +                       net.minecraft.util.math.MathHelper.clamp(net.minecraft.util.math.MathHelper.floor(position * this.part.getSize(axis)), -1, this.part.getSize(axis));
 +    }

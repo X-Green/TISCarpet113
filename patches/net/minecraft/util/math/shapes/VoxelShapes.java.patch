@@ -3,7 +3,7 @@
 @@ -1,5 +1,6 @@
  package net.minecraft.util.math.shapes;
  
-+import carpet.CarpetSettings;
++import carpet.settings.CarpetSettings;
  import com.google.common.annotations.VisibleForTesting;
  import com.google.common.math.DoubleMath;
  import com.google.common.math.IntMath;
@@ -45,7 +45,7 @@
          else
          {
 -            return new VoxelShapeArray(FULL_CUBE.part, new double[] {aabb.minX, aabb.maxX}, new double[] {aabb.minY, aabb.maxY}, new double[] {aabb.minZ, aabb.maxZ});
-+            return !CarpetSettings.b_optimizeVoxelCode ?
++            return !CarpetSettings.optimizeVoxelCode ?
 +                    new VoxelShapeArray(FULL_CUBE.part, new double[] {aabb.minX, aabb.maxX}, new double[] {aabb.minY, aabb.maxY}, new double[] {aabb.minZ, aabb.maxZ}) :
 +                    new ocd.mcoptimizations.voxel.VoxelShapeAABB.Cached(aabb);
          }
