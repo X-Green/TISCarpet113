@@ -41,6 +41,12 @@ public class CarpetSettings
             validate = ValidateVoxelOpt.class
     )
     public static boolean optimizeVoxelCode = false;
+    
+    @Rule(
+            desc = "Improved chunk caching by PhiPro",
+            category = OPTIMIZATION
+    )
+    public static boolean chunkCache = false;
 
     @Rule(
             desc = "Fixes server crashing supposedly on falling behind 60s in ONE tick, yeah bs.",
