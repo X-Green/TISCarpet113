@@ -35,7 +35,6 @@ public class CarpetSettings
             return newValue;
         }
     }
-    
     @Rule(
             desc = "optimizes the voxel code which is used by e.g. the entity movement",
             category = OPTIMIZATION,
