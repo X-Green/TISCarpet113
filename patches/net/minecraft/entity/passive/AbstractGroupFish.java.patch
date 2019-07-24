@@ -1,0 +1,24 @@
+--- a/net/minecraft/entity/passive/AbstractGroupFish.java
++++ b/net/minecraft/entity/passive/AbstractGroupFish.java
+@@ -3,6 +3,8 @@
+ import java.util.List;
+ import java.util.stream.Stream;
+ import javax.annotation.Nullable;
++
++import carpet.settings.CarpetSettings;
+ import net.minecraft.entity.EntityType;
+ import net.minecraft.entity.IEntityLivingData;
+ import net.minecraft.entity.ai.EntityAIFollowGroupLeader;
+@@ -23,7 +25,11 @@
+     protected void initEntityAI()
+     {
+         super.initEntityAI();
+-        this.tasks.addTask(5, new EntityAIFollowGroupLeader(this));
++        // [CM] Yeeting the laggy fish ai
++        if (!CarpetSettings.yeetFishAI)
++        {
++            this.tasks.addTask(5, new EntityAIFollowGroupLeader(this));
++        }
+     }
+ 
+     public int getMaxSpawnedInChunk()

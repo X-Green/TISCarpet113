@@ -53,6 +53,12 @@ public class CarpetSettings
             category = EXPERIMENTAL
     )
     public static boolean entityMomentumLoss = true;
+    
+    @Rule(
+            desc = "yeet fish followGroupLeaderAI for less lag",
+            category = OPTIMIZATION
+    )
+    public static boolean yeetFishAI = false;
 
     @Rule(
             desc = "Fixes server crashing supposedly on falling behind 60s in ONE tick, yeah bs.",
