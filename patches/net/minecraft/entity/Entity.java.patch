@@ -476,7 +476,48 @@
      protected final Vec3d getVectorForRotation(float pitch, float yaw)
      {
          float f = pitch * ((float)Math.PI / 180F);
-@@ -2821,6 +3254,10 @@
+@@ -1762,22 +2195,27 @@
+             this.motionX = nbttaglist2.getDouble(0);
+             this.motionY = nbttaglist2.getDouble(1);
+             this.motionZ = nbttaglist2.getDouble(2);
+-
+-            if (Math.abs(this.motionX) > 10.0D)
++    
++            // [CM] Entity momentum loss - if statement around
++            if (CarpetSettings.entityMomentumLoss)
+             {
+-                this.motionX = 0.0D;
++                if (Math.abs(this.motionX) > 10.0D)
++                {
++                    this.motionX = 0.0D;
++                }
++    
++                if (Math.abs(this.motionY) > 10.0D)
++                {
++                    this.motionY = 0.0D;
++                }
++    
++                if (Math.abs(this.motionZ) > 10.0D)
++                {
++                    this.motionZ = 0.0D;
++                }
+             }
++            // [CM] End
+ 
+-            if (Math.abs(this.motionY) > 10.0D)
+-            {
+-                this.motionY = 0.0D;
+-            }
+-
+-            if (Math.abs(this.motionZ) > 10.0D)
+-            {
+-                this.motionZ = 0.0D;
+-            }
+-
+             this.posX = nbttaglist.getDouble(0);
+             this.posY = nbttaglist.getDouble(1);
+             this.posZ = nbttaglist.getDouble(2);
+@@ -2821,6 +3259,10 @@
  
      public EnumFacing getHorizontalFacing()
      {

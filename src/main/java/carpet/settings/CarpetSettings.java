@@ -47,6 +47,12 @@ public class CarpetSettings
             category = OPTIMIZATION
     )
     public static boolean chunkCache = false;
+    
+    @Rule(
+            desc = "Disable/Enable the entity momentum cancellation if its above 10 blocks per gametick when reading the data out of disk",
+            category = EXPERIMENTAL
+    )
+    public static boolean entityMomentumLoss = true;
 
     @Rule(
             desc = "Fixes server crashing supposedly on falling behind 60s in ONE tick, yeah bs.",
