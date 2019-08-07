@@ -51,8 +51,14 @@ public class TrajectoryLogHelper
                         Vec3d pos = positions.get(i);
                         Vec3d mot = motions.get(i);
                         line.add("w  x");
-                        line.add(String.format("^w Tick: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
-                                i, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
+                        if (i < positions.size()-1) {
+                            line.add(String.format("^w Tick: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
+                                    i, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
+                        }
+                        else {
+                            line.add(String.format("^w Hit:\nx: %f\ny: %f\nz: %f",
+                                    pos.x, pos.y, pos.z));w
+                        }
                         if ((((i+1) % MAX_TICKS_PER_LINE)==0) || i == positions.size()-1)
                         {
                             comp.add(Messenger.c(line.toArray(new Object[0])));

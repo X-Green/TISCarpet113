@@ -1,15 +1,16 @@
 --- a/net/minecraft/entity/item/EntityEnderPearl.java
 +++ b/net/minecraft/entity/item/EntityEnderPearl.java
-@@ -1,6 +1,8 @@
+@@ -1,6 +1,9 @@
  package net.minecraft.entity.item;
  
  import javax.annotation.Nullable;
 +
++import carpet.logging.LoggerRegistry;
 +import carpet.patches.EntityPlayerMPFake;
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.EntityLivingBase;
-@@ -92,7 +94,8 @@
+@@ -92,7 +95,8 @@
              {
                  EntityPlayerMP entityplayermp = (EntityPlayerMP)entitylivingbase;
  
@@ -19,3 +20,14 @@
                  {
                      if (this.rand.nextFloat() < 0.05F && this.world.getGameRules().getBoolean("doMobSpawning"))
                      {
+@@ -118,6 +122,10 @@
+                 entitylivingbase.fallDistance = 0.0F;
+             }
+ 
++            if (LoggerRegistry.__projectiles && this.logHelper != null)
++            {
++                this.logHelper.onTick(result.hitVec.x, result.hitVec.y, result.hitVec.z, 0.0D, 0.0D, 0.0D);
++            }
+             this.remove();
+         }
+     }

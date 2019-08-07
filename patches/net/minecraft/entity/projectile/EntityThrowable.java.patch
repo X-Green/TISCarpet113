@@ -15,7 +15,7 @@
      private int ignoreTime;
  
 +    //CM
-+    private TrajectoryLogHelper logHelper = null;
++    public TrajectoryLogHelper logHelper = null;
 +
 +
      protected EntityThrowable(EntityType<?> type, World p_i48540_2_)
