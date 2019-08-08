@@ -148,6 +148,11 @@ public class PlayerCommand
     {
         String playerName = getString(context,"player");
         EntityPlayer player = context.getSource().getServer().getPlayerList().getPlayerByUsername(playerName);
+        if (playerName.length() > 16)
+        {
+            Messenger.m(context.getSource(), "r Name of player ", "rb "+playerName, "r is too long(>16). Please try a shorter name.");
+            return true;
+        }
         if (player != null)
         {
             Messenger.m(context.getSource(), "r Player ", "rb "+playerName, "r is already logged on");
