@@ -51,7 +51,7 @@ public class TrajectoryLogHelper
                         Vec3d pos = positions.get(i);
                         Vec3d mot = motions.get(i);
                         line.add("w  x");
-                        if (i < positions.size()-1) {
+                        if (i < positions.size()-1 || mot.x != 0 || mot.y !=0 || mot.z !=0) {
                             line.add(String.format("^w Tick: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
                                     i, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
                         }
