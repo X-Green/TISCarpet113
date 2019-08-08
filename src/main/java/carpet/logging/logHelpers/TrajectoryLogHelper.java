@@ -57,7 +57,7 @@ public class TrajectoryLogHelper
                         }
                         else {
                             line.add(String.format("^w Hit:\nx: %f\ny: %f\nz: %f",
-                                    pos.x, pos.y, pos.z));w
+                                    pos.x, pos.y, pos.z));
                         }
                         if ((((i+1) % MAX_TICKS_PER_LINE)==0) || i == positions.size()-1)
                         {
