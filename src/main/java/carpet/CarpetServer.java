@@ -11,6 +11,7 @@ import carpet.commands.LogCommand;
 import carpet.commands.PerimeterInfoCommand;
 import carpet.commands.PlayerCommand;
 import carpet.commands.SpawnCommand;
+import carpet.commands.PingCommand;
 import carpet.commands.TestCommand;
 import carpet.commands.TickCommand;
 import carpet.logging.LoggerRegistry;
@@ -75,6 +76,7 @@ public class CarpetServer // static for now - easier to handle all around the co
         PerimeterInfoCommand.register(dispatcher);
         DrawCommand.register(dispatcher);
         ScriptCommand.register(dispatcher);
+        PingCommand.register(dispatcher);
 
         //TestCommand.register(dispatcher);
     }

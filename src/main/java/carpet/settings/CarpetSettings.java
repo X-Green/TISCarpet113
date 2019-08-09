@@ -35,6 +35,12 @@ public class CarpetSettings
             return newValue;
         }
     }
+    
+    @Rule(
+            desc = "Enables /ping command to see your ping",
+            category = COMMAND
+    )
+    public static boolean commandPing = true;
 
     @Rule(
             desc = "fix Dragon crashes server when no endstone is on the end island",
