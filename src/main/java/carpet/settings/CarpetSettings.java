@@ -35,6 +35,13 @@ public class CarpetSettings
             return newValue;
         }
     }
+
+    @Rule(
+            desc = "fix Dragon crashes server when no endstone is on the end island",
+            category = BUGFIX
+    )
+    public static boolean dragonCrashFix = false;
+
     @Rule(
             desc = "optimizes the voxel code which is used by e.g. the entity movement",
             category = OPTIMIZATION,
