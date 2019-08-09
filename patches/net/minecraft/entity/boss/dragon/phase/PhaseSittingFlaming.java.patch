@@ -7,26 +7,19 @@
  import net.minecraft.entity.EntityAreaEffectCloud;
  import net.minecraft.entity.boss.EntityDragon;
  import net.minecraft.init.MobEffects;
-@@ -72,10 +73,22 @@
-             double d2 = this.dragon.dragonPartHead.posY + (double)(this.dragon.dragonPartHead.height / 2.0F);
-             BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(MathHelper.floor(d0), MathHelper.floor(d2), MathHelper.floor(d1));
- 
-+            //TISCM fix for dragon crash
-+            Integer SearchCount = 0;
-+
+@@ -75,6 +76,15 @@
              while (this.dragon.world.isAirBlock(blockpos$mutableblockpos))
              {
                  --d2;
-                 blockpos$mutableblockpos.setPos(MathHelper.floor(d0), MathHelper.floor(d2), MathHelper.floor(d1));
 +
 +                //TISCM fix for dragon crash
 +                if (CarpetSettings.dragonCrashFix) {
-+                    ++SearchCount;
-+                    if (SearchCount > 9) {
++                    if (d2 < 0) {
 +                        d2 = this.dragon.dragonPartHead.posX - 6;
 +                        break;
 +                    }
 +                }
++
+                 blockpos$mutableblockpos.setPos(MathHelper.floor(d0), MathHelper.floor(d2), MathHelper.floor(d1));
              }
  
-             d2 = (double)(MathHelper.floor(d2) + 1);
