@@ -9,6 +9,8 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.security.cert.CertificateNotYetValidException;
+
 import static carpet.settings.RuleCategory.*;
 
 public class CarpetSettings
@@ -35,6 +37,17 @@ public class CarpetSettings
             return newValue;
         }
     }
+
+    // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
+    //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
+    //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$
+    //   | $$     | $$  |  $$$$$$ | $$      | $$ $$/$$ $$
+    //   | $$     | $$   \____  $$| $$      | $$  $$$| $$
+    //   | $$     | $$   /$$  \ $$| $$    $$| $$\  $ | $$
+    //   | $$    /$$$$$$|  $$$$$$/|  $$$$$$/| $$ \/  | $$
+    //   |__/   |______/ \______/  \______/ |__/     |__/
+    //
+    //New features added at TISCarpet goes here for easier reading please
     
     @Rule(
             desc = "Enables /ping command to see your ping",
@@ -66,12 +79,15 @@ public class CarpetSettings
             category = EXPERIMENTAL
     )
     public static boolean entityMomentumLoss = true;
-    
-    @Rule(
-            desc = "yeet fish followGroupLeaderAI for less lag",
-            category = OPTIMIZATION
-    )
-    public static boolean yeetFishAI = false;
+
+    // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
+    //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
+    //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$
+    //   | $$     | $$  |  $$$$$$ | $$      | $$ $$/$$ $$
+    //   | $$     | $$   \____  $$| $$      | $$  $$$| $$
+    //   | $$     | $$   /$$  \ $$| $$    $$| $$\  $ | $$
+    //   | $$    /$$$$$$|  $$$$$$/|  $$$$$$/| $$ \/  | $$
+    //   |__/   |______/ \______/  \______/ |__/     |__/    END OF TISCM
 
     @Rule(
             desc = "Fixes server crashing supposedly on falling behind 60s in ONE tick, yeah bs.",
@@ -446,4 +462,35 @@ public class CarpetSettings
             category = BUGFIX
     )
     public static boolean leadFix = false;
+
+    // /$$     /$$/$$$$$$$$ /$$$$$$$$/$$$$$$$$
+    //|  $$   /$$/ $$_____/| $$_____/__  $$__/
+    // \  $$ /$$/| $$      | $$        | $$
+    //  \  $$$$/ | $$$$$   | $$$$$     | $$
+    //   \  $$/  | $$__/   | $$__/     | $$
+    //    | $$   | $$      | $$        | $$
+    //    | $$   | $$$$$$$$| $$$$$$$$  | $$
+    //    |__/   |________/|________/  |__/  power yeet those things!
+
+    @Rule(
+            desc = "yeet fish followGroupLeaderAI for less lag",
+            extra = "Warn: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla",
+            category = YEET
+    )
+    public static boolean yeetFishAI = false;
+
+    @Rule(
+            desc = "yeet Golems spawing at village for faster stacking at iron farm stacking tests",
+            extra = "Warn: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla",
+            category = YEET
+    )
+    public static boolean yeetGolemSpawn = false;
+
+    @Rule(
+            desc = "yeet Villager AI for faster stacking at iron farm stacking tests",
+            extra = "Warn: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla",
+            category = YEET
+    )
+    public static boolean yeetVillagerAi = false;
+
 }

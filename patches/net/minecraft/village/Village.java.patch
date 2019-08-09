@@ -1,0 +1,21 @@
+--- a/net/minecraft/village/Village.java
++++ b/net/minecraft/village/Village.java
+@@ -30,6 +30,8 @@
+ import net.minecraft.util.text.ITextComponent;
+ import net.minecraft.world.World;
+ 
++import carpet.settings.CarpetSettings;
++
+ public class Village
+ {
+     private World world;
+@@ -77,7 +79,8 @@
+ 
+         int i = this.villagerCount / 10;
+ 
+-        if (this.golemCount < i && this.villageDoorInfoList.size() > 20 && this.world.rand.nextInt(7000) == 0)
++        //TISCM add yeet golem spawn
++        if (!CarpetSettings.yeetGolemSpawn && this.golemCount < i && this.villageDoorInfoList.size() > 20 && this.world.rand.nextInt(7000) == 0)
+         {
+             Entity entity = this.spawnIronGolem(this.center);
+ 

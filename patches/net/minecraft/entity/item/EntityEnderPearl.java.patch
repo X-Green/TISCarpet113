@@ -20,11 +20,11 @@
                  {
                      if (this.rand.nextFloat() < 0.05F && this.world.getGameRules().getBoolean("doMobSpawning"))
                      {
-@@ -118,6 +122,16 @@
+@@ -118,6 +122,18 @@
                  entitylivingbase.fallDistance = 0.0F;
              }
  
-+            //TISCM add pearl collide show
++            //TISCM add collide at logger
 +            if (LoggerRegistry.__projectiles && this.logHelper != null)
 +            {
 +                if (result.type == RayTraceResult.Type.BLOCK) {
@@ -34,6 +34,8 @@
 +                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity");
 +                }
 +            }
++            //END TISCM
++
              this.remove();
          }
      }

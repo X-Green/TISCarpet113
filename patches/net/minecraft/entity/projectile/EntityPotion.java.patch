@@ -1,0 +1,31 @@
+--- a/net/minecraft/entity/projectile/EntityPotion.java
++++ b/net/minecraft/entity/projectile/EntityPotion.java
+@@ -2,6 +2,8 @@
+ 
+ import java.util.List;
+ import java.util.function.Predicate;
++
++import carpet.logging.LoggerRegistry;
+ import net.minecraft.entity.EntityAreaEffectCloud;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.EntityType;
+@@ -128,6 +130,19 @@
+ 
+             int i = potiontype.hasInstantEffect() ? 2007 : 2002;
+             this.world.playEvent(i, new BlockPos(this), PotionUtils.getColor(itemstack));
++
++            //TISCM add collide at logger
++            if (LoggerRegistry.__projectiles && this.logHelper != null)
++            {
++                if (result.type == RayTraceResult.Type.BLOCK) {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Block");
++                }
++                else {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity");
++                }
++            }
++            //END TISCM
++
+             this.remove();
+         }
+     }

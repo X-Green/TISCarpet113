@@ -1,0 +1,29 @@
+--- a/net/minecraft/entity/projectile/EntitySnowball.java
++++ b/net/minecraft/entity/projectile/EntitySnowball.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.entity.projectile;
+ 
++import carpet.logging.LoggerRegistry;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.EntityType;
+ import net.minecraft.entity.monster.EntityBlaze;
+@@ -56,6 +57,19 @@
+         if (!this.world.isRemote)
+         {
+             this.world.setEntityState(this, (byte)3);
++
++            //TISCM add collide at logger
++            if (LoggerRegistry.__projectiles && this.logHelper != null)
++            {
++                if (result.type == RayTraceResult.Type.BLOCK) {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Block");
++                }
++                else {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity");
++                }
++            }
++            //END TISCM
++
+             this.remove();
+         }
+     }
