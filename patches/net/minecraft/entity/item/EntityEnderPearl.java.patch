@@ -20,13 +20,18 @@
                  {
                      if (this.rand.nextFloat() < 0.05F && this.world.getGameRules().getBoolean("doMobSpawning"))
                      {
-@@ -118,6 +122,10 @@
+@@ -118,6 +122,15 @@
                  entitylivingbase.fallDistance = 0.0F;
              }
  
 +            if (LoggerRegistry.__projectiles && this.logHelper != null)
 +            {
-+                this.logHelper.onTick(result.hitVec.x, result.hitVec.y, result.hitVec.z, 0.0D, 0.0D, 0.0D);
++                if (result.type == RayTraceResult.Type.BLOCK) {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Block");
++            }
++                else {
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity");
++                }
 +            }
              this.remove();
          }

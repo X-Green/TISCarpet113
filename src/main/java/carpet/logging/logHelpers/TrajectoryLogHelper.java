@@ -21,6 +21,8 @@ public class TrajectoryLogHelper
 
     private ArrayList<Vec3d> positions = new ArrayList<>();
     private ArrayList<Vec3d> motions = new ArrayList<>();
+    private ArrayList<String> collide = new ArrayList<>();
+    private String hitType = new String();
 
     public TrajectoryLogHelper(String logName)
     {
@@ -33,6 +35,16 @@ public class TrajectoryLogHelper
         if (!doLog) return;
         positions.add(new Vec3d(x, y, z));
         motions.add(new Vec3d(motionX, motionY, motionZ));
+        collide.add("f");
+    }
+
+    public void onCollide(double x, double y, double z, String type)
+    {
+        if (!doLog) return;
+        positions.add(new Vec3d(x, y, z));
+        motions.add(new Vec3d(0,0,0));
+        collide.add("t");
+        this.hitType = type;
     }
 
     public void onFinish()
@@ -50,14 +62,15 @@ public class TrajectoryLogHelper
                     {
                         Vec3d pos = positions.get(i);
                         Vec3d mot = motions.get(i);
+                        String coll = collide.get(i);
                         line.add("w  x");
-                        if (i < positions.size()-1 || mot.x != 0 || mot.y !=0 || mot.z !=0) {
+                        if (coll != "t") {
                             line.add(String.format("^w Tick: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
                                     i, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
                         }
                         else {
-                            line.add(String.format("^w Hit:\nx: %f\ny: %f\nz: %f",
-                                    pos.x, pos.y, pos.z));
+                            line.add(String.format("^w Hit:\nx: %f\ny: %f\nz: %f\n------------\nHit on: %s",
+                                    pos.x, pos.y, pos.z, this.hitType));
                         }
                         if ((((i+1) % MAX_TICKS_PER_LINE)==0) || i == positions.size()-1)
                         {
