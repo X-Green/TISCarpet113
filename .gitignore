@@ -6,3 +6,4 @@
 /.idea/
 /out/
 /installer/*.zip
+/installer/*.tar.gz
