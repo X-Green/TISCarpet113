@@ -28,6 +28,7 @@ public class LoggerRegistry
     public static boolean __packets;
     public static boolean __weather;
     public static boolean __pathfinding;
+    public static boolean __chunkdebug;
 
     public static void initLoggers()
     {
@@ -43,6 +44,9 @@ public class LoggerRegistry
         registerLogger("packets", new HUDLogger("packets", null, null));
         registerLogger("counter",new HUDLogger("counter","white", Arrays.stream(EnumDyeColor.values()).map(Object::toString).toArray(String[]::new)));
         registerLogger("mobcaps", new HUDLogger("mobcaps", "dynamic",new String[]{"dynamic", "overworld", "nether","end"}));
+
+        //TISCM add chunk debug
+        registerLogger("chunkdebug", new Logger("chunkdebug",null, null));
     }
 
     /**
