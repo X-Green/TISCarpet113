@@ -64,26 +64,42 @@
  
                      if (tileentity1 == null)
                      {
-@@ -894,6 +918,11 @@
+@@ -894,6 +918,19 @@
                  return !(p_212383_0_ instanceof EntityPlayer);
              }));
          }
 +
 +        //TISCM: chunk debug
 +        if (LoggerRegistry.__chunkdebug){
-+            ChunkLogHelper.onChunkNewState(this.x, this.z, "Loaded");
++            if (this.world.dimension.isNether()) {
++                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "l Loaded");
++            }
++            else if (this.world.dimension.hasSkyLight()){
++                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "l Loaded");
++            }
++            else{
++                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "l Loaded");
++            }
 +        }
      }
  
      public void onUnload()
-@@ -909,6 +938,11 @@
+@@ -909,6 +946,19 @@
          {
              this.world.unloadEntities(classinheritancemultimap);
          }
 +
 +        //TISCM: chunk debug
 +        if (LoggerRegistry.__chunkdebug){
-+            ChunkLogHelper.onChunkNewState(this.x, this.z, "Unloaded");
++            if (this.world.dimension.isNether()) {
++                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "r Unloaded");
++            }
++            else if (this.world.dimension.hasSkyLight()){
++                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "r Unloaded");
++            }
++            else {
++                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "r Unloaded");
++            }
 +        }
      }
  
