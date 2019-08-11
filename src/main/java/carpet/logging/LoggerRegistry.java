@@ -29,6 +29,7 @@ public class LoggerRegistry
     public static boolean __weather;
     public static boolean __pathfinding;
     public static boolean __chunkdebug;
+    public static boolean __villagecount;
 
     public static void initLoggers()
     {
@@ -47,6 +48,9 @@ public class LoggerRegistry
 
         //TISCM add chunk debug
         registerLogger("chunkdebug", new Logger("chunkdebug",null, null));
+
+        //TISCM: add villagecount
+        registerLogger("villagecount", new HUDLogger("villagecount", null, null));
     }
 
     /**
