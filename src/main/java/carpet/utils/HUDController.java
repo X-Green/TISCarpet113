@@ -2,10 +2,8 @@ package carpet.utils;
 
 import carpet.helpers.HopperCounter;
 import carpet.helpers.TickSpeed;
-import carpet.logging.Logger;
 import carpet.logging.LoggerRegistry;
 import carpet.logging.logHelpers.PacketCounter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +13,6 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.village.VillageCollection;
 import net.minecraft.world.WorldServer;
 
 import java.util.ArrayList;
