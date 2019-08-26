@@ -7,7 +7,7 @@
  import net.minecraft.entity.EntityLivingBase;
  import net.minecraft.entity.EntityType;
  import net.minecraft.entity.monster.EntityBlaze;
-@@ -56,6 +57,19 @@
+@@ -56,7 +57,28 @@
          if (!this.world.isRemote)
          {
              this.world.setEntityState(this, (byte)3);
@@ -27,3 +27,12 @@
              this.remove();
          }
      }
++
++    //TISCM make sure visualize projectile logger snowballs cannt get moved
++    public boolean isImmuneToExplosions()
++    {
++        if (this.getTags().contains("TISCM_VISPROJ_LOGGER")) return true;
++        else return false;
++    }
++    //end TISCM
+ }

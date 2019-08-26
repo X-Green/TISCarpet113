@@ -119,6 +119,7 @@ public class TrajectoryLogHelper
                         visEntity.setCustomNameVisible(true);
                         visEntity.addTag("TISCM_VISPROJ_LOGGER");
                         visEntity.logHelper = null;
+                        visEntity.setInvulnerable(true);
                         world.spawnEntity(visEntity);
                     }
                     break;
