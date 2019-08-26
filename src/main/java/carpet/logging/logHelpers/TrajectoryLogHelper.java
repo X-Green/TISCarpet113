@@ -3,8 +3,12 @@ package carpet.logging.logHelpers;
 import carpet.logging.Logger;
 import carpet.logging.LoggerRegistry;
 import carpet.utils.Messenger;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,8 @@ public class TrajectoryLogHelper
     private ArrayList<Vec3d> positions = new ArrayList<>();
     private ArrayList<Vec3d> motions = new ArrayList<>();
     private ArrayList<String> collide = new ArrayList<>();
-    private String hitType = new String();
+    private String hitType;
+    private World world;
 
     public TrajectoryLogHelper(String logName)
     {
@@ -38,13 +43,21 @@ public class TrajectoryLogHelper
         collide.add("f");
     }
 
-    public void onCollide(double x, double y, double z, String type)
+    public void onCollide(double x, double y, double z, String type, World worldIn)
     {
         if (!doLog) return;
         positions.add(new Vec3d(x, y, z));
         motions.add(new Vec3d(0,0,0));
         collide.add("t");
-        this.hitType = type;
+        hitType = type;
+        world = worldIn;
+
+        for (int i = 0; i < worldIn.loadedEntityList.size(); ++i){
+            Entity checkentity = worldIn.loadedEntityList.get(i);
+            if (checkentity.getTags().contains("TISCM_VISPROJ_LOGGER")){
+                worldIn.removeEntity(checkentity);
+            }
+        }
     }
 
     public void onFinish()
@@ -88,6 +101,25 @@ public class TrajectoryLogHelper
                         comp.add(Messenger.c(
                                 String.format("w tick: %3d pos",i),Messenger.dblt("w",pos.x, pos.y, pos.z),
                                 "w   mot",Messenger.dblt("w",mot.x, mot.y, mot.z)));
+                    }
+                    break;
+                case "visualize":
+                    comp.add(Messenger.c("w visualize logger: visualized " + (positions.size()-1) + " tick(s)"));
+                    for (int i = 0; i < positions.size(); i++)
+                    {
+                        Vec3d pos = positions.get(i);
+                        EntitySnowball visEntity = new EntitySnowball(world, pos.x, pos.y, pos.z);
+                        visEntity.setNoGravity(true);
+                        if (i < positions.size() - 1) {
+                            visEntity.setCustomName(new TextComponentString(i + ""));
+                        }
+                        else {
+                            visEntity.setCustomName(new TextComponentString("Hit"));
+                        }
+                        visEntity.setCustomNameVisible(true);
+                        visEntity.addTag("TISCM_VISPROJ_LOGGER");
+                        visEntity.logHelper = null;
+                        world.spawnEntity(visEntity);
                     }
                     break;
             }

@@ -16,10 +16,10 @@
 +            if (LoggerRegistry.__projectiles && this.logHelper != null)
 +            {
 +                if (result.type == RayTraceResult.Type.BLOCK) {
-+                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Block");
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Block", this.world);
 +                }
 +                else {
-+                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity");
++                    this.logHelper.onCollide(result.hitVec.x, result.hitVec.y, result.hitVec.z, "Entity", this.world);
 +                }
 +            }
 +            //END TISCM
