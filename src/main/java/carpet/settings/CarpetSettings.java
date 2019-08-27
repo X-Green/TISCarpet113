@@ -87,7 +87,7 @@ public class CarpetSettings
     public static boolean stainedGlassNoMapRendering = true;
 
     @Rule(
-            desc = "Caching explosions",
+            desc = "Caching explosions, useful for situations eg pearl cannon",
             category = OPTIMIZATION
     )
     public static boolean cacheExplosions = false;
