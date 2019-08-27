@@ -86,6 +86,12 @@ public class CarpetSettings
     )
     public static boolean stainedGlassNoMapRendering = true;
 
+    @Rule(
+            desc = "Caching explosions",
+            category = OPTIMIZATION
+    )
+    public static boolean cacheExplosions = false;
+
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
     //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$

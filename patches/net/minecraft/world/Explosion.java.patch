@@ -7,15 +7,161 @@
  import com.google.common.collect.Lists;
  import com.google.common.collect.Maps;
  import com.google.common.collect.Sets;
-@@ -126,7 +127,10 @@
+@@ -13,6 +14,7 @@
+ import net.minecraft.enchantment.EnchantmentProtection;
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityLivingBase;
++import net.minecraft.entity.EntityType;
+ import net.minecraft.entity.item.EntityTNTPrimed;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.fluid.IFluidState;
+@@ -43,6 +45,13 @@
+     private final List<BlockPos> affectedBlockPositions = Lists.newArrayList();
+     private final Map<EntityPlayer, Vec3d> playerKnockbackMap = Maps.newHashMap();
+ 
++    //TISCM cache explosions
++    private static Vec3d cachedPos = new Vec3d(0,0,0);
++    private static float cachedSize = 0;
++    private static long cachedTick = 0;
++    private static Map<Entity, Vec3d> cachedMotionMap = Maps.newHashMap();
++    private static Map<EntityPlayer, Vec3d> cachedKnockBackMap = Maps.newHashMap();
++
+     @OnlyIn(Dist.CLIENT)
+     public Explosion(World worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)
+     {
+@@ -126,63 +135,91 @@
              }
          }
  
 -        this.affectedBlockPositions.addAll(set);
+-        float f3 = this.size * 2.0F;
+-        int k1 = MathHelper.floor(this.x - (double)f3 - 1.0D);
+-        int l1 = MathHelper.floor(this.x + (double)f3 + 1.0D);
+-        int i2 = MathHelper.floor(this.y - (double)f3 - 1.0D);
+-        int i1 = MathHelper.floor(this.y + (double)f3 + 1.0D);
+-        int j2 = MathHelper.floor(this.z - (double)f3 - 1.0D);
+-        int j1 = MathHelper.floor(this.z + (double)f3 + 1.0D);
+-        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
+-        Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
 +        // [CM] if statement around - explosionNoBlockDamage
 +        if (!CarpetSettings.explosionNoBlockDamage)
 +            this.affectedBlockPositions.addAll(set);
 +        // [CM] End - explosionNoBlockDamage
-         float f3 = this.size * 2.0F;
-         int k1 = MathHelper.floor(this.x - (double)f3 - 1.0D);
-         int l1 = MathHelper.floor(this.x + (double)f3 + 1.0D);
+ 
+-        for (int k2 = 0; k2 < list.size(); ++k2)
+-        {
+-            Entity entity = list.get(k2);
++        //TISCM cache explosions
++        if (CarpetSettings.cacheExplosions && cachedPos.x == this.x && cachedPos.y == this.y && cachedPos.z == this.z && cachedSize == this.size && cachedTick == this.world.getGameTime() && cachedMotionMap != null){
+ 
+-            if (!entity.isImmuneToExplosions())
+-            {
+-                double d12 = entity.getDistance(this.x, this.y, this.z) / (double)f3;
++            for (Entity entity : cachedMotionMap.keySet()){
++                if (cachedMotionMap.get(entity) != null){
++                    Vec3d motion = cachedMotionMap.get(entity);
++                    entity.motionX += motion.x;
++                    entity.motionY += motion.y;
++                    entity.motionZ += motion.z;
++                }
++            }
+ 
+-                if (d12 <= 1.0D)
+-                {
+-                    double d5 = entity.posX - this.x;
+-                    double d7 = entity.posY + (double)entity.getEyeHeight() - this.y;
+-                    double d9 = entity.posZ - this.z;
+-                    double d13 = (double)MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
++            this.playerKnockbackMap.putAll(cachedKnockBackMap);
+ 
+-                    if (d13 != 0.0D)
+-                    {
+-                        d5 = d5 / d13;
+-                        d7 = d7 / d13;
+-                        d9 = d9 / d13;
+-                        double d14 = (double)this.world.getBlockDensity(vec3d, entity.getBoundingBox());
+-                        double d10 = (1.0D - d12) * d14;
+-                        entity.attackEntityFrom(this.getDamageSource(), (float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f3 + 1.0D)));
+-                        double d11 = d10;
++        }
++        else {
++            cachedMotionMap.clear();
++            cachedKnockBackMap.clear();
+ 
+-                        if (entity instanceof EntityLivingBase)
+-                        {
+-                            d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, d10);
+-                        }
++            float f3 = this.size * 2.0F;
++            int k1 = MathHelper.floor(this.x - (double) f3 - 1.0D);
++            int l1 = MathHelper.floor(this.x + (double) f3 + 1.0D);
++            int i2 = MathHelper.floor(this.y - (double) f3 - 1.0D);
++            int i1 = MathHelper.floor(this.y + (double) f3 + 1.0D);
++            int j2 = MathHelper.floor(this.z - (double) f3 - 1.0D);
++            int j1 = MathHelper.floor(this.z + (double) f3 + 1.0D);
++            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this.exploder, new AxisAlignedBB((double) k1, (double) i2, (double) j2, (double) l1, (double) i1, (double) j1));
++            Vec3d vec3d = new Vec3d(this.x, this.y, this.z);
+ 
+-                        entity.motionX += d5 * d11;
+-                        entity.motionY += d7 * d11;
+-                        entity.motionZ += d9 * d11;
++            for (int k2 = 0; k2 < list.size(); ++k2) {
++                Entity entity = list.get(k2);
+ 
+-                        if (entity instanceof EntityPlayer)
+-                        {
+-                            EntityPlayer entityplayer = (EntityPlayer)entity;
++                if (!entity.isImmuneToExplosions()) {
++                    double d12 = entity.getDistance(this.x, this.y, this.z) / (double) f3;
+ 
+-                            if (!entityplayer.isSpectator() && (!entityplayer.isCreative() || !entityplayer.abilities.isFlying))
+-                            {
+-                                this.playerKnockbackMap.put(entityplayer, new Vec3d(d5 * d10, d7 * d10, d9 * d10));
++                    if (d12 <= 1.0D) {
++                        double d5 = entity.posX - this.x;
++                        double d7 = entity.posY + (double) entity.getEyeHeight() - this.y;
++                        double d9 = entity.posZ - this.z;
++                        double d13 = (double) MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
++
++                        if (d13 != 0.0D) {
++                            d5 = d5 / d13;
++                            d7 = d7 / d13;
++                            d9 = d9 / d13;
++                            double d14 = (double) this.world.getBlockDensity(vec3d, entity.getBoundingBox());
++                            double d10 = (1.0D - d12) * d14;
++                            entity.attackEntityFrom(this.getDamageSource(), (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f3 + 1.0D)));
++                            double d11 = d10;
++
++                            if (entity instanceof EntityLivingBase) {
++                                d11 = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase) entity, d10);
+                             }
++
++                            entity.motionX += d5 * d11;
++                            entity.motionY += d7 * d11;
++                            entity.motionZ += d9 * d11;
++
++                            if (CarpetSettings.cacheExplosions) {
++                                cachedMotionMap.put(entity, new Vec3d(d5 * d11, d7 * d11, d9 * d11));
++                                cachedPos = vec3d;
++                                cachedSize = this.size;
++                                cachedTick = this.world.getGameTime();
++                            }
++
++                            if (entity instanceof EntityPlayer) {
++                                EntityPlayer entityplayer = (EntityPlayer) entity;
++
++                                if (!entityplayer.isSpectator() && (!entityplayer.isCreative() || !entityplayer.abilities.isFlying)) {
++                                    this.playerKnockbackMap.put(entityplayer, new Vec3d(d5 * d10, d7 * d10, d9 * d10));
++                                    if (CarpetSettings.cacheExplosions) {
++                                        cachedKnockBackMap.put(entityplayer, new Vec3d(d5 * d10, d7 * d10, d9 * d10));
++                                    }
++                                }
++                            }
+                         }
+                     }
+                 }
+             }
++
+         }
+     }
+ 
