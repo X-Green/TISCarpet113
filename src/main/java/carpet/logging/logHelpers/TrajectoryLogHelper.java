@@ -9,6 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +121,13 @@ public class TrajectoryLogHelper
                         visEntity.addTag("TISCM_VISPROJ_LOGGER");
                         visEntity.logHelper = null;
                         visEntity.setInvulnerable(true);
-                        world.spawnEntity(visEntity);
+                        try {
+                            world.spawnEntity(visEntity);
+                        }
+                        catch (NullPointerException exception){
+                            comp.clear();
+                            comp.add(Messenger.c("w visualize logger: visualize failed, someone is killing snowballs?"));
+                        }
                     }
                     break;
             }
