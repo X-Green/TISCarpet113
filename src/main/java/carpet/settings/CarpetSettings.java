@@ -84,7 +84,7 @@ public class CarpetSettings
             desc = "Disable the rendering of stained glass on maps",
             category = EXPERIMENTAL
     )
-    public static boolean stainedGlassNoMapRendering = true;
+    public static boolean stainedGlassNoMapRendering = false;
 
     @Rule(
             desc = "Caching explosions, useful for situations eg pearl cannon",
