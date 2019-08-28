@@ -15,7 +15,7 @@ public class LoggerRegistry
     // Map from logger names to loggers.
     private static Map<String, Logger> loggerRegistry = new HashMap<>();
     // Map from player names to the set of names of the logs that player is subscribed to.
-    private static Map<String, Map<String, String>> playerSubscriptions = new HashMap<>();
+    public static Map<String, Map<String, String>> playerSubscriptions = new HashMap<>();
     //statics to quickly asses if its worth even to call each one
     public static boolean __tnt;
     public static boolean __projectiles;
@@ -73,6 +73,7 @@ public class LoggerRegistry
         if (option == null) option = log.getDefault();
         playerSubscriptions.get(playerName).put(logName,option);
         log.addPlayer(playerName, option);
+        log.dumpPersistantSubs();
     }
 
     /**
@@ -86,6 +87,7 @@ public class LoggerRegistry
             subscriptions.remove(logName);
             loggerRegistry.get(logName).removePlayer(playerName);
             if (subscriptions.size() == 0) playerSubscriptions.remove(playerName);
+            loggerRegistry.get(logName).dumpPersistantSubs();
         }
     }
 
