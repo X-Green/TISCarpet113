@@ -189,7 +189,7 @@ public class Logger
 
     public void loadPersistantSubs() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("carpetLogger/" + logName + ".conf"));
+            BufferedReader reader = new BufferedReader(new FileReader("./carpetLogger/" + logName + ".conf"));
             String line;
             while ((line = reader.readLine()) != null){
                 String[] subData = line.split(" ");
@@ -200,16 +200,21 @@ public class Logger
     }
 
     public void dumpPersistantSubs(){
+
+        //get the directory created
+        File saveDir = new File("./carpetLogger");
+        if (!saveDir.exists()){
+            if (!saveDir.mkdirs()) System.out.println("[TISCM]: couldn't create presistant logger directory");
+        }
+
         try{
-            BufferedWriter writer = new BufferedWriter(new FileWriter("carpetLogger/" + logName + ".conf", false));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./carpetLogger/" + logName + ".conf", false));
             for ( String player : subscribedOnlinePlayers.keySet()){
                 writer.write( player + " " + subscribedOnlinePlayers.get(player));
-                System.out.println(player + " " + subscribedOnlinePlayers.get(player));
                 writer.newLine();
             }
             for ( String player : subscribedOfflinePlayers.keySet()){
                 writer.write( player + " " + subscribedOfflinePlayers.get(player));
-                System.out.println(player + " " + subscribedOfflinePlayers.get(player));
                 writer.newLine();
             }
             writer.close();
