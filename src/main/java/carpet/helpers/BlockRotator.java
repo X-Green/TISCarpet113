@@ -160,7 +160,7 @@ public class BlockRotator
     {
         Block block = state.getBlock();
         if ( (block instanceof BlockGlazedTerracotta) || (block instanceof BlockRedstoneDiode) || (block instanceof BlockRailBase) ||
-             (block instanceof BlockTrapDoor)         || (block instanceof BlockLever)         || (block instanceof BlockFenceGate))
+             (block instanceof BlockTrapDoor)         || (block instanceof BlockFenceGate))
         {
             worldIn.setBlockState(pos, block.rotate(state, Rotation.CLOCKWISE_90), 2 | 1024);
         }
