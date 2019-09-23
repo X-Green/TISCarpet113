@@ -30,10 +30,12 @@ warn: Features here is incomplete, some features in original carpet or developin
 * `/log projectiles visualize`: visual logger for projectiles / 投掷物可视化记录器
 * `/log chunkdebug`: chunk loading/unloading / 区块加载/卸载记录器
 * `/log villagecount`: log village count / 村庄数量记录器
+* Store logger status to automatically load unclosed loggers after reboot / 保存记录器状态信息，以便在重启服务器后自动加载未关闭的记录器
 
 ------
 
 ## Fixes for original CarpetMod/对原版CarpetMod的修复:
 
 * fix no username length limit with `/player` command (long name will make everyone cannt enter the server)/ 修复了使用`/player`指令时没有限制名字长度的问题（过长的名字会使所有人都不能进入服务器）
+* remove lever modification ability from flippinCactus / 移除仙人掌扳手修改拉杆的功能
 
