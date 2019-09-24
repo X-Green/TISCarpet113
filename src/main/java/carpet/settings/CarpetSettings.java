@@ -99,6 +99,13 @@ public class CarpetSettings
             )
     public static boolean missingLightFix = false;
     
+    @Rule(
+            desc = "Uses alternative lighting engine by PhiPros. AKA NewLight mod",
+            extra = "Now Ported to 1.13 by Salandora!",
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static boolean newLight = false;
+    
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
     //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$

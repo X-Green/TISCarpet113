@@ -1,13 +1,15 @@
 --- a/net/minecraft/world/chunk/Chunk.java
 +++ b/net/minecraft/world/chunk/Chunk.java
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,8 @@
  package net.minecraft.world.chunk;
  
 +import carpet.settings.CarpetSettings;
++import carpet.utils.LightInitHooks;
++import carpet.utils.LightingHooks;
  import com.google.common.collect.Maps;
  import com.google.common.collect.Queues;
  import com.google.common.collect.Sets;
-@@ -55,6 +56,10 @@
+@@ -55,6 +58,10 @@
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
  
@@ -18,7 +20,212 @@
  public class Chunk implements IChunk
  {
      private static final Logger LOGGER = LogManager.getLogger();
-@@ -489,9 +494,16 @@
+@@ -89,6 +96,19 @@
+     private int neighborCount;
+     private final AtomicInteger field_205757_F = new AtomicInteger();
+     private final ChunkPos field_212816_F;
++    
++    // [TISCM] Newlight - Start
++    private int neighborLoaded;
++    
++    private int[] neighborLightChecks = null;
++    private int[] lightTrackings = null;
++    private int[] neighborLightTrackings = null;
++    
++    private boolean pendingBoundaryChecks;
++    private short pendingNeighborLightInits;
++    
++    private boolean isLightPopulated;
++    // [TISCM] Newlight - End
+ 
+     @OnlyIn(Dist.CLIENT)
+     public Chunk(World worldIn, int cx, int cz, Biome[] biomesIn)
+@@ -212,37 +232,45 @@
+             {
+                 if (this.world.dimension.hasSkyLight())
+                 {
+-                    int j = 15;
+-                    int k = i + 16 - 1;
+-
+-                    while (true)
++                    // [TISCM] Newlight - if statement around
++                    if (CarpetSettings.newLight)
+                     {
+-                        int l = this.getBlockLightOpacity(i1, k, j1);
+-
+-                        if (l == 0 && j != 15)
++                        LightInitHooks.fillSkylightColumn(this, i1,  j1);
++                    }
++                    else
++                    {
++                        int j = 15;
++                        int k = i + 16 - 1;
++    
++                        while (true)
+                         {
+-                            l = 1;
+-                        }
+-
+-                        j -= l;
+-
+-                        if (j > 0)
+-                        {
+-                            ChunkSection chunksection = this.sections[k >> 4];
+-
+-                            if (chunksection != EMPTY_SECTION)
++                            int l = this.getBlockLightOpacity(i1, k, j1);
++        
++                            if (l == 0 && j != 15)
+                             {
+-                                chunksection.setSkyLight(i1, k & 15, j1, j);
+-                                this.world.notifyLightSet(new BlockPos((this.x << 4) + i1, k, (this.z << 4) + j1));
++                                l = 1;
+                             }
++        
++                            j -= l;
++        
++                            if (j > 0)
++                            {
++                                ChunkSection chunksection = this.sections[k >> 4];
++            
++                                if (chunksection != EMPTY_SECTION)
++                                {
++                                    chunksection.setSkyLight(i1, k & 15, j1, j);
++                                    this.world.notifyLightSet(new BlockPos((this.x << 4) + i1, k, (this.z << 4) + j1));
++                                }
++                            }
++        
++                            --k;
++        
++                            if (k <= 0 || j <= 0)
++                            {
++                                break;
++                            }
+                         }
+-
+-                        --k;
+-
+-                        if (k <= 0 || j <= 0)
+-                        {
+-                            break;
+-                        }
+                     }
+                 }
+             }
+@@ -339,40 +367,52 @@
+             int j = heightmap.getHeight(x & 15, z & 15);
+             int k = this.x * 16 + x;
+             int l = this.z * 16 + z;
+-            this.world.markBlocksDirtyVertical(k, l, j, i);
++            // [TISCM] Newlight - if statement around
++            if (!CarpetSettings.newLight)
++            {
++                this.world.markBlocksDirtyVertical(k, l, j, i);
++            }
+ 
+             if (this.world.dimension.hasSkyLight())
+             {
+-                int i1 = Math.min(i, j);
+-                int j1 = Math.max(i, j);
+-                int k1 = j < i ? 15 : 0;
+-
+-                for (int l1 = i1; l1 < j1; ++l1)
++                // [TISCM] Newlight - if statement around
++                if (CarpetSettings.newLight)
+                 {
+-                    ChunkSection chunksection = this.sections[l1 >> 4];
+-
+-                    if (chunksection != EMPTY_SECTION)
+-                    {
+-                        chunksection.setSkyLight(x, l1 & 15, z, k1);
+-                        this.world.notifyLightSet(new BlockPos((this.x << 4) + x, l1, (this.z << 4) + z));
+-                    }
++                    LightingHooks.relightSkylightColumn(this.world, this, x, z, i, j);
+                 }
+-
+-                int l2 = 15;
+-
+-                while (j > 0 && l2 > 0)
++                else
+                 {
+-                    --j;
+-                    int i3 = this.getBlockLightOpacity(x, j, z);
+-                    i3 = i3 == 0 ? 1 : i3;
+-                    l2 = l2 - i3;
+-                    l2 = Math.max(0, l2);
+-                    ChunkSection chunksection1 = this.sections[j >> 4];
+-
+-                    if (chunksection1 != EMPTY_SECTION)
++                    int i1 = Math.min(i, j);
++                    int j1 = Math.max(i, j);
++                    int k1 = j < i ? 15 : 0;
++    
++                    for (int l1 = i1; l1 < j1; ++l1)
+                     {
+-                        chunksection1.setSkyLight(x, j & 15, z, l2);
++                        ChunkSection chunksection = this.sections[l1 >> 4];
++        
++                        if (chunksection != EMPTY_SECTION)
++                        {
++                            chunksection.setSkyLight(x, l1 & 15, z, k1);
++                            this.world.notifyLightSet(new BlockPos((this.x << 4) + x, l1, (this.z << 4) + z));
++                        }
+                     }
++    
++                    int l2 = 15;
++    
++                    while (j > 0 && l2 > 0)
++                    {
++                        --j;
++                        int i3 = this.getBlockLightOpacity(x, j, z);
++                        i3 = i3 == 0 ? 1 : i3;
++                        l2 = l2 - i3;
++                        l2 = Math.max(0, l2);
++                        ChunkSection chunksection1 = this.sections[j >> 4];
++        
++                        if (chunksection1 != EMPTY_SECTION)
++                        {
++                            chunksection1.setSkyLight(x, j & 15, z, l2);
++                        }
++                    }
+                 }
+             }
+ 
+@@ -380,19 +420,23 @@
+             {
+                 this.heightMapMinimum = j;
+             }
+-
+-            if (this.world.dimension.hasSkyLight())
++            
++            // [TISCM] Newlight - if statement around
++            if (!CarpetSettings.newLight)
+             {
+-                int i2 = heightmap.getHeight(x & 15, z & 15);
+-                int j2 = Math.min(i, i2);
+-                int k2 = Math.max(i, i2);
+-
+-                for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
++                if (this.world.dimension.hasSkyLight())
+                 {
+-                    this.updateSkylightNeighborHeight(k + enumfacing.getXOffset(), l + enumfacing.getZOffset(), j2, k2);
++                    int i2 = heightmap.getHeight(x & 15, z & 15);
++                    int j2 = Math.min(i, i2);
++                    int k2 = Math.max(i, i2);
++        
++                    for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
++                    {
++                        this.updateSkylightNeighborHeight(k + enumfacing.getXOffset(), l + enumfacing.getZOffset(), j2, k2);
++                    }
++        
++                    this.updateSkylightNeighborHeight(k, l, j2, k2);
+                 }
+-
+-                this.updateSkylightNeighborHeight(k, l, j2, k2);
+             }
+ 
+             this.dirty = true;
+@@ -489,9 +533,16 @@
          }
      }
  
@@ -35,7 +242,43 @@
          int i = pos.getX() & 15;
          int j = pos.getY();
          int k = pos.getZ() & 15;
-@@ -568,14 +580,26 @@
+@@ -517,10 +568,16 @@
+                 }
+ 
+                 chunksection = new ChunkSection(j >> 4 << 4, this.world.dimension.hasSkyLight());
++                // [TISCM] Newlight
++                if (CarpetSettings.newLight)
++                    LightingHooks.initSkylightForSection(this.world, this, chunksection);
+                 this.sections[j >> 4] = chunksection;
+                 flag = j >= l;
+             }
+-
++            // [TISCM] Newlight
++            if (CarpetSettings.newLight)
++                flag = false;
++            
+             chunksection.set(i, j & 15, k, state);
+             this.heightMap.get(Heightmap.Type.MOTION_BLOCKING).update(i, j, k, state);
+             this.heightMap.get(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES).update(i, j, k, state);
+@@ -551,10 +608,14 @@
+                     int i1 = state.getOpacity(this.world, pos);
+                     int j1 = iblockstate.getOpacity(this.world, pos);
+                     this.relightBlock(i, j, k, state);
+-
+-                    if (i1 != j1 && (i1 < j1 || this.getLightFor(EnumLightType.SKY, pos) > 0 || this.getLightFor(EnumLightType.BLOCK, pos) > 0))
++    
++                    // [TISCM] Newlight - if statement around
++                    if (!CarpetSettings.newLight)
+                     {
+-                        this.propagateSkylightOcclusion(i, k);
++                        if (i1 != j1 && (i1 < j1 || this.getLightFor(EnumLightType.SKY, pos) > 0 || this.getLightFor(EnumLightType.BLOCK, pos) > 0))
++                        {
++                            this.propagateSkylightOcclusion(i, k);
++                        }
+                     }
+                 }
+ 
+@@ -568,14 +629,26 @@
                      }
                  }
  
@@ -64,7 +307,48 @@
  
                      if (tileentity1 == null)
                      {
-@@ -894,6 +918,19 @@
+@@ -596,6 +669,9 @@
+ 
+     public int getLightFor(EnumLightType type, BlockPos pos)
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            this.world.getLightingEngine().procLightUpdates(type);
+         return this.getLight(type, pos, this.world.getDimension().hasSkyLight());
+     }
+ 
+@@ -651,10 +727,18 @@
+                 {
+                     return;
+                 }
+-
++    
+                 chunksection = new ChunkSection(l << 4, hasSkylight);
+                 this.sections[l] = chunksection;
+-                this.generateSkylightMap();
++                // [TISCM] Newlight - if else statement around
++                if (!CarpetSettings.newLight)
++                {
++                    this.generateSkylightMap();
++                }
++                else
++                {
++                    LightingHooks.initSkylightForSection(this.world, this, chunksection);
++                }
+             }
+ 
+             if (light == EnumLightType.SKY)
+@@ -680,6 +764,9 @@
+ 
+     public int getLightSubtracted(BlockPos pos, int amount, boolean hasSkylight)
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            this.world.getLightingEngine().procLightUpdates();
+         int i = pos.getX() & 15;
+         int j = pos.getY();
+         int k = pos.getZ() & 15;
+@@ -894,10 +981,32 @@
                  return !(p_212383_0_ instanceof EntityPlayer);
              }));
          }
@@ -81,10 +365,23 @@
 +                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "l Loaded");
 +            }
 +        }
++        
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++        {
++            LightingHooks.onLoadServer(this.world, this);
++        }
      }
  
      public void onUnload()
-@@ -909,6 +946,19 @@
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            this.world.getLightingEngine().procLightUpdates();
+         this.loaded = false;
+ 
+         for (TileEntity tileentity : this.tileEntities.values())
+@@ -909,6 +1018,23 @@
          {
              this.world.unloadEntities(classinheritancemultimap);
          }
@@ -101,6 +398,104 @@
 +                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "r Unloaded");
 +            }
 +        }
++        
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            LightingHooks.onUnload(this.world, this);
      }
  
      public void markDirty()
+@@ -997,6 +1123,9 @@
+ 
+     public void tick(boolean skipRecheckGaps)
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            LightingHooks.onTick(this.world, this);
+         if (this.isGapLightingUpdated && this.world.dimension.hasSkyLight() && !skipRecheckGaps)
+         {
+             this.recheckGaps(this.world.isRemote);
+@@ -1138,9 +1267,28 @@
+                 this.sections[l].recalculateRefCounts();
+             }
+         }
+-
++        
++        // [TISCM] Newlight - start
++        long[] oldHeightMap = null;
++        if (CarpetSettings.newLight)
++        {
++            this.isLightPopulated = true;
++            
++            if (!fullChunk)
++            {
++                Heightmap map = this.getHeightmap(Heightmap.Type.LIGHT_BLOCKING);
++                oldHeightMap = new long[map.getDataArray().length];
++                System.arraycopy(map.getDataArray(), 0, oldHeightMap, 0, oldHeightMap.length);
++            }
++        }
++        // [TISCM] Newlight - end
++        
+         this.generateHeightMap();
+-
++        
++        // [TISCM] Newlight - start
++        if (CarpetSettings.newLight)
++            LightingHooks.relightSkylightColumns(this.world, this, oldHeightMap);
++        // [TISCM] Newlight - end
+         for (TileEntity tileentity : this.tileEntities.values())
+         {
+             tileentity.updateContainingBlockInfo();
+@@ -1497,4 +1645,52 @@
+         QUEUED,
+         CHECK;
+     }
++    
++    // [TISCM] Newlight - getters and setters
++    public int[] getNeighborLightChecks() {
++        return this.neighborLightChecks;
++    }
++    public void setNeighborLightChecks(int[] in) {
++        this.neighborLightChecks = in;
++    }
++    
++    public int[] getLightTrackings() {
++        return this.lightTrackings;
++    }
++    public void setLightTrackings(int[] in) {
++        this.lightTrackings = in;
++    }
++    
++    public int[] getNeighborLightTrackings() {
++        return this.neighborLightTrackings;
++    }
++    public void setNeighborLightTrackings(int[] in) {
++        this.neighborLightTrackings = in;
++    }
++    
++    public int getNeighborsLoaded() {
++        return this.neighborLoaded;
++    }
++    public void setNeighborsLoaded(int in) {
++        this.neighborLoaded = in;
++    }
++    
++    public boolean getPendingBoundaryChecks() { return this.pendingBoundaryChecks; }
++    public void setPendingBoundaryChecks(boolean value) { this.pendingBoundaryChecks = value; }
++    
++    public short getPendingNeighborLightInits() {
++        return this.pendingNeighborLightInits;
++    }
++    public void setPendingNeighborLightInits(short in) {
++        this.pendingNeighborLightInits = in;
++    }
++    
++    public boolean getIsLightPopulated()
++    {
++        return this.isLightPopulated;
++    }
++    public void setIsLightPopulated(boolean value)
++    {
++        this.isLightPopulated = value;
++    }
+ }

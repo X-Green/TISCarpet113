@@ -1,0 +1,19 @@
+--- a/net/minecraft/network/play/server/SPacketChunkData.java
++++ b/net/minecraft/network/play/server/SPacketChunkData.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.network.play.server;
+ 
++import carpet.settings.CarpetSettings;
+ import com.google.common.collect.Lists;
+ import io.netty.buffer.ByteBuf;
+ import io.netty.buffer.Unpooled;
+@@ -154,6 +155,9 @@
+ 
+     protected int calculateChunkSize(Chunk chunkIn, boolean p_189556_2_, int p_189556_3_)
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            chunkIn.getWorld().getLightingEngine().procLightUpdates();
+         int i = 0;
+         ChunkSection[] achunksection = chunkIn.getSections();
+         int j = 0;

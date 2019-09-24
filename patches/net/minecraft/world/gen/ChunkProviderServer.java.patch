@@ -52,7 +52,17 @@
          }
  
          this.mainThread.addScheduledTask(chunk::onLoad);
-@@ -309,7 +325,18 @@
+@@ -241,6 +257,9 @@
+ 
+     public boolean saveChunks(boolean all)
+     {
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++            this.world.getLightingEngine().procLightUpdates();
+         int i = 0;
+         this.chunkScheduler.save(() ->
+         {
+@@ -309,7 +328,18 @@
                              chunk.onUnload();
                              this.saveChunkData(chunk);
                              this.loadedChunks.remove(olong);
@@ -72,7 +82,7 @@
                              ++i;
                          }
                      }
-@@ -360,6 +387,82 @@
+@@ -360,6 +390,82 @@
  
      public boolean chunkExists(int x, int z)
      {

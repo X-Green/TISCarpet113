@@ -1,0 +1,99 @@
+--- a/net/minecraft/server/management/PlayerChunkMapEntry.java
++++ b/net/minecraft/server/management/PlayerChunkMapEntry.java
+@@ -1,7 +1,10 @@
+ package net.minecraft.server.management;
+ 
++import carpet.settings.CarpetSettings;
++import carpet.utils.LightTrackingHooks;
+ import com.google.common.collect.Lists;
+ import java.util.List;
++import java.util.Map;
+ import java.util.function.Predicate;
+ import javax.annotation.Nullable;
+ import net.minecraft.entity.player.EntityPlayerMP;
+@@ -32,6 +35,11 @@
+     private int changedSectionFilter;
+     private long lastUpdateInhabitedTime;
+     private boolean sentToPlayers;
++    
++    // [TISCM] Newlight - start
++    private java.util.Map<EntityPlayerMP, int[]> lightTrackings = new java.util.HashMap<>();
++    private final java.util.Map<EntityPlayerMP, int[]> neighborLightTrackings = new java.util.HashMap<>();
++    // [TISCM] Newlight - end
+ 
+     public PlayerChunkMapEntry(PlayerChunkMap mapIn, int chunkX, int chunkZ)
+     {
+@@ -64,6 +72,9 @@
+ 
+             if (this.sentToPlayers)
+             {
++                // [TISCM] Newlight
++                if (CarpetSettings.newLight)
++                    LightTrackingHooks.addPlayer(player, this, this.playerChunkMap);
+                 this.sendToPlayer(player);
+             }
+         }
+@@ -75,6 +86,9 @@
+         {
+             if (this.sentToPlayers)
+             {
++                // [TISCM] Newlight
++                if (CarpetSettings.newLight)
++                    LightTrackingHooks.removePlayer(player, this, this.playerChunkMap);
+                 player.connection.sendPacket(new SPacketUnloadChunk(this.pos.x, this.pos.z));
+             }
+ 
+@@ -126,8 +140,16 @@
+ 
+                 for (EntityPlayerMP entityplayermp : this.players)
+                 {
++                    // [TISCM] Newlight
++                    if (CarpetSettings.newLight)
++                        LightTrackingHooks.addPlayer(entityplayermp, this, this.playerChunkMap);
++                    
+                     entityplayermp.connection.sendPacket(packet);
+                     this.playerChunkMap.getWorld().getEntityTracker().sendLeashedEntitiesInChunk(entityplayermp, this.chunk);
++    
++                    // [TISCM] Newlight
++                    if (CarpetSettings.newLight)
++                        LightTrackingHooks.sendLightTrackings(this, entityplayermp, this.playerChunkMap);
+                 }
+             }
+ 
+@@ -141,6 +163,10 @@
+         {
+             player.connection.sendPacket(new SPacketChunkData(this.chunk, 65535));
+             this.playerChunkMap.getWorld().getEntityTracker().sendLeashedEntitiesInChunk(player, this.chunk);
++    
++            // [TISCM] Newlight
++            if (CarpetSettings.newLight)
++                LightTrackingHooks.sendLightTrackings(this, player, this.playerChunkMap);
+         }
+     }
+ 
+@@ -217,6 +243,9 @@
+                 else if (this.changes == 64)
+                 {
+                     this.sendPacket(new SPacketChunkData(this.chunk, this.changedSectionFilter));
++                    // [TISCM] Newlight
++                    if (CarpetSettings.newLight)
++                        LightTrackingHooks.sendLightTrackings(this, this.changedSectionFilter, this.playerChunkMap);
+                 }
+                 else
+                 {
+@@ -309,4 +338,15 @@
+ 
+         return d0;
+     }
++    
++    // [TISCM] Newlight - getters
++    public Map<EntityPlayerMP, int[]> getLightTrackings()
++    {
++        return lightTrackings;
++    }
++    
++    public Map<EntityPlayerMP, int[]> getNeighborLightTrackings()
++    {
++        return neighborLightTrackings;
++    }
+ }

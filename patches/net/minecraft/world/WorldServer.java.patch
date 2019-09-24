@@ -43,7 +43,7 @@
          this.worldInfo.setGameTime(this.worldInfo.getGameTime() + 1L);
  
          if (this.getGameRules().getBoolean("doDaylightCycle"))
-@@ -216,16 +232,27 @@
+@@ -216,16 +232,33 @@
          }
  
          this.profiler.endStartSection("tickPending");
@@ -68,10 +68,16 @@
          this.profiler.endStartSection("portalForcer");
          this.worldTeleporter.tick(this.getGameTime());
 +        }
++        // [TISCM] Newlight
++        if (CarpetSettings.newLight)
++        {
++            this.profiler.endStartSection("lighting");
++            this.getLightingEngine().procLightUpdates();
++        }
          this.profiler.endSection();
          this.sendQueuedBlockEvents();
          this.insideTick = false;
-@@ -270,7 +297,7 @@
+@@ -270,7 +303,7 @@
                  }
              }
  
@@ -80,7 +86,7 @@
          }
      }
  
-@@ -306,6 +333,13 @@
+@@ -306,6 +339,13 @@
      {
          if (this.allPlayersSleeping && !this.isRemote)
          {
@@ -94,7 +100,7 @@
              for (EntityPlayer entityplayer : this.playerEntities)
              {
                  if (!entityplayer.isSpectator() && !entityplayer.isPlayerFullyAsleep())
-@@ -407,6 +441,13 @@
+@@ -407,6 +447,13 @@
                  chunk.enqueueRelightChecks();
                  this.profiler.endStartSection("tickChunk");
                  chunk.tick(false);
@@ -108,7 +114,7 @@
                  this.profiler.endStartSection("thunder");
  
                  if (flag && flag1 && this.rand.nextInt(100000) == 0)
-@@ -499,7 +540,7 @@
+@@ -499,7 +546,7 @@
          }
      }
  
