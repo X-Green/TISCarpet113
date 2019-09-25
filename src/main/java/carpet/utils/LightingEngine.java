@@ -74,7 +74,7 @@ public class LightingEngine {
     {
         for (int i = 0; i < 6; ++i)
         {
-            final Vec3i offset = EnumFacing.values()[i].getDirectionVec();
+            final Vec3i offset = EnumFacing.values()[i].getDirectionVecTIS();
             neighborShifts[i] = ((long) offset.getY() << sY) | ((long) offset.getX() << sX) | ((long) offset.getZ() << sZ);
         }
     }

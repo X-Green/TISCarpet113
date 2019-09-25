@@ -39,3 +39,14 @@
          EnumFacing enumfacing = flag ? EAST : WEST;
          EnumFacing enumfacing1 = flag1 ? UP : DOWN;
          EnumFacing enumfacing2 = flag2 ? SOUTH : NORTH;
+@@ -510,4 +527,10 @@
+             return Iterators.forArray(this.facingValues);
+         }
+     }
++    
++    // [TISCM] Newlight - get directionVec for server
++    public Vec3i getDirectionVecTIS()
++    {
++        return this.directionVec;
++    }
+ }
