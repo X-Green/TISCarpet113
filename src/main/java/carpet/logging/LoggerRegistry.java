@@ -30,6 +30,7 @@ public class LoggerRegistry
     public static boolean __pathfinding;
     public static boolean __chunkdebug;
     public static boolean __villagecount;
+    public static boolean __memory;
 
     public static void initLoggers()
     {
@@ -51,6 +52,9 @@ public class LoggerRegistry
 
         //TISCM: add villagecount
         registerLogger("villagecount", new HUDLogger("villagecount", null, null));
+
+        //TISCM: add memory
+        registerLogger("memory", new HUDLogger("memory", null, null));
     }
 
     /**

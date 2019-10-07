@@ -84,6 +84,9 @@ public class HUDController
         if (LoggerRegistry.__villagecount)
             LoggerRegistry.getLogger("villagecount").log(() -> send_total_villages(server));
 
+        if (LoggerRegistry.__memory)
+            LoggerRegistry.getLogger("memory").log(() -> send_mem_usage());
+
         for (EntityPlayer player: player_huds.keySet())
         {
             SPacketPlayerListHeaderFooter packet = new SPacketPlayerListHeaderFooter();
@@ -143,6 +146,16 @@ public class HUDController
 
         ITextComponent [] ret =  new ITextComponent[]{
                 Messenger.c("w Villages:" + villagecount),
+        };
+        return ret;
+    }
+
+    private static ITextComponent [] send_mem_usage()
+    {
+
+
+        ITextComponent [] ret =  new ITextComponent[]{
+                Messenger.c("g "+ (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory())/1048576 + "M / " +(Runtime.getRuntime().maxMemory()/1048576) + " M"),
         };
         return ret;
     }
