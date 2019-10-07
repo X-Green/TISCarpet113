@@ -356,13 +356,13 @@
 +        //TISCM: chunk debug
 +        if (LoggerRegistry.__chunkdebug){
 +            if (this.world.dimension.isNether()) {
-+                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "l Loaded");
++                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "l Loaded tick: " + this.world.getGameTime());
 +            }
 +            else if (this.world.dimension.hasSkyLight()){
-+                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "l Loaded");
++                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "l Loaded tick: " + this.world.getGameTime());
 +            }
 +            else{
-+                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "l Loaded");
++                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "l Loaded tick: " + this.world.getGameTime());
 +            }
 +        }
 +        
@@ -389,13 +389,13 @@
 +        //TISCM: chunk debug
 +        if (LoggerRegistry.__chunkdebug){
 +            if (this.world.dimension.isNether()) {
-+                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "r Unloaded");
++                ChunkLogHelper.onChunkNewState("Nether", this.x, this.z, "r Unloaded tick: " + this.world.getGameTime());
 +            }
 +            else if (this.world.dimension.hasSkyLight()){
-+                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "r Unloaded");
++                ChunkLogHelper.onChunkNewState("Overworld", this.x, this.z, "r Unloaded tick: " + this.world.getGameTime());
 +            }
 +            else {
-+                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "r Unloaded");
++                ChunkLogHelper.onChunkNewState("End", this.x, this.z, "r Unloaded tick: " + this.world.getGameTime());
 +            }
 +        }
 +        
