@@ -30,7 +30,7 @@ public class TickCommand
                                 executes((c) -> setTps(c.getSource(), getFloat(c, "rate"))))).
                 then(literal("warp").
                         executes( (c)-> setWarp(c.getSource(), 0, null)).
-                        then(argument("ticks", integer(0,4000000)).
+                        then(argument("ticks", integer(0,2147483647)).
                                 suggests( (c, b) -> ISuggestionProvider.suggest(new String[]{"3600","72000"},b)).
                                 executes((c) -> setWarp(c.getSource(), getInteger(c,"ticks"), null)).
                                 then(argument("tail command", greedyString()).
