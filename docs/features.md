@@ -32,6 +32,7 @@ warn: Features here maybe incomplete, some features in original carpet or develo
 * `/log chunkdebug`: chunk loading/unloading / 区块加载/卸载记录器
 * `/log villagecount`: log village count / 村庄数量记录器
 * `/log nte`: log tile tick / NTE记录器
+* `/log bud`: log NeighborChanged and PostPlacement with a observer on a dead fire coral block / 用放在死火珊瑚块上的侦测器来记录NeighborChanged与PostPlacement
 * Store logger status to automatically load unclosed loggers after reboot / 保存记录器状态信息，以便在重启服务器后自动加载未关闭的记录器
 
 ------

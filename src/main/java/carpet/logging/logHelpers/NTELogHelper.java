@@ -32,13 +32,13 @@ public class NTELogHelper {
         LoggerRegistry.getLogger("nte").log( (option, player) -> 
         {
             return new ITextComponent[]{Messenger.c(
-                    "w [" + gameTime + "] ", 
+                    "g [" + gameTime + "] ", 
                     "w Size=" + listSize + " ",
                     "w Dealt=" + dealt + " ",
                     "w Ticked=" + ticked + " ",
                     "w Skipped=" + skipped + " ",
                     "t " + NTELogHelper.type + " ",
-                    "w in ",
+                    "g in ",
                     "e " + NTELogHelper.dimension)};
             
         });

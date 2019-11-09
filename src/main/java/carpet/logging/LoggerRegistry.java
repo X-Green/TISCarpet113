@@ -32,6 +32,7 @@ public class LoggerRegistry
     public static boolean __villagecount;
     public static boolean __memory;
     public static boolean __nte;
+    public static boolean __bud;
 
     public static void initLoggers()
     {
@@ -56,9 +57,12 @@ public class LoggerRegistry
 
         //TISCM: add memory
         registerLogger("memory", new HUDLogger("memory", null, null));
-        
+
         //TISCM: add nte
         registerLogger("nte", new Logger("nte", null, null)); 
+        
+        //TISCM: add bud
+        registerLogger("bud", new Logger("bud", null, null)); 
     }
 
     /**
