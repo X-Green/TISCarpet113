@@ -31,6 +31,7 @@ public class LoggerRegistry
     public static boolean __chunkdebug;
     public static boolean __villagecount;
     public static boolean __memory;
+    public static boolean __nte;
 
     public static void initLoggers()
     {
@@ -55,6 +56,9 @@ public class LoggerRegistry
 
         //TISCM: add memory
         registerLogger("memory", new HUDLogger("memory", null, null));
+        
+        //TISCM: add nte
+        registerLogger("nte", new Logger("nte", null, null)); 
     }
 
     /**
