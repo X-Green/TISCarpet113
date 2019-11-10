@@ -31,8 +31,8 @@ public class LoggerRegistry
     public static boolean __chunkdebug;
     public static boolean __villagecount;
     public static boolean __memory;
-    public static boolean __nte;
-    public static boolean __bud;
+    public static boolean __tileticklist;
+    public static boolean __blockupdates;
 
     public static void initLoggers()
     {
@@ -58,11 +58,11 @@ public class LoggerRegistry
         //TISCM: add memory
         registerLogger("memory", new HUDLogger("memory", null, null));
 
-        //TISCM: add nte
-        registerLogger("nte", new Logger("nte", null, null)); 
+        //TISCM: add tile tick list
+        registerLogger("tileticklist", new Logger("tileticklist", null, null)); 
         
-        //TISCM: add bud
-        registerLogger("bud", new Logger("bud", null, null)); 
+        //TISCM: add block updates
+        registerLogger("blockupdates", new Logger("blockupdates", "all", new String[]{"all", "unique"})); 
     }
 
     /**

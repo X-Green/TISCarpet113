@@ -31,8 +31,10 @@ warn: Features here maybe incomplete, some features in original carpet or develo
 * `/log projectiles visualize`: visual logger for projectiles / 投掷物可视化记录器
 * `/log chunkdebug`: chunk loading/unloading / 区块加载/卸载记录器
 * `/log villagecount`: log village count / 村庄数量记录器
-* `/log nte`: log tile tick / NTE记录器
-* `/log bud`: log NeighborChanged and PostPlacement with a observer on a dead fire coral block / 用放在死火珊瑚块上的侦测器来记录NeighborChanged与PostPlacement
+* `/log tileticklist`: log tile tick list for making tiletick EMP / NTE列表记录器，有助于制作NTE EMP
+* `/log blockupdates`: log NeighborChanged and PostPlacement with an observer pointing to a dead fire coral block / 用指着死火珊瑚块上的侦测器来记录NeighborChanged与PostPlacement
+  * `/log blockupdates all`: log all updates, default stats / 记录所有更新，默认状态
+  * `/log blockupdates unique`: log unique updates. Turn it on if you don't want to be spammed by redstone dusts / 只记录不同的更新，如果你不想被红石粉刷屏的话可以开
 * Store logger status to automatically load unclosed loggers after reboot / 保存记录器状态信息，以便在重启服务器后自动加载未关闭的记录器
 
 ------

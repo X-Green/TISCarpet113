@@ -4,32 +4,32 @@ import carpet.logging.LoggerRegistry;
 import carpet.utils.Messenger;
 import net.minecraft.util.text.ITextComponent;
 
-public class NTELogHelper {
+public class TileTickListLogHelper {
     private static String type = new String();
     private static String dimension = new String();
     
     public static void setListInfo(String type, int dimensionID)
     {
-        NTELogHelper.type = type;
+        TileTickListLogHelper.type = type;
         switch (dimensionID)
         {
         case 0: 
-            NTELogHelper.dimension = "Overworld";
+            TileTickListLogHelper.dimension = "Overworld";
             break;
         case 1: 
-            NTELogHelper.dimension = "End";
+            TileTickListLogHelper.dimension = "End";
             break;
         case -1: 
-            NTELogHelper.dimension = "Nether";
+            TileTickListLogHelper.dimension = "Nether";
             break;
         }
     }
     
-    public static void onNTETicked(long gameTime, int listSize, int dealt, int ticked, int skipped)
+    public static void onTileTicked(long gameTime, int listSize, int dealt, int ticked, int skipped)
     {
         if (listSize == 0)
             return;
-        LoggerRegistry.getLogger("nte").log( (option, player) -> 
+        LoggerRegistry.getLogger("tileticklist").log( () -> 
         {
             return new ITextComponent[]{Messenger.c(
                     "g [" + gameTime + "] ", 
@@ -37,9 +37,9 @@ public class NTELogHelper {
                     "w Dealt=" + dealt + " ",
                     "w Ticked=" + ticked + " ",
                     "w Skipped=" + skipped + " ",
-                    "t " + NTELogHelper.type + " ",
+                    "t " + TileTickListLogHelper.type + " ",
                     "g in ",
-                    "e " + NTELogHelper.dimension)};
+                    "e " + TileTickListLogHelper.dimension)};
             
         });
     }
