@@ -118,7 +118,7 @@
              boolean flag = this.isRaining();
              boolean flag1 = this.isThundering();
              this.profiler.startSection("pollingChunks");
-+            BlockUpdatesLogHelper.setTickStage("RandomTick&Weather"); // TISCM Block Updates logger
++            BlockUpdatesLogHelper.setTickStage("RandomTick&Climate"); // TISCM Block Updates logger
  
              for (Iterator<Chunk> iterator = this.playerChunkMap.getChunkIterator(); iterator.hasNext(); this.profiler.endSection())
              {
