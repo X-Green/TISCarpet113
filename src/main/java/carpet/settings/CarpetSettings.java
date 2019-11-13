@@ -9,8 +9,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.cert.CertificateNotYetValidException;
-
 import static carpet.settings.RuleCategory.*;
 
 public class CarpetSettings
@@ -520,4 +518,13 @@ public class CarpetSettings
     )
     public static boolean yeetVillagerAi = false;
 
+    public enum TeleportSeacher {
+        VANILLA, SPIRAL, BOX, SUPER_CACHE
+    }
+    @Rule(
+            desc = "improve the search algorithm for nether portal",
+            extra = "WARNING: option SUPER_CACHE is experimental since it adds extra tile entities",
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static TeleportSeacher betterPortalSearcher = TeleportSeacher.VANILLA;
 }

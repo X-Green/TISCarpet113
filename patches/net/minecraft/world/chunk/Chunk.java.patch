@@ -348,6 +348,15 @@
          int i = pos.getX() & 15;
          int j = pos.getY();
          int k = pos.getZ() & 15;
+@@ -869,7 +956,7 @@
+         this.deferredTileEntities.put(new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z")), nbt);
+     }
+ 
+-    public void removeTileEntity(BlockPos pos)
++    public void  removeTileEntity(BlockPos pos)
+     {
+         if (this.loaded)
+         {
 @@ -894,10 +981,32 @@
                  return !(p_212383_0_ instanceof EntityPlayer);
              }));
