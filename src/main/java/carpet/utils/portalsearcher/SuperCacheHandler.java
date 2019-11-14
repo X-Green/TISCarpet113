@@ -1,10 +1,13 @@
-package carpet.patches.portalsearcher;
+package carpet.utils.portalsearcher;
 
+import carpet.settings.CarpetSettings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,23 +30,35 @@ public class SuperCacheHandler {
     }
 
     public boolean addPortal(BlockPos portalPos) {
+        if (!checkOption()) {
+            return false;
+        }
         ChunkPos cPos = new ChunkPos(portalPos);
         if (!chunkPortalMapping.containsKey(cPos)) {
             return false;
+        }
+        if (chunkPortalMapping.get(cPos) == null) {
+            chunkPortalMapping.put(cPos, Sets.newHashSet());
         }
         chunkPortalMapping.get(cPos).add(new BlockPos(portalPos));
         return true;
     }
 
     public boolean markChunk(ChunkPos chunkPos) {
+        if (!checkOption()) {
+            return false;
+        }
         if (!chunkPortalMapping.containsKey(chunkPos)) {
-            chunkPortalMapping.put(chunkPos, Sets.newHashSet());
+            chunkPortalMapping.put(chunkPos, null);
             return true;
         }
         return false;
     }
 
     public boolean removePortal(BlockPos portalPos) {
+        if (!checkOption()) {
+            return false;
+        }
         ChunkPos cPos = new ChunkPos(portalPos);
         if (!chunkPortalMapping.containsKey(cPos)) {
             return false;
@@ -59,6 +74,20 @@ public class SuperCacheHandler {
         if (!isMarked(chunkPos)) {
             return null;
         }
-        return chunkPortalMapping.get(chunkPos);
+        Iterable iterable = chunkPortalMapping.get(chunkPos);
+        return iterable == null ? Collections::emptyIterator : iterable;
+    }
+
+    public void clear() {
+        chunkPortalMapping.clear();
+    }
+
+    private boolean checkOption() {
+        if (CarpetSettings.betterPortalSearcher != CarpetSettings.EnumPortalSearcher.SUPER_CACHE) {
+            this.clear();
+            return false;
+        } else {
+            return true;
+        }
     }
 }

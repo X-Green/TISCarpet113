@@ -103,6 +103,17 @@ public class CarpetSettings
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean newLight = false;
+
+    @Rule(
+            desc = "improve the search algorithm for nether portal",
+            extra = "try super cache please",
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static EnumPortalSearcher betterPortalSearcher = EnumPortalSearcher.VANILLA;
+
+    public enum EnumPortalSearcher {
+        VANILLA, SPIRAL, BOX, SUPER_CACHE
+    }
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
@@ -517,14 +528,4 @@ public class CarpetSettings
             category = YEET
     )
     public static boolean yeetVillagerAi = false;
-
-    public enum TeleportSeacher {
-        VANILLA, SPIRAL, BOX, SUPER_CACHE
-    }
-    @Rule(
-            desc = "improve the search algorithm for nether portal",
-            extra = "WARNING: option SUPER_CACHE is experimental since it adds extra tile entities",
-            category = {EXPERIMENTAL, OPTIMIZATION}
-    )
-    public static TeleportSeacher betterPortalSearcher = TeleportSeacher.VANILLA;
 }

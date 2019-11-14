@@ -1,4 +1,4 @@
-package carpet.patches.portalsearcher;
+package carpet.utils.portalsearcher;
 
 import net.minecraft.block.BlockPortal;
 import net.minecraft.init.Blocks;
