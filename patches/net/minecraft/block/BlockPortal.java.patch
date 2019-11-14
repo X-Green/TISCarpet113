@@ -56,7 +56,7 @@
          }
      }
  
-+    // SuperCache starts
++    // TISCM betterPortalSearcher
 +    @Override
 +    public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving) {
 +        (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).removePortal(pos);
@@ -68,7 +68,7 @@
 +        (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).addPortal(pos);
 +        super.onBlockAdded(state, worldIn, pos, oldState);
 +    }
-+    // SuperCache ends
++    // end TISCM betterPortalSearcher
 +
      public ItemStack getItem(IBlockReader worldIn, BlockPos pos, IBlockState state)
      {

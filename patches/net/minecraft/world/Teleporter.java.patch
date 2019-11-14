@@ -34,7 +34,7 @@
          BlockPos blockpos = BlockPos.ORIGIN;
          long l = ChunkPos.asLong(j, k);
  
-@@ -87,38 +94,45 @@
+@@ -87,38 +94,46 @@
              teleporter$portalposition.lastUpdateTime = this.world.getGameTime();
              flag = false;
          }
@@ -70,6 +70,7 @@
 -                            {
 -                                blockpos1 = blockpos2;
 -                            }
++            // TISCM betterPortalSearcher
 +            PortalSearcherAbstract searcher;
 +            switch (CarpetSettings.betterPortalSearcher) {
 +            case BOX: // similar to spiral, but slightly faster
@@ -102,11 +103,11 @@
 +            blockpos = result.getResult();
 +//            LogManager.getLogger().info(result.toString()); // only for debug
 +
-+            /* betterPortalSearcher ends */
++            // end TISCM betterPortalSearcher
          }
  
          if (d0 >= 0.0D)
-@@ -128,6 +142,15 @@
+@@ -128,6 +143,15 @@
                  this.destinationCoordinateCache.put(l, new Teleporter.PortalPosition(blockpos, this.world.getGameTime()));
              }
  
@@ -122,7 +123,7 @@
              double d5 = (double)blockpos.getX() + 0.5D;
              double d7 = (double)blockpos.getZ() + 0.5D;
              BlockPattern.PatternHelper blockpattern$patternhelper = BLOCK_NETHER_PORTAL.createPatternHelper(this.world, blockpos);
-@@ -139,14 +162,35 @@
+@@ -139,14 +163,35 @@
              {
                  ++d2;
              }
@@ -161,7 +162,7 @@
              }
  
              float f = 0.0F;
-@@ -394,6 +438,13 @@
+@@ -394,6 +439,13 @@
              }
          }
  
@@ -175,7 +176,7 @@
          return true;
      }
  
-@@ -413,9 +464,35 @@
+@@ -413,9 +465,37 @@
                      objectiterator.remove();
                  }
              }
@@ -187,9 +188,11 @@
 +                removeAllCachedEntries();
 +            }
 +
++            // TISCM betterPortalSearcher
 +            if (CarpetSettings.betterPortalSearcher != CarpetSettings.EnumPortalSearcher.SUPER_CACHE) {
 +                (this.world.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).clear();
 +            }
++            // end TISCM betterPortalSearcher
 +            /* carpet mod end */
          }
      }
