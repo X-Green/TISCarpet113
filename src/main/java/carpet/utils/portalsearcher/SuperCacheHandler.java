@@ -83,7 +83,7 @@ public class SuperCacheHandler {
     }
 
     private boolean checkOption() {
-        if (CarpetSettings.betterPortalSearcher != CarpetSettings.EnumPortalSearcher.SUPER_CACHE) {
+        if (!CarpetSettings.portalSuperCache) {
             this.clear();
             return false;
         } else {
