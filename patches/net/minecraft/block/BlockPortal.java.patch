@@ -52,20 +52,24 @@
          return !flag && facingState.getBlock() != this && !(new BlockPortal.Size(worldIn, currentPos, enumfacing$axis1)).func_208508_f() ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
      }
  
-@@ -174,6 +199,20 @@
+@@ -174,6 +199,24 @@
          }
      }
  
 +    // TISCM betterPortalSearcher
 +    @Override
 +    public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving) {
-+        (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).removePortal(pos);
++        if (pos.getY() < worldIn.getActualHeight()) {
++            (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).removePortal(pos);
++        }
 +        super.onReplaced(state, worldIn, pos, newState, isMoving);
 +    }
 +
 +    @Override
 +    public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
-+        (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).addPortal(pos);
++        if (pos.getY() < worldIn.getActualHeight()) {
++            (worldIn.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).addPortal(pos);
++        }
 +        super.onBlockAdded(state, worldIn, pos, oldState);
 +    }
 +    // end TISCM betterPortalSearcher
