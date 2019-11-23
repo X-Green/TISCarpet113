@@ -103,13 +103,25 @@ public class CarpetSettings
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean newLight = false;
-
+    
     @Rule(
             desc = "Greatly improve the efficiency of nether portal",
             extra = "10000 times faster!",
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean portalSuperCache = false;
+
+    @Rule(
+            desc = "Display actions of redstone components and blockupdates with wool block",
+            extra = {
+                    "Use /log microtick to start logging",
+                    "endrods will detect block updates and redstone components will show their actions",
+                    "repeater, comparator, observer: pointing towards wool",
+                    "endrod, rtorch, rails, buttons, etc.: placed on wool",
+            },
+            category = {COMMAND, CREATIVE}
+    )
+    public static boolean microTick = false;
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
