@@ -103,17 +103,13 @@ public class CarpetSettings
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean newLight = false;
-
+    
     @Rule(
-            desc = "improve the search algorithm for nether portal",
-            extra = "try super cache please",
+            desc = "Greatly improve the efficiency of nether portal",
+            extra = "10000 times faster!",
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
-    public static EnumPortalSearcher betterPortalSearcher = EnumPortalSearcher.VANILLA;
-
-    public enum EnumPortalSearcher {
-        VANILLA, SPIRAL, BOX, SUPER_CACHE
-    }
+    public static boolean portalSuperCache = false;
 
     @Rule(
             desc = "Display actions of redstone components and blockupdates with wool block",

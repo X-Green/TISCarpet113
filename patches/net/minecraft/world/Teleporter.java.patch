@@ -34,7 +34,7 @@
          BlockPos blockpos = BlockPos.ORIGIN;
          long l = ChunkPos.asLong(j, k);
  
-@@ -87,38 +94,46 @@
+@@ -87,38 +94,35 @@
              teleporter$portalposition.lastUpdateTime = this.world.getGameTime();
              flag = false;
          }
@@ -70,19 +70,7 @@
 -                            {
 -                                blockpos1 = blockpos2;
 -                            }
-+            // TISCM betterPortalSearcher
-+            PortalSearcherAbstract searcher;
-+            switch (CarpetSettings.betterPortalSearcher) {
-+            case BOX: // similar to spiral, but slightly faster
-+                searcher = new PortalSearcherBox(world);
-+                break;
-+            case SPIRAL:
-+                searcher = new PortalSearcherSpiral(world);
-+                break;
-+            case SUPER_CACHE: // slightly slower than vanilla for the first time, but can be super fast later on
-+                searcher = new PortalSearcherSuperCache(world);
-+                break;
- 
+-
 -                            double d1 = blockpos1.distanceSq(blockpos3);
 -
 -                            if (d0 < 0.0D || d1 < d0)
@@ -93,10 +81,12 @@
 -                        }
 -                    }
 -                }
-+            case VANILLA:
-+            default: // it should be the same as vanilla
++            // TISCM betterPortalSearcher
++            PortalSearcherAbstract searcher;
++            if (CarpetSettings.portalSuperCache) {
++                searcher = new PortalSearcherSuperCache(world);
++            } else {
 +                searcher = new PortalSearcherVanilla(world);
-+                break;
              }
 +            PortalSearchResult result = searcher.search(new BlockPos(entityIn));
 +            d0 = result.getDistanceSq();
@@ -107,7 +97,7 @@
          }
  
          if (d0 >= 0.0D)
-@@ -128,6 +143,15 @@
+@@ -128,6 +132,15 @@
                  this.destinationCoordinateCache.put(l, new Teleporter.PortalPosition(blockpos, this.world.getGameTime()));
              }
  
@@ -123,7 +113,7 @@
              double d5 = (double)blockpos.getX() + 0.5D;
              double d7 = (double)blockpos.getZ() + 0.5D;
              BlockPattern.PatternHelper blockpattern$patternhelper = BLOCK_NETHER_PORTAL.createPatternHelper(this.world, blockpos);
-@@ -139,14 +163,35 @@
+@@ -139,14 +152,35 @@
              {
                  ++d2;
              }
@@ -162,7 +152,7 @@
              }
  
              float f = 0.0F;
-@@ -394,6 +439,13 @@
+@@ -394,6 +428,13 @@
              }
          }
  
@@ -176,7 +166,7 @@
          return true;
      }
  
-@@ -413,9 +465,37 @@
+@@ -413,9 +454,37 @@
                      objectiterator.remove();
                  }
              }
@@ -189,7 +179,7 @@
 +            }
 +
 +            // TISCM betterPortalSearcher
-+            if (CarpetSettings.betterPortalSearcher != CarpetSettings.EnumPortalSearcher.SUPER_CACHE) {
++            if (!CarpetSettings.portalSuperCache) {
 +                (this.world.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).clear();
 +            }
 +            // end TISCM betterPortalSearcher
