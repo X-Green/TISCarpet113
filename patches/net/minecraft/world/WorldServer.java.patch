@@ -114,7 +114,7 @@
              for (EntityPlayer entityplayer : this.playerEntities)
              {
                  if (!entityplayer.isSpectator() && !entityplayer.isPlayerFullyAsleep())
-@@ -396,6 +445,7 @@
+@@ -396,9 +445,11 @@
              boolean flag = this.isRaining();
              boolean flag1 = this.isThundering();
              this.profiler.startSection("pollingChunks");
@@ -122,7 +122,11 @@
  
              for (Iterator<Chunk> iterator = this.playerChunkMap.getChunkIterator(); iterator.hasNext(); this.profiler.endSection())
              {
-@@ -407,6 +457,13 @@
++                MicroTickLogHelper.setTickStageDetail(".TickChunk"); // TISCM Micro Tick logger
+                 this.profiler.startSection("getChunk");
+                 Chunk chunk = iterator.next();
+                 int j = chunk.x * 16;
+@@ -407,7 +458,15 @@
                  chunk.enqueueRelightChecks();
                  this.profiler.endStartSection("tickChunk");
                  chunk.tick(false);
@@ -134,9 +138,31 @@
 +                }
 +
                  this.profiler.endStartSection("thunder");
++                MicroTickLogHelper.setTickStageDetail(".Thunder"); // TISCM Micro Tick logger
  
                  if (flag && flag1 && this.rand.nextInt(100000) == 0)
-@@ -499,7 +556,7 @@
+                 {
+@@ -434,6 +493,7 @@
+                 }
+ 
+                 this.profiler.endStartSection("iceandsnow");
++                MicroTickLogHelper.setTickStageDetail(".Ice&Snow"); // TISCM Micro Tick logger
+ 
+                 if (this.rand.nextInt(16) == 0)
+                 {
+@@ -460,6 +520,7 @@
+                 }
+ 
+                 this.profiler.endStartSection("tickBlocks");
++                MicroTickLogHelper.setTickStageDetail(".RandomTick"); // TISCM Micro Tick logger
+ 
+                 if (i > 0)
+                 {
+@@ -496,10 +557,11 @@
+             }
+ 
+             this.profiler.endSection();
++            MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
          }
      }
  
@@ -145,7 +171,7 @@
      {
          BlockPos blockpos = this.getHeight(Heightmap.Type.MOTION_BLOCKING, pos);
          AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.getX(), this.getHeight(), blockpos.getZ()))).grow(3.0D);
-@@ -608,7 +665,14 @@
+@@ -608,7 +670,14 @@
      {
          if (this.worldInfo.getGenerator() != WorldType.DEBUG_ALL_BLOCK_STATES)
          {

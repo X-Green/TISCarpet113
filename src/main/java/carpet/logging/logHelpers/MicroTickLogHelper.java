@@ -64,6 +64,8 @@ public class MicroTickLogHelper
         return dimension;
     }
 
+    // called before action
+
     public static void setTickStage(String stage)
     {
         MicroTickLogHelper.stage = stage;
@@ -76,7 +78,7 @@ public class MicroTickLogHelper
 
     public static void setTickStageDetail(String stage)
     {
-        MicroTickLogHelper.stage_detail = stage_detail;
+        MicroTickLogHelper.stage_detail = stage;
     }
 
     public static String getTickStageDetail()
@@ -176,6 +178,8 @@ public class MicroTickLogHelper
         return WoolTool.getWoolColorAtPosition(worldIn.getWorld(), woolPos);
     }
 
+    // called after action done
+
     public static void onBlockUpdated(World worldIn, BlockPos pos, String type)
     {
         EnumDyeColor color = getWoolColor(worldIn, pos);
@@ -245,6 +249,7 @@ public class MicroTickLogHelper
             }
             MicroTickLogHelperMessage message = new MicroTickLogHelperMessage(dimensionID, pos, color, texts);
             message.stage = MicroTickLogHelper.stage;
+            message.stage_detail = MicroTickLogHelper.stage_detail;
             this.messages.add(message);
         }
         public void addMessage(EnumDyeColor color, BlockPos pos, World worldIn, Object [] texts)
@@ -308,7 +313,12 @@ public class MicroTickLogHelper
                         }
                     }
                     line.add("g at ");
-                    line.add("y " + message.stage + " ");
+                    String stage = message.stage;
+                    if (message.stage_detail != null)
+                    {
+                        stage += message.stage_detail;
+                    }
+                    line.add("y " + stage + " ");
                     line.add("g in ");
                     line.add("e " + getDimension(message.dimensionID));
                     ret.add(Messenger.c(line.toArray(new Object[0])));
@@ -323,7 +333,7 @@ public class MicroTickLogHelper
             int dimensionID;
             BlockPos pos;
             EnumDyeColor color;
-            String stage;
+            String stage, stage_detail;
             Object [] texts;
 
             private MicroTickLogHelperMessage(int dimensionID, BlockPos pos, EnumDyeColor color, Object [] texts)
@@ -332,7 +342,7 @@ public class MicroTickLogHelper
                 this.pos = pos.toImmutable();
                 this.color = color;
                 this.texts = texts;
-                this.stage = null;
+                this.stage = this.stage_detail = null;
             }
 
             public boolean equals(Object obj)
