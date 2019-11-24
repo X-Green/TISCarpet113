@@ -17,7 +17,10 @@ public class TileEntityListLogHelper {
     
     public static void log(long gameTime, int dimensionID, String msg, BlockPos pos)
     {
-        
+        if (!LoggerRegistry.__tileentitylist)
+        {
+            return;
+        }
         TileEntityListLogHelper.messages.add(Messenger.c(
                 "g [" + gameTime + "] ",
                 "w " + "TE" + " ",

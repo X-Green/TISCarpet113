@@ -243,10 +243,6 @@ public class MicroTickLogHelper
 
         public void addMessage(EnumDyeColor color, BlockPos pos, int dimensionID, Object [] texts)
         {
-            if (!CarpetSettings.microTick)
-            {
-                return;
-            }
             MicroTickLogHelperMessage message = new MicroTickLogHelperMessage(dimensionID, pos, color, texts);
             message.stage = MicroTickLogHelper.stage;
             message.stage_detail = MicroTickLogHelper.stage_detail;
