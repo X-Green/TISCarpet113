@@ -64,7 +64,7 @@ public class MicroTickLogHelper
         return dimension;
     }
 
-    // called before action
+    // called before action is done
 
     public static void setTickStage(String stage)
     {
@@ -178,7 +178,7 @@ public class MicroTickLogHelper
         return WoolTool.getWoolColorAtPosition(worldIn.getWorld(), woolPos);
     }
 
-    // called after action done
+    // called after action is done
 
     public static void onBlockUpdated(World worldIn, BlockPos pos, String type)
     {

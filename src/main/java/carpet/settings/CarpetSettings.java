@@ -105,7 +105,7 @@ public class CarpetSettings
     public static boolean newLight = false;
     
     @Rule(
-            desc = "Greatly improve the efficiency of nether portal",
+            desc = "Greatly improve the efficiency of nether portal by LucunJi",
             extra = "10000 times faster!",
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
