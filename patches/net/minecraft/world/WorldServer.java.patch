@@ -186,3 +186,32 @@
              this.pendingFluidTicks.tick();
          }
      }
+@@ -1026,15 +1095,27 @@
+ 
+     private void sendQueuedBlockEvents()
+     {
++        int depth = 0, depthSize = this.blockEventQueue.size(), i = 0; // TISCM Micro Tick logger
+         while (!this.blockEventQueue.isEmpty())
+         {
+             BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
+-
++            MicroTickLogHelper.setTickStageDetail("." + depth); // TISCM Micro Tick logger
+             if (this.fireBlockEvent(blockeventdata))
+             {
+                 this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
+             }
++
++            // TISCM Micro Tick logger
++            i++;
++            if (i == depthSize)
++            {
++                depth++;
++                depthSize = this.blockEventQueue.size();
++                i = 0;
++            }
++            // end TISCM Micro Tick logger
+         }
++        MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
+     }
+ 
+     private boolean fireBlockEvent(BlockEventData event)

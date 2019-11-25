@@ -97,7 +97,7 @@
 +                if (this.world.isAreaLoaded(nextticklistentry1.position.add(0, 0, 0),
 +                        nextticklistentry1.position.add(0, 0, 0))) {
 +                    try {
-+                        MicroTickLogHelper.setTickStageDetail("("+ nextticklistentry1.priority.getPriority() + ")"); // TISCM Micro Tick logger
++                        MicroTickLogHelper.setTickStageDetail("." + nextticklistentry1.priority.getPriority()); // TISCM Micro Tick logger
                          this.tickFunction.accept(nextticklistentry1);
 -                    }
 -                    catch (Throwable throwable)

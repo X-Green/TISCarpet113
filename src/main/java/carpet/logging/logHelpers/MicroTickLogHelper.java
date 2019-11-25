@@ -143,7 +143,8 @@ public class MicroTickLogHelper
         Block block = state.getBlock();
         BlockPos woolPos = pos;
 
-        if (block == Blocks.OBSERVER || block == Blocks.END_ROD)
+        if (block == Blocks.OBSERVER || block == Blocks.END_ROD ||
+                block instanceof BlockPistonBase || block instanceof BlockPistonMoving)
         {
             woolPos = pos.offset(state.get(BlockStateProperties.FACING).getOpposite());
         }
@@ -174,6 +175,10 @@ public class MicroTickLogHelper
         {
             woolPos = pos.down();
         }
+        else
+        {
+            return null;
+        }
 
         return WoolTool.getWoolColorAtPosition(worldIn.getWorld(), woolPos);
     }
@@ -195,12 +200,38 @@ public class MicroTickLogHelper
         if (color != null)
         {
             logger.addMessage(color, pos, worldIn, new Object[]{getTranslatedName(worldIn.getBlockState(pos).getBlock()),
-                    "c  Added +" + length + "gt TileTick(" + priority.getPriority() + ")"});
+                    "c  Added +" + length + "gt TileTick." + priority.getPriority()});
         }
     }
     public static void onComponentAddToTileTickList(World worldIn, BlockPos pos, int length)
     {
         onComponentAddToTileTickList(worldIn, pos, length, TickPriority.NORMAL);
+    }
+
+    public static void onComponentAddToBlockEvent(World worldIn, BlockPos pos, int eventID, int eventParam)
+    {
+        EnumDyeColor color = getWoolColor(worldIn, pos);
+        if (color != null)
+        {
+            logger.addMessage(color, pos, worldIn, new Object[]{getTranslatedName(worldIn.getBlockState(pos).getBlock()),
+                    "c  Added BlockEvent(" + eventID + ", " + eventParam + ")"});
+        }
+    }
+
+    public static void onPistonMove(World worldIn, BlockPos pos, Block block, int id)
+    {
+        EnumDyeColor color = getWoolColor(worldIn, pos);
+        if (color != null)
+        {
+            String types[] = new String[]{"Pushed", "Pulled", "Dropped"};
+            logger.addMessage(color, pos, worldIn, new Object[]{getTranslatedName(block),
+                    "c  " + types[id]});
+        }
+    }
+
+    public static void onPistonMove(World worldIn, BlockPos pos, int id)
+    {
+        onPistonMove(worldIn, pos, worldIn.getBlockState(pos).getBlock(), id);
     }
 
     public static void onComponentPowered(World worldIn, BlockPos pos, boolean poweredState)
