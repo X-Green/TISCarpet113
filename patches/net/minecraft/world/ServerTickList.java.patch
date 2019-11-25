@@ -75,7 +75,7 @@
                      break;
                  }
  
-@@ -76,46 +79,53 @@
+@@ -76,46 +79,57 @@
  
              this.world.profiler.endSection();
              this.world.profiler.startSection("ticking");
@@ -97,7 +97,10 @@
 +                if (this.world.isAreaLoaded(nextticklistentry1.position.add(0, 0, 0),
 +                        nextticklistentry1.position.add(0, 0, 0))) {
 +                    try {
-+                        MicroTickLogHelper.setTickStageDetail("." + nextticklistentry1.priority.getPriority()); // TISCM Micro Tick logger
++                        // TISCM Micro Tick logger
++                        MicroTickLogHelper.setTickStageDetail("." + nextticklistentry1.priority.getPriority());
++                        MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nPriority: %s", TileTicklogger_ticked, nextticklistentry1.priority));
++                        // end TISCM Micro Tick logger
                          this.tickFunction.accept(nextticklistentry1);
 -                    }
 -                    catch (Throwable throwable)
@@ -132,6 +135,7 @@
 +            // end TISCM TileTick logger
 +
 +            MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
++            MicroTickLogHelper.setTickStageExtra(null); // TISCM Micro Tick logger
          }
      }
  
@@ -147,7 +151,7 @@
          ChunkPos chunkpos = p_205364_1_.getPos();
          int i = (chunkpos.x << 4) - 2;
          int j = i + 16 + 2;
-@@ -124,42 +134,33 @@
+@@ -124,42 +138,33 @@
          return this.getPending(new MutableBoundingBox(i, 0, k, j, 256, l), remove);
      }
  
@@ -200,7 +204,7 @@
                          list = Lists.newArrayList();
                      }
  
-@@ -171,83 +172,73 @@
+@@ -171,83 +176,73 @@
          return list == null ? Collections.emptyList() : list;
      }
  

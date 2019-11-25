@@ -57,7 +57,7 @@
                      {
                          int i = flags & -2;
                          iblockstate.updateDiagonalNeighbors(this, pos, i);
-@@ -1199,6 +1216,12 @@
+@@ -1199,6 +1216,13 @@
      {
          this.profiler.startSection("entities");
          this.profiler.startSection("global");
@@ -66,11 +66,28 @@
 +        String world_name = (did==0)?"Overworld":((did<0?"The Nether":"The End"));
 +        CarpetProfiler.ProfilerToken tok_entities = CarpetProfiler.start_section_concurrent(world_name, "Entities", this.isRemote);
 +        MicroTickLogHelper.setTickStage("Entities"); // TISCM Micro Tick logger
++        MicroTickLogHelper.setTickStageExtra("Ticking weather effects"); // TISCM Micro Tick logger
 +        // end
  
          for (int i = 0; i < this.weatherEffects.size(); ++i)
          {
-@@ -1259,6 +1282,7 @@
+@@ -1234,6 +1258,7 @@
+ 
+         this.profiler.endStartSection("remove");
+         this.loadedEntityList.removeAll(this.unloadedEntityList);
++        MicroTickLogHelper.setTickStageExtra("Removing entities"); // TISCM Micro Tick logger
+ 
+         for (int k = 0; k < this.unloadedEntityList.size(); ++k)
+         {
+@@ -1253,12 +1278,15 @@
+         }
+ 
+         this.unloadedEntityList.clear();
++        MicroTickLogHelper.setTickStageExtra("Ticking players"); // TISCM Micro Tick logger
+         this.tickPlayers();
+         this.profiler.endStartSection("regular");
++        MicroTickLogHelper.setTickStageExtra("Ticking regular entities"); // TISCM Micro Tick logger
+ 
          for (int i1 = 0; i1 < this.loadedEntityList.size(); ++i1)
          {
              Entity entity2 = this.loadedEntityList.get(i1);
@@ -78,7 +95,7 @@
              Entity entity3 = entity2.getRidingEntity();
  
              if (entity3 != null)
-@@ -1273,7 +1297,8 @@
+@@ -1273,7 +1301,8 @@
  
              this.profiler.startSection("tick");
  
@@ -88,7 +105,7 @@
              {
                  try
                  {
-@@ -1304,14 +1329,25 @@
+@@ -1304,14 +1333,26 @@
                  this.loadedEntityList.remove(i1--);
                  this.onEntityRemoved(entity2);
              }
@@ -101,6 +118,7 @@
  
 +
          this.profiler.endStartSection("blockEntities");
++        MicroTickLogHelper.setTickStageExtra(null); // TISCM Micro Tick logger
 +        MicroTickLogHelper.setTickStage("TileEntities"); // TISCM Micro Tick logger
  
          if (!this.tileEntitiesToBeRemoved.isEmpty())
@@ -114,7 +132,12 @@
              this.tickableTileEntities.removeAll(this.tileEntitiesToBeRemoved);
              this.loadedTileEntityList.removeAll(this.tileEntitiesToBeRemoved);
              this.tileEntitiesToBeRemoved.clear();
-@@ -1323,12 +1359,15 @@
+@@ -1319,16 +1360,19 @@
+ 
+         this.processingLoadedTiles = true;
+         Iterator<TileEntity> iterator = this.tickableTileEntities.iterator();
+-
++        int counter = 0; // TISCM TileEntityListLogger
          while (iterator.hasNext())
          {
              TileEntity tileentity = iterator.next();
@@ -131,7 +154,16 @@
                  {
                      try
                      {
-@@ -1359,6 +1398,7 @@
+@@ -1336,6 +1380,8 @@
+                         {
+                             return String.valueOf((Object)TileEntityType.getId(tileentity.getType()));
+                         });
++                        MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nPosition: [%d, %d, %d]",
++                                counter++, tileentity.getPos().getX(), tileentity.getPos().getY(), tileentity.getPos().getZ()));
+                         ((ITickable)tileentity).tick();
+                         this.profiler.endSection();
+                     }
+@@ -1359,10 +1405,12 @@
                      this.getChunk(tileentity.getPos()).removeTileEntity(tileentity.getPos());
                  }
              }
@@ -139,7 +171,12 @@
          }
  
          this.processingLoadedTiles = false;
-@@ -1389,9 +1429,14 @@
+         this.profiler.endStartSection("pendingBlockEntities");
++        MicroTickLogHelper.setTickStageExtra("Adding pending block entities"); // TISCM Micro Tick logger
+ 
+         if (!this.addedTileEntityList.isEmpty())
+         {
+@@ -1389,9 +1437,13 @@
  
              this.addedTileEntityList.clear();
          }
@@ -148,13 +185,12 @@
          this.profiler.endSection();
          this.profiler.endSection();
 +
-+        // TISCM TileEntityListLogger
-+        TileEntityListLogHelper.flush();
-+        // end TISCM TileEntityListLogger
++        TileEntityListLogHelper.flush(); // TISCM TileEntityListLogger
++        MicroTickLogHelper.setTickStageExtra(null); // TISCM Micro Tick logger
      }
  
      protected void tickPlayers()
-@@ -1414,6 +1459,10 @@
+@@ -1414,6 +1466,10 @@
              this.notifyBlockUpdate(blockpos, iblockstate, iblockstate, 2);
          }
  
@@ -165,7 +201,7 @@
          return flag;
      }
  
-@@ -1422,6 +1471,12 @@
+@@ -1422,6 +1478,12 @@
          if (this.processingLoadedTiles)
          {
              this.addedTileEntityList.addAll(tileEntityCollection);
@@ -178,7 +214,7 @@
          }
          else
          {
-@@ -1514,7 +1569,8 @@
+@@ -1514,7 +1576,8 @@
                  this.getChunk(entityIn.chunkCoordX, entityIn.chunkCoordZ).removeEntityAtIndex(entityIn, entityIn.chunkCoordY);
              }
  
@@ -188,7 +224,7 @@
              {
                  entityIn.addedToChunk = false;
              }
-@@ -1883,6 +1939,10 @@
+@@ -1883,6 +1946,10 @@
      public void removeTileEntity(BlockPos pos)
      {
          TileEntity tileentity = this.getTileEntity(pos);
@@ -199,7 +235,7 @@
  
          if (tileentity != null && this.processingLoadedTiles)
          {
-@@ -2149,6 +2209,13 @@
+@@ -2149,6 +2216,13 @@
  
      public boolean checkLightFor(EnumLightType lightType, BlockPos pos)
      {
@@ -213,7 +249,7 @@
          if (!this.isAreaLoaded(pos, 17, false))
          {
              return false;
-@@ -3204,4 +3271,17 @@
+@@ -3204,4 +3278,17 @@
      public abstract RecipeManager getRecipeManager();
  
      public abstract NetworkTagManager getTags();

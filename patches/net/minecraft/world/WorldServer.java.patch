@@ -158,11 +158,15 @@
  
                  if (i > 0)
                  {
-@@ -496,10 +557,11 @@
+@@ -496,10 +557,15 @@
              }
  
              this.profiler.endSection();
-+            MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
++
++            // TISCM Micro Tick logger
++            MicroTickLogHelper.setTickStageDetail(null);
++            MicroTickLogHelper.setTickStageExtra(null);
++            // end TISCM Micro Tick logger
          }
      }
  
@@ -171,7 +175,7 @@
      {
          BlockPos blockpos = this.getHeight(Heightmap.Type.MOTION_BLOCKING, pos);
          AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.getX(), this.getHeight(), blockpos.getZ()))).grow(3.0D);
-@@ -608,7 +670,14 @@
+@@ -608,7 +674,14 @@
      {
          if (this.worldInfo.getGenerator() != WorldType.DEBUG_ALL_BLOCK_STATES)
          {
@@ -186,16 +190,23 @@
              this.pendingFluidTicks.tick();
          }
      }
-@@ -1026,15 +1095,27 @@
+@@ -1026,15 +1099,38 @@
  
      private void sendQueuedBlockEvents()
      {
-+        int depth = 0, depthSize = this.blockEventQueue.size(), i = 0; // TISCM Micro Tick logger
++        // TISCM Micro Tick logger
++        int depth = 0, depthSize = this.blockEventQueue.size();
++        int counter = 0, i = 0;
++        // end TISCM Micro Tick logger
          while (!this.blockEventQueue.isEmpty())
          {
-             BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
--
-+            MicroTickLogHelper.setTickStageDetail("." + depth); // TISCM Micro Tick logger
+-            BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
++            // TISCM Micro Tick logger
++            MicroTickLogHelper.setTickStageDetail("." + depth);
++            MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nDepth: %s", counter++, depth));
++            // end TISCM Micro Tick logger
+ 
++            BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
              if (this.fireBlockEvent(blockeventdata))
              {
                  this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
@@ -211,7 +222,11 @@
 +            }
 +            // end TISCM Micro Tick logger
          }
-+        MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
++
++        // TISCM Micro Tick logger
++        MicroTickLogHelper.setTickStageDetail(null);
++        MicroTickLogHelper.setTickStageExtra(null);
++        // end TISCM Micro Tick logger
      }
  
      private boolean fireBlockEvent(BlockEventData event)

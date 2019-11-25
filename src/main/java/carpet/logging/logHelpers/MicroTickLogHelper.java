@@ -27,6 +27,7 @@ public class MicroTickLogHelper
     public static MicroTickLogger logger = new MicroTickLogger();
     private static String stage;
     private static String stage_detail;
+    private static String stage_extra;
 
     public static String getDimension(int dimensionID)
     {
@@ -65,25 +66,31 @@ public class MicroTickLogHelper
     }
 
     // called before action is done
+    // [stage][detail]^[extra]
 
     public static void setTickStage(String stage)
     {
         MicroTickLogHelper.stage = stage;
     }
-
     public static String getTickStage()
     {
         return MicroTickLogHelper.stage;
     }
-
     public static void setTickStageDetail(String stage)
     {
         MicroTickLogHelper.stage_detail = stage;
     }
-
     public static String getTickStageDetail()
     {
         return MicroTickLogHelper.stage_detail;
+    }
+    public static void setTickStageExtra(String extra)
+    {
+        MicroTickLogHelper.stage_extra = extra;
+    }
+    public static String getTickStageExtra()
+    {
+        return MicroTickLogHelper.stage_extra;
     }
 
     private static String getColorStype(EnumDyeColor color)
@@ -144,7 +151,7 @@ public class MicroTickLogHelper
         BlockPos woolPos = pos;
 
         if (block == Blocks.OBSERVER || block == Blocks.END_ROD ||
-                block instanceof BlockPistonBase || block instanceof BlockPistonMoving)
+                block instanceof BlockPistonBase)
         {
             woolPos = pos.offset(state.get(BlockStateProperties.FACING).getOpposite());
         }
@@ -190,7 +197,7 @@ public class MicroTickLogHelper
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)
         {
-            logger.addMessage(color, pos, worldIn, new Object[]{"t " + type});
+            logger.addMessage(color, pos, worldIn, new Object[]{"w Block Update", "c " + type});
         }
     }
 
@@ -228,7 +235,6 @@ public class MicroTickLogHelper
                     "c  " + types[id]});
         }
     }
-
     public static void onPistonMove(World worldIn, BlockPos pos, int id)
     {
         onPistonMove(worldIn, pos, worldIn.getBlockState(pos).getBlock(), id);
@@ -275,8 +281,9 @@ public class MicroTickLogHelper
         public void addMessage(EnumDyeColor color, BlockPos pos, int dimensionID, Object [] texts)
         {
             MicroTickLogHelperMessage message = new MicroTickLogHelperMessage(dimensionID, pos, color, texts);
-            message.stage = MicroTickLogHelper.stage;
-            message.stage_detail = MicroTickLogHelper.stage_detail;
+            message.stage = MicroTickLogHelper.getTickStage();
+            message.stage_detail = MicroTickLogHelper.getTickStageDetail();
+            message.stage_extra = MicroTickLogHelper.getTickStageExtra();
             this.messages.add(message);
         }
         public void addMessage(EnumDyeColor color, BlockPos pos, World worldIn, Object [] texts)
@@ -284,16 +291,16 @@ public class MicroTickLogHelper
             addMessage(color, pos, worldIn.getDimension().getType().getId(), texts);
         }
 
-        private static ITextComponent getHashTag(EnumDyeColor color, BlockPos pos, int dimensionID)
+        private static ITextComponent getHashTag(MicroTickLogHelperMessage msg)
         {
-            String text = getColorStype(color) + " # ";
+            String text = getColorStype(msg.color) + " # ";
             ITextComponent ret;
-            if (pos != null)
+            if (msg.pos != null)
             {
                 ret = Messenger.c(
                         text,
-                        String.format("!/execute in " + getDimensionCommand(dimensionID) + " run tp @s %d %d %d", pos.getX(), pos.getY(), pos.getZ()),
-                        String.format("^w [ %d, %d, %d ]", pos.getX(), pos.getY(), pos.getZ())
+                        String.format("!/execute in " + getDimensionCommand(msg.dimensionID) + " run tp @s %d %d %d", msg.pos.getX(), msg.pos.getY(), msg.pos.getZ()),
+                        String.format("^w [ %d, %d, %d ]", msg.pos.getX(), msg.pos.getY(), msg.pos.getZ())
                 );
             }
             else
@@ -301,6 +308,15 @@ public class MicroTickLogHelper
                 ret = Messenger.c(text);
             }
             return ret;
+        }
+
+        private static ITextComponent getStage(MicroTickLogHelperMessage msg)
+        {
+           return Messenger.c(
+                    "g at ",
+                    "y " + msg.stage + msg.stage_detail,
+                    String.format("^w %sWorld: %s", msg.stage_extra, getDimension(msg.dimensionID))
+            );
         }
 
         private List<ITextComponent> flushMessages(long gameTime, boolean uniqueOnly)
@@ -326,8 +342,21 @@ public class MicroTickLogHelper
                 }
                 if (flag)
                 {
+                    if (message.stage_extra == null)
+                    {
+                        message.stage_extra = "";
+                    }
+                    else
+                    {
+                        message.stage_extra += "\n";
+                    }
+                    if (message.stage_detail == null)
+                    {
+                        message.stage_detail = "";
+                    }
+
                     List<Object> line = new ArrayList<>();
-                    line.add(getHashTag(message.color, message.pos, message.dimensionID));
+                    line.add(getHashTag(message));
                     for (Object text: message.texts)
                     {
                         if (text instanceof ITextComponent)
@@ -339,15 +368,7 @@ public class MicroTickLogHelper
                             line.add(text + " ");
                         }
                     }
-                    line.add("g at ");
-                    String stage = message.stage;
-                    if (message.stage_detail != null)
-                    {
-                        stage += message.stage_detail;
-                    }
-                    line.add("y " + stage + " ");
-                    line.add("g in ");
-                    line.add("e " + getDimension(message.dimensionID));
+                    line.add(getStage(message));
                     ret.add(Messenger.c(line.toArray(new Object[0])));
                 }
             }
@@ -360,7 +381,7 @@ public class MicroTickLogHelper
             int dimensionID;
             BlockPos pos;
             EnumDyeColor color;
-            String stage, stage_detail;
+            String stage, stage_detail, stage_extra;
             Object [] texts;
 
             private MicroTickLogHelperMessage(int dimensionID, BlockPos pos, EnumDyeColor color, Object [] texts)
@@ -369,7 +390,7 @@ public class MicroTickLogHelper
                 this.pos = pos.toImmutable();
                 this.color = color;
                 this.texts = texts;
-                this.stage = this.stage_detail = null;
+                this.stage = this.stage_detail = this.stage_extra = null;
             }
 
             public boolean equals(Object obj)
