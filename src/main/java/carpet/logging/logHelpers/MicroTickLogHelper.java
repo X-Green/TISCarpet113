@@ -151,7 +151,7 @@ public class MicroTickLogHelper
         BlockPos woolPos = pos;
 
         if (block == Blocks.OBSERVER || block == Blocks.END_ROD ||
-                block instanceof BlockPistonBase)
+                block instanceof BlockPistonBase || block instanceof BlockPistonMoving)
         {
             woolPos = pos.offset(state.get(BlockStateProperties.FACING).getOpposite());
         }
@@ -225,7 +225,7 @@ public class MicroTickLogHelper
         }
     }
 
-    public static void onPistonMove(World worldIn, BlockPos pos, Block block, int id)
+    public static void onPistonMove(World worldIn, BlockPos pos, Block block, int id) // "block" only overwrites displayed name
     {
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)

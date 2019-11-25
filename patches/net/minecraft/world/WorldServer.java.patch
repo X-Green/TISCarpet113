@@ -190,7 +190,7 @@
              this.pendingFluidTicks.tick();
          }
      }
-@@ -1026,15 +1099,38 @@
+@@ -1026,15 +1099,40 @@
  
      private void sendQueuedBlockEvents()
      {
@@ -200,13 +200,14 @@
 +        // end TISCM Micro Tick logger
          while (!this.blockEventQueue.isEmpty())
          {
--            BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
+             BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
+ 
 +            // TISCM Micro Tick logger
 +            MicroTickLogHelper.setTickStageDetail("." + depth);
-+            MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nDepth: %s", counter++, depth));
++            MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nDepth: %s\nPosition: [%d, %d, %d]",
++                    counter++, depth, blockeventdata.getPosition().getX(), blockeventdata.getPosition().getY(), blockeventdata.getPosition().getZ()));
 +            // end TISCM Micro Tick logger
- 
-+            BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
++
              if (this.fireBlockEvent(blockeventdata))
              {
                  this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));

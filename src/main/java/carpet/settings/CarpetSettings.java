@@ -116,8 +116,8 @@ public class CarpetSettings
             extra = {
                     "Use /log microtick to start logging",
                     "endrods will detect block updates and redstone components will show their actions",
-                    "repeater, comparator, observer: pointing towards wool",
-                    "endrod, rtorch, rails, buttons, etc.: placed on wool",
+                    "observer, piston, endrod: pointing towards wool",
+                    "repeater, comparator, rail, button, etc.: placed on wool",
             },
             category = {COMMAND, CREATIVE}
     )
