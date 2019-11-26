@@ -122,6 +122,13 @@ public class CarpetSettings
             category = {COMMAND, CREATIVE}
     )
     public static boolean microTick = false;
+
+    @Rule(
+            desc = "Overwrite the size limit of structure block",
+            options = {"32", "64", "96", "128"},
+            category = CREATIVE
+    )
+    public static int structureLimit = 32;
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$

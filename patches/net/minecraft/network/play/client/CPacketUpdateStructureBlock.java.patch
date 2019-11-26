@@ -1,0 +1,23 @@
+--- a/net/minecraft/network/play/client/CPacketUpdateStructureBlock.java
++++ b/net/minecraft/network/play/client/CPacketUpdateStructureBlock.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.network.play.client;
+ 
+ import java.io.IOException;
++
++import carpet.settings.CarpetSettings;
+ import net.minecraft.network.Packet;
+ import net.minecraft.network.PacketBuffer;
+ import net.minecraft.network.play.INetHandlerPlayServer;
+@@ -59,8 +61,9 @@
+         this.field_210392_b = buf.readEnumValue(TileEntityStructure.UpdateCommand.class);
+         this.mode = buf.readEnumValue(StructureMode.class);
+         this.name = buf.readString(32767);
+-        this.field_210395_e = new BlockPos(MathHelper.clamp(buf.readByte(), -32, 32), MathHelper.clamp(buf.readByte(), -32, 32), MathHelper.clamp(buf.readByte(), -32, 32));
+-        this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, 32), MathHelper.clamp(buf.readByte(), 0, 32), MathHelper.clamp(buf.readByte(), 0, 32));
++        int limit = CarpetSettings.structureLimit; // TISCM
++        this.field_210395_e = new BlockPos(MathHelper.clamp(buf.readByte(), -limit, limit), MathHelper.clamp(buf.readByte(), -limit, limit), MathHelper.clamp(buf.readByte(), -limit, limit));
++        this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, limit), MathHelper.clamp(buf.readByte(), 0, limit), MathHelper.clamp(buf.readByte(), 0, limit));
+         this.mirror = buf.readEnumValue(Mirror.class);
+         this.rotation = buf.readEnumValue(Rotation.class);
+         this.field_210399_i = buf.readString(12);

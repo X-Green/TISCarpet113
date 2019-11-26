@@ -1,0 +1,30 @@
+--- a/net/minecraft/tileentity/TileEntityStructure.java
++++ b/net/minecraft/tileentity/TileEntityStructure.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.tileentity;
+ 
++import carpet.settings.CarpetSettings;
+ import com.google.common.collect.Lists;
+ import java.util.List;
+ import java.util.Objects;
+@@ -83,13 +84,14 @@
+         this.setName(compound.getString("name"));
+         this.author = compound.getString("author");
+         this.metadata = compound.getString("metadata");
+-        int i = MathHelper.clamp(compound.getInt("posX"), -32, 32);
+-        int j = MathHelper.clamp(compound.getInt("posY"), -32, 32);
+-        int k = MathHelper.clamp(compound.getInt("posZ"), -32, 32);
++        int limit = CarpetSettings.structureLimit; // TISCM
++        int i = MathHelper.clamp(compound.getInt("posX"), -limit, limit);
++        int j = MathHelper.clamp(compound.getInt("posY"), -limit, limit);
++        int k = MathHelper.clamp(compound.getInt("posZ"), -limit, limit);
+         this.position = new BlockPos(i, j, k);
+-        int l = MathHelper.clamp(compound.getInt("sizeX"), 0, 32);
+-        int i1 = MathHelper.clamp(compound.getInt("sizeY"), 0, 32);
+-        int j1 = MathHelper.clamp(compound.getInt("sizeZ"), 0, 32);
++        int l = MathHelper.clamp(compound.getInt("sizeX"), 0, limit);
++        int i1 = MathHelper.clamp(compound.getInt("sizeY"), 0, limit);
++        int j1 = MathHelper.clamp(compound.getInt("sizeZ"), 0, limit);
+         this.size = new BlockPos(l, i1, j1);
+ 
+         try

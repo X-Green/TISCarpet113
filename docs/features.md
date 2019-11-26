@@ -21,6 +21,7 @@ warn: Features here maybe incomplete, some features in original carpet or develo
 * portalSuperCache: most powerful portal optimization ever (**DOES NOT WORK with portals created/destroyed when fillUpdate is false**) / 目前最高效的地狱门优化（**对fillUpdate=false时创建的地狱门方块无效**）
 
 - microtick: Enable `/log microtick` / 启用`/log microtick`的功能
+- structureLimit: Overwrite the size limit of structure block / 覆写结构方块的大小限制
 
 * YEET：
   * yeetFishAI: yeet fish followGroupLeaderAI for less lag / 去掉实体鱼造成巨大卡顿的followGroupLeaderAI
