@@ -92,7 +92,7 @@ public class CarpetSettings
 
     @Rule(
             desc = "Treat any subchunk with light changes as a not-empty subchunk to solve the missing sky/block light in empty subchunk after reloading the chunk",
-            extra = "no more ghost shadows below giant floating buildings",
+            extra = "No more ghost shadows below giant floating buildings",
             category = {EXPERIMENTAL, BUGFIX}
             )
     public static boolean missingLightFix = false;
@@ -106,18 +106,22 @@ public class CarpetSettings
     
     @Rule(
             desc = "Greatly improve the efficiency of nether portal by LucunJi",
-            extra = "10000 times faster!",
+            extra = {
+                    "Most powerful portal optimization ever, 10000 times faster!",
+                    "DOES NOT WORK with portals created/destroyed when fillUpdate is false"
+            },
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean portalSuperCache = false;
 
     @Rule(
-            desc = "Display actions of redstone components and blockupdates with wool block",
+            desc = "Enable the function of /log microtick",
             extra = {
+                    "Display actions of redstone components and blockupdates with wool block",
                     "Use /log microtick to start logging",
                     "endrods will detect block updates and redstone components will show their actions",
                     "observer, piston, endrod: pointing towards wool",
-                    "repeater, comparator, rail, button, etc.: placed on wool",
+                    "repeater, comparator, rail, button, etc.: placed on wool"
             },
             category = {COMMAND, CREATIVE}
     )

@@ -13,7 +13,7 @@
 - 下载最新的[release](https://github.com/TISUnion/TISCarpet113/releases)
 - 或者在[TISJenkins](https://ci.tis.world/)下载最新的构建 (不一定稳定，但是可以用到最新的功能)
 - 按照zip文件内的说明把carpetmod补丁装进官方服务端
-- 在[这里](https://github.com/TISUnion/TISCarpet113/blob/TIS-Server/docs/features.md)可以看到功能文档，或者在游戏内执行`/carpet list`即可看到所有的功能，使用`/carpet <功能名字>`可以看到此功能的详细介绍
+- 在[这里](https://github.com/TISUnion/TISCarpet113/blob/TIS-Server/docs/Features_cn.md)可以看到功能文档，或者在游戏内执行`/carpet list`即可看到所有的功能，使用`/carpet <功能名字>`可以看到此功能的详细介绍
 
 ## CarpetMod开发：
 

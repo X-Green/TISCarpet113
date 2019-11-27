@@ -12,7 +12,7 @@ A fork of [gnembon's original CarpetMod for 1.13.2](https://github.com/gnembon/c
 - go to download the latest [release](https://github.com/TISUnion/TISCarpet113/releases)
 - or go download latest build on [TISJenkins](https://ci.tis.world/) (maybe unstable, but with latest features ofc)
 - follow instructions in that zip file to patch vanilla server jar
-- read command docs [here](https://github.com/TISUnion/TISCarpet113/blob/TIS-Server/docs/features.md) or run `/carpet list` to see all options, run `/carpet <featureName>` for details.
+- read command docs [here](https://github.com/TISUnion/TISCarpet113/blob/TIS-Server/docs/Features.md) or run `/carpet list` to see all options, run `/carpet <featureName>` for details.
 
 ## Developing CarpetMod:
 
