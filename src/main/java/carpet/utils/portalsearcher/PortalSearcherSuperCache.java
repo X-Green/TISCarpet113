@@ -28,6 +28,9 @@ public class PortalSearcherSuperCache extends PortalSearcherAbstract {
                 }
                 ChunkPos cPos = new ChunkPos(cx, cz);
 
+                // loading chunks like what vanilla does
+                this.worldIn.getChunk(cx, cz);
+
                 // use vanilla method and check portals
                 if (!handler.isMarked(cPos)) {
                     handler.markChunk(cPos);
