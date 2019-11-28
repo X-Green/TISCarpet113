@@ -140,7 +140,7 @@ Options: `false`, `true`
 
 Categories: command, creative
 
-## structureLimit
+## structureBlockLimit
 
 Overwrite the size limit of structure block
 

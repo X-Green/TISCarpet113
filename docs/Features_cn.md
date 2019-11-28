@@ -138,7 +138,7 @@
 
 	分类：command, creative
 
-	## structureLimit
+	## structureBlockLimit
 
 	覆写结构方块的大小限制
 
