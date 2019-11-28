@@ -1,15 +1,14 @@
 --- a/net/minecraft/world/Teleporter.java
 +++ b/net/minecraft/world/Teleporter.java
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,7 @@
  package net.minecraft.world;
  
-+import carpet.utils.portalsearcher.*;
-+import carpet.utils.portalsearcher.PortalSearcherSuperCache;
 +import carpet.settings.CarpetSettings;
++import carpet.utils.portalsearcher.*;
  import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
  import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.objects.ObjectIterator;
-@@ -10,6 +13,7 @@
+@@ -10,6 +12,7 @@
  import net.minecraft.entity.Entity;
  import net.minecraft.entity.player.EntityPlayerMP;
  import net.minecraft.init.Blocks;
@@ -17,7 +16,7 @@
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.ChunkPos;
-@@ -22,6 +26,8 @@
+@@ -22,6 +25,8 @@
      private final WorldServer world;
      private final Random random;
      private final Long2ObjectMap<Teleporter.PortalPosition> destinationCoordinateCache = new Long2ObjectOpenHashMap<>(4096);
@@ -26,7 +25,7 @@
  
      public Teleporter(WorldServer worldIn)
      {
-@@ -76,6 +82,7 @@
+@@ -76,6 +81,7 @@
          int j = MathHelper.floor(entityIn.posX);
          int k = MathHelper.floor(entityIn.posZ);
          boolean flag = true;
@@ -34,70 +33,51 @@
          BlockPos blockpos = BlockPos.ORIGIN;
          long l = ChunkPos.asLong(j, k);
  
-@@ -87,38 +94,35 @@
+@@ -87,10 +93,34 @@
              teleporter$portalposition.lastUpdateTime = this.world.getGameTime();
              flag = false;
          }
 -        else
 +        else if (CarpetSettings.portalCaching && this.destinationHistoryCache.containsKey(l)) // potential best candidate for linkage.
          {
--            BlockPos blockpos3 = new BlockPos(entityIn);
--
--            for (int i1 = -128; i1 <= 128; ++i1)
 +            Teleporter.PortalPosition teleporter$portalposition_cm = (Teleporter.PortalPosition)this.destinationHistoryCache.get(l);
 +            if (this.world.getBlockState(teleporter$portalposition_cm).getBlock() == Blocks.NETHER_PORTAL)
 +            //just to verify nobody is cheating the system with update suppression
-             {
--                BlockPos blockpos2;
++            {
 +                d0 = 0.0D;
 +                blockpos = teleporter$portalposition_cm;
 +                flag_cm = false;
 +            }
 +        }
- 
--                for (int j1 = -128; j1 <= 128; ++j1)
--                {
--                    for (BlockPos blockpos1 = blockpos3.add(i1, this.world.getActualHeight() - 1 - blockpos3.getY(), j1); blockpos1.getY() >= 0; blockpos1 = blockpos2)
--                    {
--                        blockpos2 = blockpos1.down();
++
++
++
 +        //else portalCaching
 +        if (d0 < 0.0D)
 +        {
+             BlockPos blockpos3 = new BlockPos(entityIn);
  
--                        if (this.world.getBlockState(blockpos1).getBlock() == BLOCK_NETHER_PORTAL)
--                        {
--                            for (blockpos2 = blockpos1.down(); this.world.getBlockState(blockpos2).getBlock() == BLOCK_NETHER_PORTAL; blockpos2 = blockpos2.down())
--                            {
--                                blockpos1 = blockpos2;
--                            }
--
--                            double d1 = blockpos1.distanceSq(blockpos3);
--
--                            if (d0 < 0.0D || d1 < d0)
--                            {
--                                d0 = d1;
--                                blockpos = blockpos1;
--                            }
--                        }
--                    }
--                }
-+            // TISCM betterPortalSearcher
-+            PortalSearcherAbstract searcher;
++            // begin TISCM portalSuperCache
 +            if (CarpetSettings.portalSuperCache) {
-+                searcher = new PortalSearcherSuperCache(world);
++                PortalSearcherAbstract searcherAbstract = new PortalSearcherSuperCache(this.world);
++                PortalSearchResult result = searcherAbstract.search(blockpos3);
++                blockpos = result.getResult();
++                d0 = result.getDistanceSq();
 +            } else {
-+                searcher = new PortalSearcherVanilla(world);
-             }
-+            PortalSearchResult result = searcher.search(new BlockPos(entityIn));
-+            d0 = result.getDistanceSq();
-+            blockpos = result.getResult();
-+//            LogManager.getLogger().info(result.toString()); // only for debug
++            // end TISCM portalSuperCache
 +
-+            // end TISCM betterPortalSearcher
+             for (int i1 = -128; i1 <= 128; ++i1)
+             {
+                 BlockPos blockpos2;
+@@ -119,6 +149,7 @@
+                     }
+                 }
+             }
++            }
          }
  
          if (d0 >= 0.0D)
-@@ -128,6 +132,15 @@
+@@ -128,6 +159,15 @@
                  this.destinationCoordinateCache.put(l, new Teleporter.PortalPosition(blockpos, this.world.getGameTime()));
              }
  
@@ -113,7 +93,7 @@
              double d5 = (double)blockpos.getX() + 0.5D;
              double d7 = (double)blockpos.getZ() + 0.5D;
              BlockPattern.PatternHelper blockpattern$patternhelper = BLOCK_NETHER_PORTAL.createPatternHelper(this.world, blockpos);
-@@ -139,14 +152,35 @@
+@@ -139,14 +179,35 @@
              {
                  ++d2;
              }
@@ -152,7 +132,7 @@
              }
  
              float f = 0.0F;
-@@ -394,6 +428,13 @@
+@@ -394,6 +455,13 @@
              }
          }
  
@@ -166,7 +146,7 @@
          return true;
      }
  
-@@ -413,9 +454,37 @@
+@@ -413,9 +481,36 @@
                      objectiterator.remove();
                  }
              }
@@ -177,13 +157,12 @@
 +            {
 +                removeAllCachedEntries();
 +            }
-+
-+            // TISCM betterPortalSearcher
++            /* carpet mod end */
++            // begin TISCM portalSuperCache
 +            if (!CarpetSettings.portalSuperCache) {
 +                (this.world.getDimension().isNether() ? SuperCacheHandler.getHandlerNether() : SuperCacheHandler.getHandlerOverworld()).clear();
 +            }
-+            // end TISCM betterPortalSearcher
-+            /* carpet mod end */
++            // end TISCM portalSuperCache
          }
      }
  
