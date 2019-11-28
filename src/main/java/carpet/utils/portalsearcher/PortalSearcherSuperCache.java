@@ -28,9 +28,6 @@ public class PortalSearcherSuperCache extends PortalSearcherAbstract {
                 }
                 ChunkPos cPos = new ChunkPos(cx, cz);
 
-                // loading chunks like what vanilla does
-                this.worldIn.getChunk(cx, cz);
-
                 // use vanilla method and check portals
                 if (!handler.isMarked(cPos)) {
                     handler.markChunk(cPos);
@@ -48,7 +45,7 @@ public class PortalSearcherSuperCache extends PortalSearcherAbstract {
                         }
                     }
                 } else { // fix chunkloading issue
-                    worldIn.getChunk(cPos.asBlockPos());
+                    this.worldIn.getChunk(cPos.asBlockPos());
                 }
 
                 // look into the portal map
