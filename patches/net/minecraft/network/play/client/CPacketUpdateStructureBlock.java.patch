@@ -15,7 +15,7 @@
          this.name = buf.readString(32767);
 -        this.field_210395_e = new BlockPos(MathHelper.clamp(buf.readByte(), -32, 32), MathHelper.clamp(buf.readByte(), -32, 32), MathHelper.clamp(buf.readByte(), -32, 32));
 -        this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, 32), MathHelper.clamp(buf.readByte(), 0, 32), MathHelper.clamp(buf.readByte(), 0, 32));
-+        int limit = CarpetSettings.structureLimit; // TISCM
++        int limit = CarpetSettings.structureBlockLimit; // TISCM
 +        this.field_210395_e = new BlockPos(MathHelper.clamp(buf.readByte(), -limit, limit), MathHelper.clamp(buf.readByte(), -limit, limit), MathHelper.clamp(buf.readByte(), -limit, limit));
 +        this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, limit), MathHelper.clamp(buf.readByte(), 0, limit), MathHelper.clamp(buf.readByte(), 0, limit));
          this.mirror = buf.readEnumValue(Mirror.class);

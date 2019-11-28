@@ -14,7 +14,7 @@
 -        int i = MathHelper.clamp(compound.getInt("posX"), -32, 32);
 -        int j = MathHelper.clamp(compound.getInt("posY"), -32, 32);
 -        int k = MathHelper.clamp(compound.getInt("posZ"), -32, 32);
-+        int limit = CarpetSettings.structureLimit; // TISCM
++        int limit = CarpetSettings.structureBlockLimit; // TISCM
 +        int i = MathHelper.clamp(compound.getInt("posX"), -limit, limit);
 +        int j = MathHelper.clamp(compound.getInt("posY"), -limit, limit);
 +        int k = MathHelper.clamp(compound.getInt("posZ"), -limit, limit);

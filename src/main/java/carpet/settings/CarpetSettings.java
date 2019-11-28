@@ -130,9 +130,23 @@ public class CarpetSettings
     @Rule(
             desc = "Overwrite the size limit of structure block",
             options = {"32", "64", "96", "128"},
+            validate = ValidateStructureBlockLimit.class,
             category = CREATIVE
     )
-    public static int structureLimit = 32;
+    public static int structureBlockLimit = 32;
+
+    private static class ValidateStructureBlockLimit extends Validator<Integer>
+    {
+        @Override
+        public Integer validate(CommandSource source, ParsedRule<Integer> currentRule, Integer newValue, String string)
+        {
+            return (newValue > 0 && newValue <= 1000) ? newValue : null;
+        }
+        public String description()
+        {
+            return "You must choose a value from 1 to 1000";
+        }
+    }
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
