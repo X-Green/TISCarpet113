@@ -272,6 +272,7 @@ public class MicroTickLogHelper
             List<ITextComponent> msg = logger.flushMessages(gameTime, uniqueOnly);
             return msg.toArray(new ITextComponent[0]);
         });
+        logger.clearMessages();
     }
 
     public static class MicroTickLogger
@@ -332,7 +333,6 @@ public class MicroTickLogHelper
             while (iterator.hasNext())
             {
                 MicroTickLogHelperMessage message = iterator.next();
-                iterator.remove();
 
                 boolean flag = !uniqueOnly;
                 if (!messageHashSet.contains(message))
@@ -372,8 +372,12 @@ public class MicroTickLogHelper
                     ret.add(Messenger.c(line.toArray(new Object[0])));
                 }
             }
-            this.messages.clear();
             return ret;
+        }
+
+        private void clearMessages()
+        {
+            this.messages.clear();
         }
 
         private static class MicroTickLogHelperMessage
