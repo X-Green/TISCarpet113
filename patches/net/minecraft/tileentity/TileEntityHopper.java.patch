@@ -1,17 +1,19 @@
 --- a/net/minecraft/tileentity/TileEntityHopper.java
 +++ b/net/minecraft/tileentity/TileEntityHopper.java
-@@ -4,6 +4,10 @@
+@@ -4,6 +4,12 @@
  import java.util.function.Supplier;
  import java.util.stream.Collectors;
  import javax.annotation.Nullable;
 +
 +import carpet.helpers.HopperCounter;
 +import carpet.settings.CarpetSettings;
++import carpet.utils.InventoryOptimizer;
++import carpet.utils.OptimizedInventory;
 +import carpet.utils.WoolTool;
  import net.minecraft.block.Block;
  import net.minecraft.block.BlockChest;
  import net.minecraft.block.BlockHopper;
-@@ -17,6 +21,7 @@
+@@ -17,6 +23,7 @@
  import net.minecraft.inventory.IInventory;
  import net.minecraft.inventory.ISidedInventory;
  import net.minecraft.inventory.ItemStackHelper;
@@ -19,7 +21,7 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.util.EntitySelectors;
-@@ -197,6 +202,29 @@
+@@ -197,6 +204,29 @@
  
      private boolean transferItemsOut()
      {
@@ -49,3 +51,32 @@
          IInventory iinventory = this.getInventoryForHopperTransfer();
  
          if (iinventory == null)
+@@ -396,6 +426,28 @@
+ 
+     public static ItemStack putStackInInventoryAllSlots(@Nullable IInventory source, IInventory destination, ItemStack stack, @Nullable EnumFacing direction)
+     {
++        // [TISCM] Optimized inventories - start
++        if (destination instanceof OptimizedInventory)
++        {
++            OptimizedInventory optoTo = (OptimizedInventory) destination;
++            InventoryOptimizer optimizer = optoTo.getOptimizer();
++            if (optimizer != null)
++            {
++                while (!stack.isEmpty())
++                {
++                    int index = optimizer.findInsertSlot(stack);
++                    if (index == -1)
++                        break;
++                    int count = stack.getCount();
++                    stack = insertStack(source, destination, stack, index, direction);
++                    if (stack.getCount() == count)
++                        break;
++                }
++                return stack;
++            }
++        }
++        // [TISCM] Optimized inventories - end
++        
+         if (destination instanceof ISidedInventory && direction != null)
+         {
+             ISidedInventory isidedinventory = (ISidedInventory)destination;

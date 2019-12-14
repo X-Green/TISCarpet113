@@ -1,0 +1,49 @@
+--- a/net/minecraft/inventory/InventoryLargeChest.java
++++ b/net/minecraft/inventory/InventoryLargeChest.java
+@@ -1,6 +1,10 @@
+ package net.minecraft.inventory;
+ 
+ import javax.annotation.Nullable;
++
++import carpet.utils.DoubleInventoryOptimizer;
++import carpet.utils.InventoryOptimizer;
++import carpet.utils.OptimizedInventory;
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.entity.player.InventoryPlayer;
+ import net.minecraft.item.ItemStack;
+@@ -8,11 +12,19 @@
+ import net.minecraft.world.ILockableContainer;
+ import net.minecraft.world.LockCode;
+ 
+-public class InventoryLargeChest implements ILockableContainer
++public class InventoryLargeChest implements ILockableContainer, OptimizedInventory
+ {
+     private final ITextComponent name;
+     private final ILockableContainer upperChest;
+     private final ILockableContainer lowerChest;
++    
++    private InventoryOptimizer optimizer; // [TISCM] Optimized inventories
++    
++    @Override
++    @Nullable
++    public InventoryOptimizer getOptimizer() {
++        return optimizer;
++    }
+ 
+     public InventoryLargeChest(ITextComponent nameIn, ILockableContainer upperChestIn, ILockableContainer lowerChestIn)
+     {
+@@ -39,6 +51,14 @@
+         {
+             upperChestIn.setLockCode(lowerChestIn.getLockCode());
+         }
++    
++        // [TISCM] Optimized inventories - start
++        if (upperChestIn instanceof OptimizedInventory && ((OptimizedInventory) upperChestIn).getOptimizer() != null && lowerChestIn instanceof OptimizedInventory && ((OptimizedInventory) lowerChestIn).getOptimizer() != null)
++        {
++            optimizer = new DoubleInventoryOptimizer(((OptimizedInventory) upperChestIn), ((OptimizedInventory) lowerChestIn));
++            optimizer.recalculate();
++        }
++        // [TISCM] Optimized inventories - end
+     }
+ 
+     public int getSizeInventory()

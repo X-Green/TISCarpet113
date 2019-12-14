@@ -1,0 +1,80 @@
+--- a/net/minecraft/tileentity/TileEntityChest.java
++++ b/net/minecraft/tileentity/TileEntityChest.java
+@@ -1,5 +1,8 @@
+ package net.minecraft.tileentity;
+ 
++import carpet.settings.CarpetSettings;
++import carpet.utils.InventoryOptimizer;
++import carpet.utils.OptimizedInventory;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.BlockChest;
+ import net.minecraft.block.state.IBlockState;
+@@ -27,17 +30,22 @@
+ import net.minecraftforge.api.distmarker.Dist;
+ import net.minecraftforge.api.distmarker.OnlyIn;
+ 
+-public class TileEntityChest extends TileEntityLockableLoot implements IChestLid, ITickable
++import javax.annotation.Nullable;
++
++public class TileEntityChest extends TileEntityLockableLoot implements IChestLid, ITickable, OptimizedInventory
+ {
+     private NonNullList<ItemStack> chestContents = NonNullList.withSize(27, ItemStack.EMPTY);
+     protected float lidAngle;
+     protected float prevLidAngle;
+     protected int numPlayersUsing;
+     private int ticksSinceSync;
++    
++    private InventoryOptimizer optimizer; // [TISCM] Optimized inventories
+ 
+     protected TileEntityChest(TileEntityType<?> typeIn)
+     {
+         super(typeIn);
++        reoptimize(); // [TISCM] Optimized inventories
+     }
+ 
+     public TileEntityChest()
+@@ -83,6 +91,7 @@
+         {
+             this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+         }
++        reoptimize(); // [TISCM] Optimized inventories
+     }
+ 
+     public NBTTagCompound write(NBTTagCompound compound)
+@@ -262,6 +271,7 @@
+     protected void setItems(NonNullList<ItemStack> itemsIn)
+     {
+         this.chestContents = itemsIn;
++        reoptimize(); // [TISCM] Optimized inventories
+     }
+ 
+     @OnlyIn(Dist.CLIENT)
+@@ -293,4 +303,28 @@
+         chest.setItems(otherChest.getItems());
+         otherChest.setItems(nonnulllist);
+     }
++    
++    // [TISCM] Optimized inventories - new methods
++    private void reoptimize()
++    {
++        optimizer = null;
++        if (CarpetSettings.optimizedInventories && chestContents.size() > 5)
++        {
++            optimizer = new InventoryOptimizer(chestContents);
++            optimizer.recalculate();
++        }
++    }
++    
++    @Override
++    public void markDirty()
++    {
++        super.markDirty();
++        if (optimizer != null) optimizer.recalculate();
++    }
++    
++    @Nullable
++    @Override
++    public InventoryOptimizer getOptimizer() {
++        return optimizer;
++    }
+ }

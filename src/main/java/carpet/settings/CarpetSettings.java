@@ -148,6 +148,13 @@ public class CarpetSettings
         }
     }
     
+    @Rule(
+            desc = "Optimizes hoppers and droppers interacting with chests",
+            extra = "Credits: skyrising (Quickcarpet)",
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static boolean optimizedInventories = false;
+    
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
     //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$
