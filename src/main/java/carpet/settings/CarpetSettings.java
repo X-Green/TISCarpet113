@@ -129,6 +129,9 @@ public class CarpetSettings
 
     @Rule(
             desc = "Overwrite the size limit of structure block",
+            extra = {
+                    "Relative position might display wrongly on client side if it's larger than 32"
+            },
             options = {"32", "64", "96", "128"},
             validate = ValidateStructureBlockLimit.class,
             category = CREATIVE
@@ -154,6 +157,30 @@ public class CarpetSettings
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean optimizedInventories = false;
+
+    @Rule(
+            desc = "Overwrite the tracking distance of xp orb",
+            extra = {
+                    "Change it to 0 to disable tracking"
+            },
+            options = {"0", "1", "8", "32"},
+            validate = ValidateXPTrackingDistance.class,
+            category = CREATIVE
+    )
+    public static int xpTrackingDistance = 8;
+
+    private static class ValidateXPTrackingDistance extends Validator<Integer>
+    {
+        @Override
+        public Integer validate(CommandSource source, ParsedRule<Integer> currentRule, Integer newValue, String string)
+        {
+            return (newValue >= 0 && newValue <= 128) ? newValue : null;
+        }
+        public String description()
+        {
+            return "You must choose a value from 0 to 128";
+        }
+    }
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$

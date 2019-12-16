@@ -132,7 +132,7 @@ endrods will detect block updates and redstone components will show their action
 
 - observer, piston, endrod: pointing towards wool
 
--  repeater, comparator, rail, button, etc.: placed on wool
+- repeater, comparator, rail, button, etc.: placed on wool
 
 Default: `false`
 
@@ -144,11 +144,25 @@ Categories: command, creative
 
 Overwrite the size limit of structure block
 
+Relative position might display wrongly on client side if it's larger than 32
+
 Default: `32`
 
 Options: `32`, `64`, `96`, `128`
 
 Categories: creative
+
+## optimizedInventories
+
+Optimizes hoppers and droppers interacting with chests
+
+Credits: skyrising (Quickcarpet)
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: experimental, optimization
 
 ## YEET
 

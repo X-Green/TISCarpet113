@@ -141,12 +141,26 @@
 	## structureBlockLimit
 
 	覆写结构方块的大小限制
+	
+	当相对位置的值大于32时客户端里结构的位置可能会错误地显示
 
 	默认值： `32`
 
 	选项：`32`, `64`, `96`, `128`
 
 	分类：creative
+	
+	## optimizedInventories
+    
+    优化漏斗与投掷器跟箱子的互动
+    
+    感谢: skyrising (Quickcarpet)
+    
+    默认值: `false`
+    
+    选项: `false`, `true`
+    
+    分类: experimental, optimization
 
 	## YEET
 

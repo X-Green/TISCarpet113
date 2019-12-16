@@ -49,6 +49,42 @@
      public EntityXPOrb(World worldIn)
      {
          super(EntityType.EXPERIENCE_ORB, worldIn);
+@@ -103,28 +125,28 @@
+         }
+ 
+         this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+-        double d0 = 8.0D;
++        double d0 = CarpetSettings.xpTrackingDistance; // TISCM xpTrackingDistance
+ 
+         if (this.xpTargetColor < this.xpColor - 20 + this.getEntityId() % 100)
+         {
+-            if (this.closestPlayer == null || this.closestPlayer.getDistanceSq(this) > 64.0D)
++            if (this.closestPlayer == null || this.closestPlayer.getDistanceSq(this) > d0 * d0)
+             {
+-                this.closestPlayer = this.world.getClosestPlayerToEntity(this, 8.0D);
++                this.closestPlayer = this.world.getClosestPlayerToEntity(this, d0);
+             }
+ 
+             this.xpTargetColor = this.xpColor;
+         }
+ 
+-        if (this.closestPlayer != null && this.closestPlayer.isSpectator())
++        if ((this.closestPlayer != null && this.closestPlayer.isSpectator()) || d0 == 0.0D) // TISCM xpTrackingDistance
+         {
+             this.closestPlayer = null;
+         }
+ 
+         if (this.closestPlayer != null)
+         {
+-            double d1 = (this.closestPlayer.posX - this.posX) / 8.0D;
+-            double d2 = (this.closestPlayer.posY + (double)this.closestPlayer.getEyeHeight() / 2.0D - this.posY) / 8.0D;
+-            double d3 = (this.closestPlayer.posZ - this.posZ) / 8.0D;
++            double d1 = (this.closestPlayer.posX - this.posX) / d0;
++            double d2 = (this.closestPlayer.posY + (double)this.closestPlayer.getEyeHeight() / 2.0D - this.posY) / d0;
++            double d3 = (this.closestPlayer.posZ - this.posZ) / d0;
+             double d4 = Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
+             double d5 = 1.0D - d4;
+ 
 @@ -138,6 +160,21 @@
          }
  
