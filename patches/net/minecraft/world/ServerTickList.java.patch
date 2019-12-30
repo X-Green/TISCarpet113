@@ -99,8 +99,8 @@
 +                    try {
 +                        // TISCM Micro Tick logger
 +                        MicroTickLogHelper.setTickStageDetail("." + nextticklistentry1.priority.getPriority());
-+                        MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nPriority: %s\nPosition: [%d, %d, %d]",
-+                                TileTicklogger_ticked, nextticklistentry1.priority, nextticklistentry1.position.getX(), nextticklistentry1.position.getY(), nextticklistentry1.position.getZ()));
++                        MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nPriority: %d (%s)\nPosition: [%d, %d, %d]",
++                                TileTicklogger_ticked, nextticklistentry1.priority.getPriority(), nextticklistentry1.priority, nextticklistentry1.position.getX(), nextticklistentry1.position.getY(), nextticklistentry1.position.getZ()));
 +                        // end TISCM Micro Tick logger
                          this.tickFunction.accept(nextticklistentry1);
 -                    }

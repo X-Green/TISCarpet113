@@ -1,6 +1,13 @@
 --- a/net/minecraft/block/Block.java
 +++ b/net/minecraft/block/Block.java
-@@ -175,7 +175,11 @@
+@@ -1,5 +1,6 @@
+ package net.minecraft.block;
+ 
++import carpet.logging.logHelpers.MicroTickLogHelper;
+ import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
+ import java.util.List;
+ import java.util.Objects;
+@@ -175,7 +176,11 @@
      @Deprecated
      public MaterialColor getMaterialColor(IBlockState state, IBlockReader worldIn, BlockPos pos)
      {
@@ -13,3 +20,21 @@
      }
  
      @Deprecated
+@@ -183,6 +188,8 @@
+     {
+         try (BlockPos.PooledMutableBlockPos blockpos$pooledmutableblockpos = BlockPos.PooledMutableBlockPos.retain())
+         {
++            MicroTickLogHelper.onBlockUpdate(worldIn.getWorld(), pos, 0, "PostPlacement", MicroTickLogHelper.getUpdateOrderList(UPDATE_ORDER)); // TISCM Micro Tick logger); // TISCM Micro Tick logger
++
+             for (EnumFacing enumfacing : UPDATE_ORDER)
+             {
+                 blockpos$pooledmutableblockpos.setPos(pos).move(enumfacing);
+@@ -190,6 +197,8 @@
+                 IBlockState iblockstate1 = iblockstate.updatePostPlacement(enumfacing.getOpposite(), stateIn, worldIn, blockpos$pooledmutableblockpos, pos);
+                 replaceBlock(iblockstate, iblockstate1, worldIn, blockpos$pooledmutableblockpos, flags);
+             }
++
++            MicroTickLogHelper.onBlockUpdate(worldIn.getWorld(), pos, 1, "PostPlacement", MicroTickLogHelper.getUpdateOrderList(UPDATE_ORDER)); // TISCM Micro Tick logger
+         }
+     }
+ 
