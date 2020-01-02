@@ -15,7 +15,15 @@
  import net.minecraft.entity.item.EntityTNTPrimed;
  import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.fluid.IFluidState;
-@@ -43,6 +45,13 @@
+@@ -21,6 +23,7 @@
+ import net.minecraft.init.SoundEvents;
+ import net.minecraft.util.DamageSource;
+ import net.minecraft.util.SoundCategory;
++import net.minecraft.util.Tuple;
+ import net.minecraft.util.math.AxisAlignedBB;
+ import net.minecraft.util.math.BlockPos;
+ import net.minecraft.util.math.MathHelper;
+@@ -43,6 +46,13 @@
      private final List<BlockPos> affectedBlockPositions = Lists.newArrayList();
      private final Map<EntityPlayer, Vec3d> playerKnockbackMap = Maps.newHashMap();
  
@@ -29,9 +37,81 @@
      @OnlyIn(Dist.CLIENT)
      public Explosion(World worldIn, @Nullable Entity entityIn, double x, double y, double z, float size, List<BlockPos> affectedPositions)
      {
-@@ -126,63 +135,91 @@
+@@ -71,14 +81,19 @@
+ 
+     public void doExplosionA()
+     {
++        // TISCM optimizedExplosion
++        Map<BlockPos, Tuple<IBlockState, IFluidState>> cachedStateMap = Maps.newHashMap();
++        boolean flagHopeless = false;
++        // end TISCM optimizedExplosion
++
+         Set<BlockPos> set = Sets.newHashSet();
+         int i = 16;
+ 
+-        for (int j = 0; j < 16; ++j)
++        for (int j = 0; j < 16 && !flagHopeless; ++j)
+         {
+-            for (int k = 0; k < 16; ++k)
++            for (int k = 0; k < 16 && !flagHopeless; ++k)
+             {
+-                for (int l = 0; l < 16; ++l)
++                for (int l = 0; l < 16 && !flagHopeless; ++l)
+                 {
+                     if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15)
+                     {
+@@ -97,9 +112,31 @@
+                         for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F)
+                         {
+                             BlockPos blockpos = new BlockPos(d4, d6, d8);
+-                            IBlockState iblockstate = this.world.getBlockState(blockpos);
+-                            IFluidState ifluidstate = this.world.getFluidState(blockpos);
++                            IBlockState iblockstate;
++                            IFluidState ifluidstate;
+ 
++                            // TISCM optimizedExplosion
++                            if (CarpetSettings.cacheExplosions)
++                            {
++                                if (cachedStateMap.containsKey(blockpos))
++                                {
++                                    Tuple<IBlockState, IFluidState> state = cachedStateMap.get(blockpos);
++                                    iblockstate = state.getA();
++                                    ifluidstate = state.getB();
++                                }
++                                else
++                                {
++                                    iblockstate = this.world.getBlockState(blockpos);
++                                    ifluidstate = this.world.getFluidState(blockpos);
++                                    cachedStateMap.put(blockpos, new Tuple<>(iblockstate, ifluidstate));
++                                }
++                            }
++                            else // vanilla
++                            {
++                                iblockstate = this.world.getBlockState(blockpos);
++                                ifluidstate = this.world.getFluidState(blockpos);
++                            }
++
+                             if (!iblockstate.isAir() || !ifluidstate.isEmpty())
+                             {
+                                 float f2 = Math.max(iblockstate.getBlock().getExplosionResistance(), ifluidstate.getExplosionResistance());
+@@ -117,6 +154,12 @@
+                                 set.add(blockpos);
+                             }
+ 
++                            // abort explosion if the explosion cannot break through the first block
++                            if (CarpetSettings.cacheExplosions && f <= 0.0F && d4 == this.x && d6 == this.y && d8 == this.z)
++                            {
++                                flagHopeless = true;
++                            }
++
+                             d4 += d0 * (double)0.3F;
+                             d6 += d1 * (double)0.3F;
+                             d8 += d2 * (double)0.3F;
+@@ -125,64 +168,93 @@
+                 }
              }
          }
++        cachedStateMap.clear();
  
 -        this.affectedBlockPositions.addAll(set);
 -        float f3 = this.size * 2.0F;

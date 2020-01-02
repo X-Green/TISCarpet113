@@ -32,7 +32,6 @@ public class TileEntityListLogHelper {
                 "e " + MicroTickLogHelper.getDimension(dimensionID)
                 ));
     }
-
     public static void log(long gameTime, int dimensionID, String msg, TileEntity te)
     {
         TileEntityListLogHelper.log(gameTime, dimensionID, msg, te.getPos());
@@ -47,11 +46,11 @@ public class TileEntityListLogHelper {
             while (iterator.hasNext()) 
             {
                 ITextComponent message = iterator.next();
-                iterator.remove();
                 comp.add(message);
             }
             return comp.toArray(new ITextComponent[0]);
         });
+        TileEntityListLogHelper.messages.clear();
     }
     
 }

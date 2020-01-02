@@ -30,7 +30,7 @@ public class MicroTickLogHelper
     private static String stage;
     private static String stage_detail;
     private static String stage_extra;
-    private static String PistonBlockEventName[] = new String[]{"Push", "Retract", "Drop"};
+    private static String[] PistonBlockEventName = new String[]{"Push", "Retract", "Drop"};
     private static Set<BlockPos> pistonBlockEventSuccessPosition = Sets.newHashSet();
 
     public static String getDimension(int dimensionID)
@@ -234,7 +234,7 @@ public class MicroTickLogHelper
         {
             return;
         }
-        String actions [] = new String[] {"Emitting", "Finished"};
+        String[] actions = new String[] {"Emitting", "Finished"};
         for (EnumFacing facing: EnumFacing.values())
         {
             BlockPos blockEndRodPos = pos.offset(facing);
@@ -274,6 +274,10 @@ public class MicroTickLogHelper
 
     public static void onComponentAddToTileTickList(World worldIn, BlockPos pos, int delay, TickPriority priority)
     {
+        if (!loggerActivated())
+        {
+            return;
+        }
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)
         {
@@ -298,6 +302,10 @@ public class MicroTickLogHelper
 
     public static void onPistonAddBlockEvent(World worldIn, BlockPos pos, int eventID, int eventParam)
     {
+        if (!loggerActivated())
+        {
+            return;
+        }
         if (eventID < 0 || eventID > 2)
         {
             return;
@@ -316,6 +324,10 @@ public class MicroTickLogHelper
 
     public static void onPistonExecuteBlockEvent(World worldIn, BlockPos pos, Block block, int eventID, int eventParam, boolean success) // "block" only overwrites displayed name
     {
+        if (!loggerActivated())
+        {
+            return;
+        }
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)
         {
@@ -339,6 +351,10 @@ public class MicroTickLogHelper
 
     public static void onComponentPowered(World worldIn, BlockPos pos, boolean poweredState)
     {
+        if (!loggerActivated())
+        {
+            return;
+        }
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)
         {
@@ -351,6 +367,10 @@ public class MicroTickLogHelper
 
     public static void onRedstoneTorchLit(World worldIn, BlockPos pos, boolean litState)
     {
+        if (!loggerActivated())
+        {
+            return;
+        }
         EnumDyeColor color = getWoolColor(worldIn, pos);
         if (color != null)
         {

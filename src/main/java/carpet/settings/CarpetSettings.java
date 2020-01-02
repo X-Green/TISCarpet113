@@ -181,6 +181,16 @@ public class CarpetSettings
             return "You must choose a value from 0 to 128";
         }
     }
+
+    @Rule(
+            desc = "Optimizes explosion",
+            extra = {
+                    "Caching block or liquid states in doExplosionA",
+                    "Abort the looping in doExplosionA if the explosion cannot break through the first block"
+            },
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static boolean optimizedExplosion = false;
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
