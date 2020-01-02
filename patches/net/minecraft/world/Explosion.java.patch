@@ -70,7 +70,7 @@
 +                            IFluidState ifluidstate;
  
 +                            // TISCM optimizedExplosion
-+                            if (CarpetSettings.cacheExplosions)
++                            if (CarpetSettings.optimizedExplosion)
 +                            {
 +                                if (cachedStateMap.containsKey(blockpos))
 +                                {
