@@ -136,16 +136,19 @@
                  if (this.player.isPlayerSleeping())
                  {
                      this.player.wakeUpPlayer(false, true, true);
-@@ -1303,6 +1335,8 @@
+@@ -1303,7 +1335,10 @@
                  break;
              case START_FALL_FLYING:
  
+-                if (!this.player.onGround && this.player.motionY < 0.0D && !this.player.isElytraFlying() && !this.player.isInWater())
 +                CarpetServer.scriptServer.events.onElytraDeploy(player);
-+
-                 if (!this.player.onGround && this.player.motionY < 0.0D && !this.player.isElytraFlying() && !this.player.isInWater())
++                
++                // [TISCM] Optimized elytra
++                if (!this.player.onGround && (CarpetSettings.optimizedElytraDeployment || this.player.motionY < 0.0D) && !this.player.isElytraFlying() && !this.player.isInWater())
                  {
                      ItemStack itemstack = this.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-@@ -1345,6 +1379,9 @@
+ 
+@@ -1345,6 +1380,9 @@
                  if (packetIn.getAction() == CPacketUseEntity.Action.INTERACT)
                  {
                      EnumHand enumhand = packetIn.getHand();
@@ -155,7 +158,7 @@
                      this.player.interactOn(entity, enumhand);
                  }
                  else if (packetIn.getAction() == CPacketUseEntity.Action.INTERACT_AT)
-@@ -1360,6 +1397,8 @@
+@@ -1360,6 +1398,8 @@
                          this.server.logWarning("Player " + this.player.getName().getString() + " tried to attack an invalid entity");
                          return;
                      }

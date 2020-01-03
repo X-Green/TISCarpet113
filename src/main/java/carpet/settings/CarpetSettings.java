@@ -192,6 +192,13 @@ public class CarpetSettings
     )
     public static boolean optimizedExplosion = false;
     
+    @Rule(
+            desc = "Optimized Elytra deployment",
+            extra = "Code from 1.15",
+            category = {EXPERIMENTAL, OPTIMIZATION}
+    )
+    public static boolean optimizedElytraDeployment = false;
+    
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
     //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$
