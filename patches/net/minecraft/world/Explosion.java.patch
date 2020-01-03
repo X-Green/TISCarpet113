@@ -99,7 +99,7 @@
                              }
  
 +                            // abort explosion if the explosion cannot break through the first block
-+                            if (CarpetSettings.cacheExplosions && f <= 0.0F && d4 == this.x && d6 == this.y && d8 == this.z)
++                            if (CarpetSettings.optimizedExplosion && f <= 0.0F && d4 == this.x && d6 == this.y && d8 == this.z)
 +                            {
 +                                flagHopeless = true;
 +                            }
