@@ -164,6 +164,43 @@ Options: `false`, `true`
 
 Categories: experimental, optimization
 
+## xpTrackingDistance
+
+Overwrite the tracking distance of xp orb
+
+Change it to 0 to disable tracking
+
+Default: `8`
+
+Options: `0`, `1`, `8`, `32`
+
+Categories: creative
+
+## optimizedExplosion
+
+Optimizes explosion
+
+- Caching block or liquid states in `doExplosionA`
+- Abort the looping in `doExplosionA` if the explosion cannot break through the first block
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: experimental, optimization
+  
+## elytraDeploymentFix
+
+Optimized Elytra deployment
+
+Code from 1.15. Fixes MC-111444
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: experimental, bugfix
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla

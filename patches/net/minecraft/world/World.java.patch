@@ -111,7 +111,7 @@
 +        // TISCM Micro Tick logger
 +        if (MicroTickLogHelper.loggerActivated())
 +        {
-+            MicroTickLogHelper.onBlockUpdate(this, pos, blockType, 0, "NeighborChanged Except",
++            MicroTickLogHelper.onBlockUpdate(this, pos, blockType, 1, "NeighborChanged Except",
 +                    String.format("Except: %s\n%s", skipSide, MicroTickLogHelper.getUpdateOrderList(NC_UPDATE_ORDER, skipSide))); // TISCM Micro Tick logger
 +        }
 +        // end TISCM Micro Tick logger
