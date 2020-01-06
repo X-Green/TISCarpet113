@@ -194,10 +194,10 @@ public class CarpetSettings
     
     @Rule(
             desc = "Optimized Elytra deployment",
-            extra = "Code from 1.15",
-            category = {EXPERIMENTAL, OPTIMIZATION}
+            extra = "Code from 1.15. Fixes MC-111444",
+            category = {EXPERIMENTAL, BUGFIX}
     )
-    public static boolean optimizedElytraDeployment = false;
+    public static boolean elytraDeploymentFix = false;
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$

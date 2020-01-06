@@ -144,7 +144,7 @@
 +                CarpetServer.scriptServer.events.onElytraDeploy(player);
 +                
 +                // [TISCM] Optimized elytra
-+                if (!this.player.onGround && (CarpetSettings.optimizedElytraDeployment || this.player.motionY < 0.0D) && !this.player.isElytraFlying() && !this.player.isInWater())
++                if (!this.player.onGround && (CarpetSettings.elytraDeploymentFix || this.player.motionY < 0.0D) && !this.player.isElytraFlying() && !this.player.isInWater())
                  {
                      ItemStack itemstack = this.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
  
