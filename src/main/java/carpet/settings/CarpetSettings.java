@@ -612,4 +612,10 @@ public class CarpetSettings
             category = YEET
     )
     public static boolean yeetVillagerAi = false;
+
+    @Rule(
+            desc = "yeet kicking players from the server from spamming messages",
+            category = YEET
+    )
+    public static boolean yeetKickedForSpam = false;
 }

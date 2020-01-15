@@ -110,6 +110,15 @@
          if (!itemstack.isEmpty())
          {
              this.player.interactionManager.processRightClick(this.player, worldserver, itemstack, enumhand);
+@@ -1223,7 +1249,7 @@
+ 
+             this.chatSpamThresholdCount += 20;
+ 
+-            if (this.chatSpamThresholdCount > 200 && !this.server.getPlayerList().canSendCommands(this.player.getGameProfile()))
++            if (!CarpetSettings.yeetKickedForSpam && this.chatSpamThresholdCount > 200 && !this.server.getPlayerList().canSendCommands(this.player.getGameProfile()))
+             {
+                 this.disconnect(new TextComponentTranslation("disconnect.spam"));
+             }
 @@ -1250,19 +1276,25 @@
          switch (packetIn.getAction())
          {
