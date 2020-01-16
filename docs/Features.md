@@ -200,6 +200,18 @@ Default: `false`
 Options: `false`, `true`
 
 Categories: experimental, bugfix
+  
+## explosionRandomSizeRatio
+
+Set the random size ratio in `doExplosionA` to a fixed value
+
+The value should be between 0.7 and 1.3 as vanilla behavior. Set it to -1 to disable overriding
+
+Default: `-1`
+
+Options: `-1`, `0.7`, `1`, `1.3`
+
+Categories: creative
 
 ## YEET
 
@@ -228,6 +240,16 @@ Categories: yeet
 ### yeetVillagerAi
 
 yeet villager ai for faster stacking at 14k iron farm test
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: yeet
+
+### yeetKickedForSpam
+
+yeet kicking players from the server from spamming messages
 
 Default: `false`
 

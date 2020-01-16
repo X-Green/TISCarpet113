@@ -60,7 +60,21 @@
                  {
                      if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15)
                      {
-@@ -97,9 +112,31 @@
+@@ -89,7 +104,13 @@
+                         d0 = d0 / d3;
+                         d1 = d1 / d3;
+                         d2 = d2 / d3;
++
+                         float f = this.size * (0.7F + this.world.rand.nextFloat() * 0.6F);
++                        if (CarpetSettings.explosionRandomSizeRatio != -1) // TISCM explosionRandomSize
++                        {
++                            f = this.size * (float)CarpetSettings.explosionRandomSizeRatio;
++                        }
++
+                         double d4 = this.x;
+                         double d6 = this.y;
+                         double d8 = this.z;
+@@ -97,9 +118,31 @@
                          for (float f1 = 0.3F; f > 0.0F; f -= 0.22500001F)
                          {
                              BlockPos blockpos = new BlockPos(d4, d6, d8);
@@ -94,7 +108,7 @@
                              if (!iblockstate.isAir() || !ifluidstate.isEmpty())
                              {
                                  float f2 = Math.max(iblockstate.getBlock().getExplosionResistance(), ifluidstate.getExplosionResistance());
-@@ -117,6 +154,12 @@
+@@ -117,6 +160,12 @@
                                  set.add(blockpos);
                              }
  
@@ -107,7 +121,7 @@
                              d4 += d0 * (double)0.3F;
                              d6 += d1 * (double)0.3F;
                              d8 += d2 * (double)0.3F;
-@@ -125,64 +168,93 @@
+@@ -125,64 +174,93 @@
                  }
              }
          }

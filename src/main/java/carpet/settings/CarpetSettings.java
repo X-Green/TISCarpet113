@@ -167,12 +167,12 @@ public class CarpetSettings
             validate = ValidateXPTrackingDistance.class,
             category = CREATIVE
     )
-    public static int xpTrackingDistance = 8;
+    public static double xpTrackingDistance = 8;
 
-    private static class ValidateXPTrackingDistance extends Validator<Integer>
+    private static class ValidateXPTrackingDistance extends Validator<Double>
     {
         @Override
-        public Integer validate(CommandSource source, ParsedRule<Integer> currentRule, Integer newValue, String string)
+        public Double validate(CommandSource source, ParsedRule<Double> currentRule, Double newValue, String string)
         {
             return (newValue >= 0 && newValue <= 128) ? newValue : null;
         }
@@ -191,13 +191,35 @@ public class CarpetSettings
             category = {EXPERIMENTAL, OPTIMIZATION}
     )
     public static boolean optimizedExplosion = false;
-    
+
     @Rule(
             desc = "Optimized Elytra deployment",
             extra = "Code from 1.15. Fixes MC-111444",
             category = {EXPERIMENTAL, BUGFIX}
     )
     public static boolean elytraDeploymentFix = false;
+
+    @Rule(
+            desc = "Set the random size ratio in doExplosionA to a fixed value",
+            extra = "The value should be between 0.7 and 1.3 as vanilla behavior. Set it to -1 to disable overriding",
+            validate = ExplosionRandomSizeRatioValidator.class,
+            options = {"-1", "0.7", "1", "1.3"},
+            category = CREATIVE
+    )
+    public static double explosionRandomSizeRatio = -1;
+
+    private static class ExplosionRandomSizeRatioValidator extends Validator<Double>
+    {
+        @Override
+        public Double validate(CommandSource source, ParsedRule<Double> currentRule, Double newValue, String string) {
+            return newValue == -1 || (0.7 <= newValue && newValue <= 1.3) ? newValue : null;
+        }
+
+        @Override
+        public String description() {
+            return "You must choose a value from 0.7 to 1.3 or -1";
+        }
+    }
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$

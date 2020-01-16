@@ -197,6 +197,19 @@
 
 分类: experimental, bugfix
 
+  
+## explosionRandomSizeRatio
+
+将 `doExplosionA` 中爆炸射线的随机比率设为一个固定值
+
+根据原版表现，这个值应该在 `0.7` 至 `1.3` 间。将它设为 `-1` 以禁用比率覆盖
+
+默认值: `-1`
+
+选项: `-1`, `0.7`, `1`, `1.3`
+
+分类: creative
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla
@@ -226,6 +239,16 @@
 ### yeetVillagerAi
 
 去掉部分村民ai使14k刷铁塔堆叠更快
+
+默认值： `false`
+
+选项：`false`, `true`
+
+分类：yeet
+
+### yeetKickedForSpam
+
+去掉当玩家发送消息过快时，玩家被因滥发消息而踢出游戏的特性
 
 默认值： `false`
 
