@@ -213,6 +213,16 @@ Options: `-1`, `0.7`, `1`, `1.3`
 
 Categories: creative
 
+## totallyNoBlockUpdate
+
+Ban block updates
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: creative
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla

@@ -197,7 +197,6 @@
 
 分类: experimental, bugfix
 
-  
 ## explosionRandomSizeRatio
 
 将 `doExplosionA` 中爆炸射线的随机比率设为一个固定值
@@ -207,6 +206,16 @@
 默认值: `-1`
 
 选项: `-1`, `0.7`, `1`, `1.3`
+
+分类: creative
+
+## totallyNoBlockUpdate
+
+禁止方块更新
+
+默认值: `false`
+
+选项: `false`, `true`
 
 分类: creative
 
