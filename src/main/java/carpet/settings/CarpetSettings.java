@@ -54,6 +54,13 @@ public class CarpetSettings
     public static boolean commandPing = true;
 
     @Rule(
+    		desc = "No block updates",
+    		category = CREATIVE
+    )
+    public static boolean totallyNoBlockUpdate = true;
+    
+    
+    @Rule(
             desc = "fix Dragon crashes server when no endstone is on the end island",
             category = BUGFIX
     )
