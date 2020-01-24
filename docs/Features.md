@@ -223,6 +223,16 @@ Options: `false`, `true`
 
 Categories: creative
 
+## commandEPSTest
+
+Enables `/epsTest` for performance tests
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: command
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla
@@ -321,6 +331,18 @@ Output all messages, default stats
 ### unique
 
 Only output unique messages. Turn it on if you don't want to be spammed by redstone dusts
+
+------
+
+# Commands
+
+## epsTest
+
+`/epsTest [<duration>]`
+
+Trigger a `<duration>` (default: `30`) seconds long explosion performance test. When it finishes it will output the number of explosions which the server can process every second, aka Explosion per Second (EPS)
+
+Use `/carpet commandEPSTest` to enable / disable this command
 
 ------
 

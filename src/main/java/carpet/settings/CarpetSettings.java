@@ -18,7 +18,7 @@ public class CarpetSettings
     public static boolean skipGenerationChecks = false;
     public static boolean impendingFillSkipUpdates = false;
     public static final int SHULKERBOX_MAX_STACK_AMOUNT = 64;
-    public static boolean isEpsActive= false;
+    public static boolean isEpsActive = false;
     
     private static class ValidateVoxelOpt extends Validator<Boolean>
     {
@@ -52,7 +52,7 @@ public class CarpetSettings
             desc = "Enables /epsTest for performance tests",
             category = COMMAND
     )
-    public static boolean commandEPSTest = true;
+    public static boolean commandEPSTest = false;
     
     @Rule(
             desc = "Enables /ping command to see your ping",

@@ -219,6 +219,16 @@
 
 分类: creative
 
+## commandEPSTest
+
+启用用于性能测试的 `/epsTest`
+
+默认值: `false`
+
+选项: `false`, `true`
+
+分类: command
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla
@@ -320,6 +330,17 @@ TileTick(NTE) 列表记录器，有助于制作 TileTick EMP
 ### unique
 
 仅输出不同的信息，如果你不想被红石粉刷屏的话可以开
+
+------
+
+# 指令
+
+## epsTest
+
+触发一个长为 2 分钟的基于爆炸的性能测试。完成时将会输出服务器每秒可处理的爆炸数，也就是 Explosion per Second (EPS)
+
+
+使用 `/carpet commandEPSTest` 来启用 / 禁用此命令
 
 ------
 
