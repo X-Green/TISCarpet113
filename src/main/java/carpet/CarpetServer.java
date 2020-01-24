@@ -14,6 +14,7 @@ import carpet.commands.SpawnCommand;
 import carpet.commands.PingCommand;
 import carpet.commands.TestCommand;
 import carpet.commands.TickCommand;
+import carpet.commands.EpsCommand;
 import carpet.logging.LoggerRegistry;
 import carpet.script.CarpetScriptServer;
 import carpet.settings.CarpetSettings;
@@ -77,6 +78,7 @@ public class CarpetServer // static for now - easier to handle all around the co
         DrawCommand.register(dispatcher);
         ScriptCommand.register(dispatcher);
         PingCommand.register(dispatcher);
+        EpsCommand.register(dispatcher);
 
         //TestCommand.register(dispatcher);
     }

@@ -28,7 +28,7 @@
      }
  
      public abstract boolean init() throws IOException;
-@@ -642,24 +650,43 @@
+@@ -642,31 +650,68 @@
              if (this.init())
              {
                  this.serverTime = Util.milliTime();
@@ -39,44 +39,83 @@
                  this.statusResponse.setVersion(new ServerStatusResponse.Version("1.13.2", 404));
                  this.applyServerIconToResponse(this.statusResponse);
  
-                 while (this.serverRunning)
-                 {
-+                    /* carpet mod commandTick */
-+                    //todo check if this check is necessary
-+                    if (TickSpeed.time_warp_start_time != 0)
-+                    {
-+                        if (TickSpeed.continueWarp())
-+                        {
-+                            this.tick( ()->true );
-+                            this.serverTime = Util.milliTime();
-+                            this.actualServerTime = Util.milliTime();
-+                            this.serverIsRunning = true;
-+                        }
-+                        continue;
-+                    }
-                     long i = Util.milliTime() - this.serverTime;
- 
-                     if (i > 2000L && this.serverTime - this.timeOfLastWarning >= 15000L)
+-                while (this.serverRunning)
+-                {
+-                    long i = Util.milliTime() - this.serverTime;
+-
+-                    if (i > 2000L && this.serverTime - this.timeOfLastWarning >= 15000L)
++                while (this.serverRunning) {
++                    //TISCM EPS if statement
++                    if (!CarpetSettings.isEpsActive)
                      {
 -                        long j = i / 50L;
-+                        long j = i / TickSpeed.mspt;//50L;
-                         LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
+-                        LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
 -                        this.serverTime += j * 50L;
-+                        this.serverTime += j * TickSpeed.mspt;//50L;
-                         this.timeOfLastWarning = this.serverTime;
-                     }
+-                        this.timeOfLastWarning = this.serverTime;
+-                    }
++                        /* carpet mod commandTick */
++                        //todo check if this check is necessary
++                        if (TickSpeed.time_warp_start_time != 0) {
++                            if (TickSpeed.continueWarp()) {
++                                this.tick(() -> true);
++                                this.serverTime = Util.milliTime();
++                                this.actualServerTime = Util.milliTime();
++                                this.serverIsRunning = true;
++                            }
++                            continue;
++                        }
++                        long i = Util.milliTime() - this.serverTime;
  
-                     this.tick(this::isAheadOfTime);
+-                    this.tick(this::isAheadOfTime);
 -                    this.serverTime += 50L;
-+                    //[CM] NOTE: serverTime doesn't indicate current time, but server wannabe-time
-+                    // only corrected if it falls behind more than 2000 and manages to catch the warning
-+                    // which releases accrued time it falls behind, not 1 tick, but MULTIPLE ticks
-+                    this.actualServerTime = Util.milliTime();
-+                    this.serverTime += TickSpeed.mspt;//50L;
++                        if (i > 2000L && this.serverTime - this.timeOfLastWarning >= 15000L) {
++                            long j = i / TickSpeed.mspt;//50L;
++                            LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
++                            this.serverTime += j * TickSpeed.mspt;//50L;
++                            this.timeOfLastWarning = this.serverTime;
++                        }
  
-                     while (this.isAheadOfTime())
-                     {
-@@ -782,6 +809,12 @@
+-                    while (this.isAheadOfTime())
+-                    {
+-                        Thread.sleep(1L);
+-                    }
++                        this.tick(this::isAheadOfTime);
++                        //[CM] NOTE: serverTime doesn't indicate current time, but server wannabe-time
++                        // only corrected if it falls behind more than 2000 and manages to catch the warning
++                        // which releases accrued time it falls behind, not 1 tick, but MULTIPLE ticks
++                        this.actualServerTime = Util.milliTime();
++                        this.serverTime += TickSpeed.mspt;//50L;
+ 
+-                    this.serverIsRunning = true;
++                        while (this.isAheadOfTime()) {
++                            Thread.sleep(1L);
++                        }
++
++                        this.serverIsRunning = true;
++                        }
++                    //TISCM EPS code
++                    else {
++                        WorldServer world = this.getWorld(DimensionType.OVERWORLD);
++                        long endtime = Util.milliTime() + 120000l;
++                        long counter = 0;
++                        logInfo("[TISCM]: starting EPS test for 2 minutes...please wait");
++
++                        while (endtime > Util.milliTime()){
++                            world.createExplosion(null , 0, -100, 0, 4, false);
++                            counter++;
++                            //trick that dog
++                            this.serverTime = Util.milliTime();
++                            this.actualServerTime = Util.milliTime();
++                        }
++                        long result = counter / 30;
++                        logInfo("[TISCM]: EPS test finished, result is:" + result);
++
++                        CarpetSettings.isEpsActive = false;
++                    }
+                 }
+             }
+             else
+@@ -782,6 +827,12 @@
      {
          long i = Util.nanoTime();
          ++this.tickCounter;
@@ -89,7 +128,7 @@
  
          if (this.startProfiling)
          {
-@@ -790,6 +823,9 @@
+@@ -790,6 +841,9 @@
          }
  
          this.profiler.startSection("root");
@@ -99,7 +138,7 @@
          this.updateTimeLightAndEntities(hasTimeLeft);
  
          if (i - this.nanoTimeSinceStatusRefresh >= 5000000000L)
-@@ -810,10 +846,13 @@
+@@ -810,10 +864,13 @@
  
          if (this.tickCounter % 900 == 0)
          {
@@ -113,7 +152,7 @@
          }
  
          this.profiler.startSection("snooper");
-@@ -829,11 +868,18 @@
+@@ -829,11 +886,18 @@
          }
  
          this.profiler.endSection();
@@ -132,7 +171,7 @@
      }
  
      public void updateTimeLightAndEntities(BooleanSupplier hasTimeLeft)
-@@ -847,6 +893,7 @@
+@@ -847,6 +911,7 @@
          }
  
          this.profiler.endStartSection("commandFunctions");
@@ -140,7 +179,7 @@
          this.getFunctionManager().tick();
          this.profiler.endStartSection("levels");
  
-@@ -905,10 +952,13 @@
+@@ -905,10 +970,13 @@
              }))[this.tickCounter % 100] = Util.nanoTime() - i;
          }
  
@@ -154,7 +193,7 @@
          this.profiler.endStartSection("tickables");
  
          for (int j = 0; j < this.tickables.size(); ++j)
-@@ -1605,6 +1655,12 @@
+@@ -1605,6 +1673,12 @@
      {
          return this.serverTime;
      }
@@ -167,7 +206,7 @@
  
      public Thread getServerThread()
      {
-@@ -1825,4 +1881,12 @@
+@@ -1825,4 +1899,12 @@
              return 0;
          }
      }
