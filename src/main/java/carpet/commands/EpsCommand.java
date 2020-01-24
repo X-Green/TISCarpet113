@@ -13,6 +13,7 @@ public class EpsCommand
     public static void register(CommandDispatcher<CommandSource> dispatcher)
     {
         LiteralArgumentBuilder<CommandSource> command = literal("epsTest").
+                requires( (player) -> CarpetSettings.commandEPSTest).
                 executes( (c) ->
                 {
                     Messenger.m(c.getSource(),"[TISCM]: EPS test is now active");

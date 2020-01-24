@@ -47,6 +47,12 @@ public class CarpetSettings
     //   |__/   |______/ \______/  \______/ |__/     |__/
     //
     //New features added at TISCarpet goes here for easier reading please
+
+    @Rule(
+            desc = "Enables /epsTest for performance tests",
+            category = COMMAND
+    )
+    public static boolean commandEPSTest = true;
     
     @Rule(
             desc = "Enables /ping command to see your ping",
