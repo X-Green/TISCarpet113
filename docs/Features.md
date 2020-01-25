@@ -326,6 +326,7 @@ Display actions of redstone components and blockupdates with wool block. Type `/
 Options: `all`, `unique`
 
 ### all
+
 Output all messages, default stats
 
 ### unique

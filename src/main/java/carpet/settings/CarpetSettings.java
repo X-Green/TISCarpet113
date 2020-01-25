@@ -64,7 +64,7 @@ public class CarpetSettings
     		desc = "No block updates",
     		category = CREATIVE
     )
-    public static boolean totallyNoBlockUpdate = true;
+    public static boolean totallyNoBlockUpdate = false;
     
     
     @Rule(
