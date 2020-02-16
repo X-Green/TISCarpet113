@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/MinecraftServer.java
 +++ b/net/minecraft/server/MinecraftServer.java
-@@ -1,5 +1,11 @@
+@@ -1,5 +1,10 @@
  package net.minecraft.server;
  
 +import carpet.CarpetServer;
@@ -8,11 +8,10 @@
 +import carpet.helpers.TickSpeed;
 +import carpet.settings.CarpetSettings;
 +import carpet.utils.CarpetProfiler;
-+import carpet.logging.logHelpers.MicroTickLogHelper;
  import com.google.common.base.Stopwatch;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Maps;
-@@ -178,6 +184,7 @@
+@@ -178,6 +183,7 @@
      public final Queue < FutureTask<? >> futureTaskQueue = Queues.newConcurrentLinkedQueue();
      private Thread serverThread;
      private long serverTime = Util.milliTime();
@@ -20,7 +19,7 @@
      @OnlyIn(Dist.CLIENT)
      private boolean worldIconSet;
      private final IReloadableResourceManager resourceManager = new SimpleReloadableResourceManager(ResourcePackType.SERVER_DATA);
-@@ -212,6 +219,8 @@
+@@ -212,6 +218,8 @@
          this.resourceManager.addReloadListener(this.lootTableManager);
          this.resourceManager.addReloadListener(this.functionManager);
          this.resourceManager.addReloadListener(this.advancementManager);
@@ -29,7 +28,7 @@
      }
  
      public abstract boolean init() throws IOException;
-@@ -642,31 +651,53 @@
+@@ -642,31 +650,53 @@
              if (this.init())
              {
                  this.serverTime = Util.milliTime();
@@ -101,7 +100,7 @@
                  }
              }
              else
-@@ -782,6 +813,12 @@
+@@ -782,6 +812,12 @@
      {
          long i = Util.nanoTime();
          ++this.tickCounter;
@@ -114,7 +113,7 @@
  
          if (this.startProfiling)
          {
-@@ -790,6 +827,9 @@
+@@ -790,6 +826,9 @@
          }
  
          this.profiler.startSection("root");
@@ -124,12 +123,11 @@
          this.updateTimeLightAndEntities(hasTimeLeft);
  
          if (i - this.nanoTimeSinceStatusRefresh >= 5000000000L)
-@@ -810,10 +850,13 @@
+@@ -810,10 +849,12 @@
  
          if (this.tickCounter % 900 == 0)
          {
 +            CarpetProfiler.start_section(null, "Autosave");
-+            MicroTickLogHelper.setTickStage("AutoSave"); // TISCM Micro Tick logger
              this.profiler.startSection("save");
              this.playerList.saveAllPlayerData();
              this.saveAllWorlds(true);
@@ -138,7 +136,7 @@
          }
  
          this.profiler.startSection("snooper");
-@@ -829,11 +872,18 @@
+@@ -829,11 +870,18 @@
          }
  
          this.profiler.endSection();
@@ -157,20 +155,11 @@
      }
  
      public void updateTimeLightAndEntities(BooleanSupplier hasTimeLeft)
-@@ -847,6 +897,7 @@
-         }
- 
-         this.profiler.endStartSection("commandFunctions");
-+        MicroTickLogHelper.setTickStage("CommandFunctions"); // TISCM Micro Tick logger
-         this.getFunctionManager().tick();
-         this.profiler.endStartSection("levels");
- 
-@@ -905,10 +956,13 @@
+@@ -905,10 +953,12 @@
              }))[this.tickCounter % 100] = Util.nanoTime() - i;
          }
  
 +        CarpetProfiler.start_section(null, "Network");
-+        MicroTickLogHelper.setTickStage("Network"); // TISCM Micro Tick logger
          this.profiler.endStartSection("connection");
          this.getNetworkSystem().tick();
          this.profiler.endStartSection("players");
@@ -179,7 +168,7 @@
          this.profiler.endStartSection("tickables");
  
          for (int j = 0; j < this.tickables.size(); ++j)
-@@ -1605,6 +1659,12 @@
+@@ -1605,6 +1655,12 @@
      {
          return this.serverTime;
      }
@@ -192,7 +181,7 @@
  
      public Thread getServerThread()
      {
-@@ -1825,4 +1885,12 @@
+@@ -1825,4 +1881,12 @@
              return 0;
          }
      }

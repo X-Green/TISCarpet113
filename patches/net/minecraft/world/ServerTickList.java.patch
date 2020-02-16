@@ -1,15 +1,14 @@
 --- a/net/minecraft/world/ServerTickList.java
 +++ b/net/minecraft/world/ServerTickList.java
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,7 @@
  package net.minecraft.world;
  
 +import carpet.logging.LoggerRegistry;
-+import carpet.logging.logHelpers.MicroTickLogHelper;
 +import carpet.logging.logHelpers.TileTickListLogHelper;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Sets;
  import java.util.Collections;
-@@ -23,8 +26,7 @@
+@@ -23,8 +25,7 @@
  import net.minecraft.util.math.MutableBoundingBox;
  import net.minecraft.world.chunk.Chunk;
  
@@ -19,7 +18,7 @@
      protected final Predicate<T> filter;
      protected final Function<T, ResourceLocation> serializer;
      protected final Function<ResourceLocation, T> deserializer;
-@@ -34,8 +36,8 @@
+@@ -34,8 +35,8 @@
      private final List<NextTickListEntry<T>> pendingTickListEntriesThisTick = Lists.newArrayList();
      private final Consumer<NextTickListEntry<T>> tickFunction;
  
@@ -30,7 +29,7 @@
          this.filter = filter;
          this.serializer = serializerIn;
          this.deserializer = deserializerIn;
-@@ -43,29 +45,30 @@
+@@ -43,29 +44,30 @@
          this.tickFunction = tickFunctionIn;
      }
  
@@ -75,7 +74,7 @@
                      break;
                  }
  
-@@ -76,46 +79,58 @@
+@@ -76,46 +78,50 @@
  
              this.world.profiler.endSection();
              this.world.profiler.startSection("ticking");
@@ -97,11 +96,6 @@
 +                if (this.world.isAreaLoaded(nextticklistentry1.position.add(0, 0, 0),
 +                        nextticklistentry1.position.add(0, 0, 0))) {
 +                    try {
-+                        // TISCM Micro Tick logger
-+                        MicroTickLogHelper.setTickStageDetail("." + nextticklistentry1.priority.getPriority());
-+                        MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nPriority: %d (%s)\nPosition: [%d, %d, %d]",
-+                                TileTicklogger_ticked, nextticklistentry1.priority.getPriority(), nextticklistentry1.priority, nextticklistentry1.position.getX(), nextticklistentry1.position.getY(), nextticklistentry1.position.getZ()));
-+                        // end TISCM Micro Tick logger
                          this.tickFunction.accept(nextticklistentry1);
 -                    }
 -                    catch (Throwable throwable)
@@ -134,9 +128,6 @@
 +                        TileTicklogger_listSize, TileTicklogger_dealt, TileTicklogger_ticked, TileTicklogger_skipped);
 +            }
 +            // end TISCM TileTick logger
-+
-+            MicroTickLogHelper.setTickStageDetail(null); // TISCM Micro Tick logger
-+            MicroTickLogHelper.setTickStageExtra(null); // TISCM Micro Tick logger
          }
      }
  
@@ -152,7 +143,7 @@
          ChunkPos chunkpos = p_205364_1_.getPos();
          int i = (chunkpos.x << 4) - 2;
          int j = i + 16 + 2;
-@@ -124,42 +139,33 @@
+@@ -124,42 +130,33 @@
          return this.getPending(new MutableBoundingBox(i, 0, k, j, 256, l), remove);
      }
  
@@ -205,7 +196,7 @@
                          list = Lists.newArrayList();
                      }
  
-@@ -171,83 +177,73 @@
+@@ -171,83 +168,73 @@
          return list == null ? Collections.emptyList() : list;
      }
  

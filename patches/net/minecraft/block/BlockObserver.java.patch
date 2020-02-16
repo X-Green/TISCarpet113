@@ -1,41 +1,11 @@
 --- a/net/minecraft/block/BlockObserver.java
 +++ b/net/minecraft/block/BlockObserver.java
-@@ -1,5 +1,6 @@
- package net.minecraft.block;
- 
-+import carpet.logging.logHelpers.MicroTickLogHelper;
- import java.util.Random;
- import net.minecraft.block.state.IBlockState;
- import net.minecraft.item.BlockItemUseContext;
-@@ -44,11 +45,14 @@
-         if (state.get(POWERED))
-         {
-             worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(false)), 2);
-+            MicroTickLogHelper.onComponentPowered(worldIn, pos, false); // TISCM Micro Tick logger
-         }
-         else
-         {
-             worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(true)), 2);
-+            MicroTickLogHelper.onComponentPowered(worldIn, pos, true); // TISCM Micro Tick logger
-             worldIn.getPendingBlockTicks().scheduleTick(pos, this, 2);
-+            MicroTickLogHelper.onComponentAddToTileTickList(worldIn, pos, 2); // TISCM Micro Tick logger
-         }
- 
-         this.updateNeighborsInFront(worldIn, pos, state);
-@@ -60,7 +64,7 @@
+@@ -60,7 +60,7 @@
          {
              this.startSignal(worldIn, currentPos);
          }
 -
 +        
          return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-     }
- 
-@@ -69,6 +73,7 @@
-         if (!worldIn.isRemote() && !worldIn.getPendingBlockTicks().isTickScheduled(pos, this))
-         {
-             worldIn.getPendingBlockTicks().scheduleTick(pos, this, 2);
-+            MicroTickLogHelper.onComponentAddToTileTickList((World)worldIn, pos, 2); // TISCM Micro Tick logger
-         }
      }
  

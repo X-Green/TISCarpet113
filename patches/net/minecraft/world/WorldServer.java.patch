@@ -1,17 +1,16 @@
 --- a/net/minecraft/world/WorldServer.java
 +++ b/net/minecraft/world/WorldServer.java
-@@ -1,5 +1,10 @@
+@@ -1,5 +1,9 @@
  package net.minecraft.world;
  
 +import carpet.helpers.TickSpeed;
 +import carpet.settings.CarpetSettings;
 +import carpet.utils.CarpetProfiler;
-+import carpet.logging.logHelpers.MicroTickLogHelper;
 +import carpet.logging.logHelpers.TileTickListLogHelper;
  import com.google.common.collect.Lists;
  import com.google.common.collect.Maps;
  import com.google.common.util.concurrent.ListenableFuture;
-@@ -191,15 +196,28 @@
+@@ -191,13 +195,24 @@
              this.wakeAllPlayers();
          }
  
@@ -24,7 +23,6 @@
 +        { // [CM] extra indent to skip processing of entities
          this.profiler.startSection("spawner");
 +        CarpetProfiler.start_section(world_name, "Spawning");
-+            MicroTickLogHelper.setTickStage("Spawning"); // TISCM Micro Tick logger
  
          if (this.getGameRules().getBoolean("doMobSpawning") && this.worldInfo.getGenerator() != WorldType.DEBUG_ALL_BLOCK_STATES)
          {
@@ -36,17 +34,13 @@
 +        // [CM] end extra indent
  
          this.profiler.endStartSection("chunkSource");
-+        MicroTickLogHelper.setTickStage("ChunkUnloading"); // TISCM Micro Tick logger
          this.chunkProvider.tick(hasTimeLeft);
-         int j = this.calculateSkylightSubtracted(1.0F);
- 
-@@ -208,25 +226,49 @@
+@@ -208,24 +223,42 @@
              this.setSkylightSubtracted(j);
          }
  
 +        if (TickSpeed.process_entities)
 +        { // CM extra indent to skip processing of entities
-+        MicroTickLogHelper.flushMessages(this.worldInfo.getGameTime()); // TISCM Micro Tick logger
          this.worldInfo.setGameTime(this.worldInfo.getGameTime() + 1L);
 -
          if (this.getGameRules().getBoolean("doDaylightCycle"))
@@ -56,7 +50,6 @@
  
          this.profiler.endStartSection("tickPending");
 +        CarpetProfiler.start_section(world_name, "Blocks");
-+        MicroTickLogHelper.setTickStage("TileTick"); // TISCM Micro Tick logger
          this.tickPending();
 +        CarpetProfiler.end_current_section();
 +        } // end extra indent
@@ -65,19 +58,16 @@
          this.tickBlocks();
 +        CarpetProfiler.end_current_section();
          this.profiler.endStartSection("chunkMap");
-+        MicroTickLogHelper.setTickStage("PlayerChunkMap"); // TISCM Micro Tick logger
          this.playerChunkMap.tick();
 +
 +        if (TickSpeed.process_entities)
 +        { // CM extra indent to skip processing of entities
          this.profiler.endStartSection("village");
 +        CarpetProfiler.start_section(world_name, "Villages");
-+        MicroTickLogHelper.setTickStage("Villages"); // TISCM Micro Tick logger
          this.villageCollection.tick();
          this.villageSiege.tick();
 +        CarpetProfiler.end_current_section();
          this.profiler.endStartSection("portalForcer");
-+        MicroTickLogHelper.setTickStage("PortalForcer"); // TISCM Micro Tick logger
          this.worldTeleporter.tick(this.getGameTime());
 +        }
 +        // [TISCM] Newlight
@@ -87,11 +77,9 @@
 +            this.getLightingEngine().procLightUpdates();
 +        }
          this.profiler.endSection();
-+        MicroTickLogHelper.setTickStage("BlockEvent"); // TISCM Micro Tick logger
          this.sendQueuedBlockEvents();
          this.insideTick = false;
-     }
-@@ -270,7 +312,7 @@
+@@ -270,7 +303,7 @@
                  }
              }
  
@@ -100,7 +88,7 @@
          }
      }
  
-@@ -306,6 +348,13 @@
+@@ -306,6 +339,13 @@
      {
          if (this.allPlayersSleeping && !this.isRemote)
          {
@@ -114,19 +102,7 @@
              for (EntityPlayer entityplayer : this.playerEntities)
              {
                  if (!entityplayer.isSpectator() && !entityplayer.isPlayerFullyAsleep())
-@@ -396,9 +445,11 @@
-             boolean flag = this.isRaining();
-             boolean flag1 = this.isThundering();
-             this.profiler.startSection("pollingChunks");
-+            MicroTickLogHelper.setTickStage("RandomTick&Climate"); // TISCM Micro Tick logger
- 
-             for (Iterator<Chunk> iterator = this.playerChunkMap.getChunkIterator(); iterator.hasNext(); this.profiler.endSection())
-             {
-+                MicroTickLogHelper.setTickStageDetail(".TickChunk"); // TISCM Micro Tick logger
-                 this.profiler.startSection("getChunk");
-                 Chunk chunk = iterator.next();
-                 int j = chunk.x * 16;
-@@ -407,7 +458,15 @@
+@@ -407,6 +447,13 @@
                  chunk.enqueueRelightChecks();
                  this.profiler.endStartSection("tickChunk");
                  chunk.tick(false);
@@ -138,35 +114,9 @@
 +                }
 +
                  this.profiler.endStartSection("thunder");
-+                MicroTickLogHelper.setTickStageDetail(".Thunder"); // TISCM Micro Tick logger
  
                  if (flag && flag1 && this.rand.nextInt(100000) == 0)
-                 {
-@@ -434,6 +493,7 @@
-                 }
- 
-                 this.profiler.endStartSection("iceandsnow");
-+                MicroTickLogHelper.setTickStageDetail(".Ice&Snow"); // TISCM Micro Tick logger
- 
-                 if (this.rand.nextInt(16) == 0)
-                 {
-@@ -460,6 +520,7 @@
-                 }
- 
-                 this.profiler.endStartSection("tickBlocks");
-+                MicroTickLogHelper.setTickStageDetail(".RandomTick"); // TISCM Micro Tick logger
- 
-                 if (i > 0)
-                 {
-@@ -496,10 +557,15 @@
-             }
- 
-             this.profiler.endSection();
-+
-+            // TISCM Micro Tick logger
-+            MicroTickLogHelper.setTickStageDetail(null);
-+            MicroTickLogHelper.setTickStageExtra(null);
-+            // end TISCM Micro Tick logger
+@@ -499,7 +546,7 @@
          }
      }
  
@@ -175,7 +125,7 @@
      {
          BlockPos blockpos = this.getHeight(Heightmap.Type.MOTION_BLOCKING, pos);
          AxisAlignedBB axisalignedbb = (new AxisAlignedBB(blockpos, new BlockPos(blockpos.getX(), this.getHeight(), blockpos.getZ()))).grow(3.0D);
-@@ -608,7 +674,14 @@
+@@ -608,7 +655,14 @@
      {
          if (this.worldInfo.getGenerator() != WorldType.DEBUG_ALL_BLOCK_STATES)
          {
@@ -190,7 +140,7 @@
              this.pendingFluidTicks.tick();
          }
      }
-@@ -1026,15 +1099,40 @@
+@@ -1026,6 +1080,10 @@
  
      private void sendQueuedBlockEvents()
      {
@@ -201,14 +151,7 @@
          while (!this.blockEventQueue.isEmpty())
          {
              BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
- 
-+            // TISCM Micro Tick logger
-+            MicroTickLogHelper.setTickStageDetail("." + depth);
-+            MicroTickLogHelper.setTickStageExtra(String.format("Order: %d\nDepth: %s\nPosition: [%d, %d, %d]",
-+                    counter++, depth, blockeventdata.getPosition().getX(), blockeventdata.getPosition().getY(), blockeventdata.getPosition().getZ()));
-+            // end TISCM Micro Tick logger
-+
-             if (this.fireBlockEvent(blockeventdata))
+@@ -1034,6 +1092,16 @@
              {
                  this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
              }
@@ -223,11 +166,5 @@
 +            }
 +            // end TISCM Micro Tick logger
          }
-+
-+        // TISCM Micro Tick logger
-+        MicroTickLogHelper.setTickStageDetail(null);
-+        MicroTickLogHelper.setTickStageExtra(null);
-+        // end TISCM Micro Tick logger
      }
  
-     private boolean fireBlockEvent(BlockEventData event)

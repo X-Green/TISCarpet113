@@ -14,11 +14,7 @@ public class ChunkLogHelper
                         "g [" + worldIn.getGameTime() + "] ",
                         "w X:" + x + " ",
                         "w Z:" + z + " ",
-                        state + " ",
-                        "g at ",
-                        "y " + MicroTickLogHelper.getTickStage(),
-                        "g  in ",
-                        "e " + MicroTickLogHelper.getDimension(worldIn.getDimension().getType().getId())
+                        state + " "
                 )});
     }
 }
