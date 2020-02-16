@@ -184,7 +184,7 @@
 选项: `false`, `true`
 
 分类: experimental, optimization
-  
+
 ## elytraDeploymentFix
 
 优化鞘翅的展开
@@ -313,11 +313,15 @@ TileTick(NTE) 列表记录器，有助于制作 TileTick EMP
 
 ## tileentitylist
 
+**仅在分支 `MicroTick-Logger` 中**
+
 方块实体列表记录器，记录方块实体从 `World` 的 `loadedTileEntityList` 中添加或删除
 
 选项：无
 
 ## microtick
+
+**仅在分支 `MicroTick-Logger` 中**
 
 使用羊毛方块来记录红石元件的动作以及方块更新。输入 `/carpet microTick` 以获得更多信息
 

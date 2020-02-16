@@ -188,7 +188,7 @@ Default: `false`
 Options: `false`, `true`
 
 Categories: experimental, optimization
-  
+
 ## elytraDeploymentFix
 
 Optimized Elytra deployment
@@ -200,7 +200,7 @@ Default: `false`
 Options: `false`, `true`
 
 Categories: experimental, bugfix
-  
+
 ## explosionRandomSizeRatio
 
 Set the random size ratio in `doExplosionA` to a fixed value
@@ -315,11 +315,15 @@ Options: none
 
 ## tileentitylist
 
+**Only in `MicroTick-Logger` branch**
+
 log when a tile entity is added to or removed from `World`'s `loadedTileEntityList`
 
 Options: none
 
 ## microtick
+
+**Only in `MicroTick-Logger` branch**
 
 Display actions of redstone components and blockupdates with wool block. Type `/carpet microTick` for more detail
 
