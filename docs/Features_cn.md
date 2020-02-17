@@ -229,6 +229,32 @@
 
 分类: command
 
+
+## blockEventPacketRange
+
+设置会在方块事件成功执行后收到数据包的玩家范围
+
+对于活塞而言，这一个数据包是用于显示活塞移动的话。把这个值调小以减小客户端卡顿
+
+默认值: `64`
+
+选项: `0`, `16`, `64`, `128`
+
+分类: optimization
+
+## tntFuseDuration
+
+覆盖 TNT 的默认点燃时长
+
+这也会影响被爆炸点燃的 TNT 的点燃时长
+
+默认值: `80`
+
+选项: `0`, `80`, `32767`
+
+分类: creative
+
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla

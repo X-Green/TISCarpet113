@@ -233,6 +233,30 @@ Options: `false`, `true`
 
 Categories: command
 
+## blockEventPacketRange
+
+Set the range where player will receive a block event packet after a block event fires successfully
+            
+For piston the packet is used to render the piston movement animation. Decrease it to reduce client's lag
+
+Default: `64`
+
+Options: `0`, `16`, `64`, `128`
+
+Categories: optimization
+
+## tntFuseDuration
+
+Overwrite the default fuse duration of TNT
+            
+This might also affects the fuse duration of TNT ignited in explosion
+
+Default: `80`
+
+Options: `0`, `80`, `32767`
+
+Categories: creative
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla

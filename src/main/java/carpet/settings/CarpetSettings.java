@@ -221,6 +221,50 @@ public class CarpetSettings
             return "You must choose a value from 0.7 to 1.3 or -1";
         }
     }
+
+    @Rule(
+            desc = "Set the range where player will receive a block event packet after a block event fires successfully",
+            extra = "For piston the packet is used to render the piston movement animation. Decrease it to reduce client's lag",
+            validate = BlockEventPacketRangeValidator.class,
+            options = {"0", "16", "64", "128"},
+            category = OPTIMIZATION
+    )
+    public static double blockEventPacketRange = 64;
+
+    private static class BlockEventPacketRangeValidator extends Validator<Double>
+    {
+        @Override
+        public Double validate(CommandSource source, ParsedRule<Double> currentRule, Double newValue, String string) {
+            return 0 <= newValue && newValue <= 256 ? newValue : null;
+        }
+
+        @Override
+        public String description() {
+            return "You must choose a value from 0 to 256";
+        }
+    }
+
+    @Rule(
+            desc = "Overwrite the default fuse duration of TNT",
+            extra = "This might also affects the fuse duration of TNT ignited in explosion",
+            options = {"0", "80", "32767"},
+            validate = ValidateTNTFuseDuration.class,
+            category = CREATIVE
+    )
+    public static int tntFuseDuration = 80;
+
+    private static class ValidateTNTFuseDuration extends Validator<Integer>
+    {
+        @Override
+        public Integer validate(CommandSource source, ParsedRule<Integer> currentRule, Integer newValue, String string)
+        {
+            return 0 <= newValue && newValue <= 32767 ? newValue : null;
+        }
+        public String description()
+        {
+            return "You must choose a integer from 0 to 32767";
+        }
+    }
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$

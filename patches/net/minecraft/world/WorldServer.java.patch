@@ -140,31 +140,12 @@
              this.pendingFluidTicks.tick();
          }
      }
-@@ -1026,6 +1080,10 @@
+@@ -1032,7 +1086,7 @@
  
-     private void sendQueuedBlockEvents()
-     {
-+        // TISCM Micro Tick logger
-+        int depth = 0, depthSize = this.blockEventQueue.size();
-+        int counter = 0, i = 0;
-+        // end TISCM Micro Tick logger
-         while (!this.blockEventQueue.isEmpty())
-         {
-             BlockEventData blockeventdata = this.blockEventQueue.removeFirst();
-@@ -1034,6 +1092,16 @@
+             if (this.fireBlockEvent(blockeventdata))
              {
-                 this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
+-                this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), 64.0D, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
++                this.server.getPlayerList().sendToAllNearExcept((EntityPlayer)null, (double)blockeventdata.getPosition().getX(), (double)blockeventdata.getPosition().getY(), (double)blockeventdata.getPosition().getZ(), CarpetSettings.blockEventPacketRange, this.dimension.getType(), new SPacketBlockAction(blockeventdata.getPosition(), blockeventdata.getBlock(), blockeventdata.getEventID(), blockeventdata.getEventParameter()));
              }
-+
-+            // TISCM Micro Tick logger
-+            i++;
-+            if (i == depthSize)
-+            {
-+                depth++;
-+                depthSize = this.blockEventQueue.size();
-+                i = 0;
-+            }
-+            // end TISCM Micro Tick logger
          }
      }
- 
