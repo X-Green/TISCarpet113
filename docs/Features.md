@@ -363,6 +363,16 @@ Only output unique messages. Turn it on if you don't want to be spammed by redst
 
 ------
 
+# Features
+
+## Stat for breaking bedrock
+
+When a bedrock is deleted by piston or sticky piston, the nearest player to the bedrock with 10m will +1 stat
+
+The stat name is `break_bedrock` in `custom` catalogory
+
+------
+
 # Commands
 
 ## epsTest
