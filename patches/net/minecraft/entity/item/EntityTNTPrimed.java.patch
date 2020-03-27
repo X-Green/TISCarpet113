@@ -94,7 +94,7 @@
      {
 +        // ----- Carpet Start ----- //
 +        if (LoggerRegistry.__tnt && logHelper != null)
-+            logHelper.onExploded(posX, posY, posZ);
++            logHelper.onExploded(posX, posY, posZ, this.world.getGameTime());
 +        // ----- Carpet End ----- //
          float f = 4.0F;
          this.world.createExplosion(this, this.posX, this.posY + (double)(this.height / 16.0F), this.posZ, 4.0F, true);
