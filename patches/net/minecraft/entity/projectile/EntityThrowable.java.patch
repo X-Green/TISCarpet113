@@ -37,7 +37,7 @@
 +        /// ----- Carpet Start ----- //
 +        if (LoggerRegistry.__projectiles && logHelper != null)
 +        {
-+            logHelper.onTick(posX, posY, posZ, motionX, motionY, motionZ);
++            logHelper.onTick(posX, posY, posZ, motionX, motionY, motionZ, this.world.getGameTime());
 +        }
 +        // ----- Carpet End ----- //
          this.setPosition(this.posX, this.posY, this.posZ);

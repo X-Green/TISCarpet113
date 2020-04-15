@@ -45,7 +45,7 @@
      {
 +        // ----- Carpet Start ----- //
 +        if (LoggerRegistry.__fallingBlocks && logHelper != null)
-+            logHelper.onTick(posX, posY, posZ, motionX, motionY, motionZ);
++            logHelper.onTick(posX, posY, posZ, motionX, motionY, motionZ, this.world.getGameTime());
 +        // ----- Carpet End ----- //
 +
          if (this.fallTile.isAir())
