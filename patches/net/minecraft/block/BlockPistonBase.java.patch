@@ -38,7 +38,7 @@
          }
      }
  
-+    // TISCM break_bedrock stats
++    // TISCM break_bedrock stat
 +    private void tryAddNearestPlayerStats(World worldIn, BlockPos pos)
 +    {
 +        if (worldIn.getBlockState(pos).getBlock() == Blocks.BEDROCK)
@@ -54,7 +54,7 @@
                  {
                      if (id != 1 || iblockstate.isAir() || !canPush(iblockstate, worldIn, blockpos, enumfacing.getOpposite(), false, enumfacing) || iblockstate.getPushReaction() != EnumPushReaction.NORMAL && block != Blocks.PISTON && block != Blocks.STICKY_PISTON)
                      {
-+                        // TISCM break_bedrock stats
++                        // TISCM break_bedrock stat
 +                        tryAddNearestPlayerStats(worldIn, pos.offset(enumfacing));
 +
                          worldIn.removeBlock(pos.offset(enumfacing));
@@ -64,7 +64,7 @@
              }
              else
              {
-+                // TISCM break_bedrock stats
++                // TISCM break_bedrock stat
 +                tryAddNearestPlayerStats(worldIn, pos.offset(enumfacing));
 +
                  worldIn.removeBlock(pos.offset(enumfacing));

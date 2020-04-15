@@ -1,0 +1,16 @@
+--- a/net/minecraft/stats/StatisticsManagerServer.java
++++ b/net/minecraft/stats/StatisticsManagerServer.java
+@@ -247,7 +247,12 @@
+ 
+             for (Stat<?> stat : this.getDirty())
+             {
+-                object2intmap.put(stat, this.getValue(stat));
++                // TISCM break_bedrock stat
++                // yeet before send or disconnect u
++                if (!stat.getName().equals("minecraft.custom:minecraft.break_bedrock"))
++                {
++                    object2intmap.put(stat, this.getValue(stat));
++                }
+             }
+         }
+ 

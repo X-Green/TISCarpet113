@@ -69,7 +69,7 @@
          }
      }
  
-+    // TISCM break_bedrock stats
++    // TISCM break_bedrock stat
 +    public void addStatsToNearestPlayersInDimensionNear(DimensionType dimension, BlockPos pos, double radius, ResourceLocation stat, int amount)
 +    {
 +        Comparator<Pair<Double, EntityPlayerMP>> comparator = (a, b) ->

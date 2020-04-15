@@ -4,7 +4,7 @@
      public static final ResourceLocation SLEEP_IN_BED = registerCustom("sleep_in_bed", IStatFormater.DEFAULT);
      public static final ResourceLocation OPEN_SHULKER_BOX = registerCustom("open_shulker_box", IStatFormater.DEFAULT);
  
-+    // TISCM break_bedrock stats
++    // TISCM break_bedrock stat
 +    public static final ResourceLocation BREAK_BEDROCK = registerCustom("break_bedrock", IStatFormater.DEFAULT);
 +
      public static void boot()
