@@ -27,6 +27,7 @@ public class TrajectoryLogHelper
     private ArrayList<Vec3d> positions = new ArrayList<>();
     private ArrayList<Vec3d> motions = new ArrayList<>();
     private ArrayList<String> collide = new ArrayList<>();
+    private ArrayList<Long> gametick = new ArrayList<>();
     private String hitType;
     private World world;
 
@@ -36,12 +37,13 @@ public class TrajectoryLogHelper
         this.doLog = this.logger.hasOnlineSubscribers();
     }
 
-    public void onTick(double x, double y, double z, double motionX, double motionY, double motionZ)
+    public void onTick(double x, double y, double z, double motionX, double motionY, double motionZ, long gt)
     {
         if (!doLog) return;
         positions.add(new Vec3d(x, y, z));
         motions.add(new Vec3d(motionX, motionY, motionZ));
         collide.add("f");
+        gametick.add(gt);
     }
 
     public void onCollide(double x, double y, double z, String type, World worldIn)
@@ -50,6 +52,7 @@ public class TrajectoryLogHelper
         positions.add(new Vec3d(x, y, z));
         motions.add(new Vec3d(0,0,0));
         collide.add("t");
+        gametick.add(worldIn.getGameTime());
         hitType = type;
         world = worldIn;
 
@@ -77,10 +80,11 @@ public class TrajectoryLogHelper
                         Vec3d pos = positions.get(i);
                         Vec3d mot = motions.get(i);
                         String coll = collide.get(i);
+                        long gt = gametick.get(i);
                         line.add("w  x");
                         if (coll != "t") {
-                            line.add(String.format("^w Tick: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
-                                    i, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
+                            line.add(String.format("^w Tick: %d\ngt: %d\nx: %f\ny: %f\nz: %f\n------------\nmx: %f\nmy: %f\nmz: %f",
+                                    i, gt, pos.x, pos.y, pos.z, mot.x, mot.y, mot.z));
                         }
                         else {
                             line.add(String.format("^w Hit:\nx: %f\ny: %f\nz: %f\n------------\nHit on: %s",
