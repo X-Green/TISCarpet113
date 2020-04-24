@@ -91,7 +91,7 @@
 +        {
 +            EntityPlayerMP player = this.players.get(i);
 +
-+            if (player.dimension == dimension)
++            if (player.dimension == dimension && !player.isSpectator())
 +            {
 +                double dis = player.getDistanceSq((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D);
 +                if (dis < radius * radius)
