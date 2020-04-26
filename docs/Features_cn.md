@@ -118,6 +118,8 @@
 
 ## microtick
 
+**仅在分支 `MicroTick-Logger` 中**
+
 启用 `/log microtick` 的功能
 
 使用羊毛块来输出红石元件的动作与方块更新
@@ -360,6 +362,12 @@ TileTick(NTE) 列表记录器，有助于制作 TileTick EMP
 ### unique
 
 仅输出不同的信息，如果你不想被红石粉刷屏的话可以开
+
+## autosave
+
+在自动保存触发时告知玩家
+
+选项：无
 
 ------
 

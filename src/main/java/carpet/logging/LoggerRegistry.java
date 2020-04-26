@@ -58,7 +58,10 @@ public class LoggerRegistry
         registerLogger("memory", new HUDLogger("memory", null, null));
 
         //TISCM: add tile tick list
-        registerLogger("tileticklist", new Logger("tileticklist", null, null)); 
+        registerLogger("tileticklist", new Logger("tileticklist", null, null));
+
+        //TISCM: add Autosave
+        registerLogger("autosave", new Logger("autosave", null, null));
     }
 
     /**

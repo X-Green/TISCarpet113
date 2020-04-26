@@ -122,6 +122,8 @@ Categories: experimental, optimization
 
 ## microtick
 
+**Only in `MicroTick-Logger` branch**
+
 Enable the function of `/log micirotick`
 
 Display actions of redstone components and blockupdates with wool block
@@ -360,6 +362,12 @@ Output all messages, default stats
 ### unique
 
 Only output unique messages. Turn it on if you don't want to be spammed by redstone dusts
+
+## autosave
+
+Inform the player when the auto save trigger
+
+Options: none
 
 ------
 
