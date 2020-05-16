@@ -118,7 +118,7 @@
 
 ## microtick
 
-**仅在分支 `MicroTick-Logger` 中**
+**仅在分支 `MicroTick-Logger` 中，[build152](https://github.com/TISUnion/TISCarpet113/releases/tag/build152) 是最后的具有其的构建**
 
 启用 `/log microtick` 的功能
 
