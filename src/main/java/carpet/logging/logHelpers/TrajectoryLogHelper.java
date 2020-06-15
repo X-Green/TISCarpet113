@@ -3,6 +3,7 @@ package carpet.logging.logHelpers;
 import carpet.logging.Logger;
 import carpet.logging.LoggerRegistry;
 import carpet.utils.Messenger;
+import carpet.settings.CarpetSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.util.math.Vec3d;
@@ -109,16 +110,15 @@ public class TrajectoryLogHelper
                     }
                     break;
                 case "visualize":
-                    comp.add(Messenger.c("w visualize logger: visualized " + (positions.size()-1) + " tick(s)"));
-                    for (int i = 0; i < positions.size(); i++)
-                    {
+                    if (CarpetSettings.visualizeProjectileLoggerEnabled){
+                    comp.add(Messenger.c("w visualize logger: visualized " + (positions.size() - 1) + " tick(s)"));
+                    for (int i = 0; i < positions.size(); i++) {
                         Vec3d pos = positions.get(i);
                         EntitySnowball visEntity = new EntitySnowball(world, pos.x, pos.y, pos.z);
                         visEntity.setNoGravity(true);
                         if (i < positions.size() - 1) {
                             visEntity.setCustomName(new TextComponentString(i + ""));
-                        }
-                        else {
+                        } else {
                             visEntity.setCustomName(new TextComponentString("Hit"));
                         }
                         visEntity.setCustomNameVisible(true);
@@ -127,12 +127,16 @@ public class TrajectoryLogHelper
                         visEntity.setInvulnerable(true);
                         try {
                             world.spawnEntity(visEntity);
-                        }
-                        catch (NullPointerException exception){
+                        } catch (NullPointerException exception) {
                             comp.clear();
                             comp.add(Messenger.c("w visualize logger: visualize failed, someone is killing snowballs?"));
                         }
                     }
+                }
+                    else{
+                        comp.add(Messenger.c("w visualize logger: visualize is not enabled"));
+
+                }
                     break;
             }
             return comp.toArray(new ITextComponent[0]);

@@ -61,6 +61,12 @@ public class CarpetSettings
     public static boolean commandPing = true;
 
     @Rule(
+            desc = "enable visualize projectile logger",
+            category = SURVIVAL
+    )
+    public static boolean visualizeProjectileLoggerEnabled = false;
+
+    @Rule(
     		desc = "No block updates",
     		category = CREATIVE
     )
