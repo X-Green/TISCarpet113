@@ -122,7 +122,7 @@ Categories: experimental, optimization
 
 ## microtick
 
-**Only in `MicroTick-Logger` branch**
+**Only in `MicroTick-Logger` branch, [build152](https://github.com/TISUnion/TISCarpet113/releases/tag/build152) is the latestet release with it**
 
 Enable the function of `/log micirotick`
 
