@@ -55,6 +55,8 @@ public class SpawnCommand
                                                         getBlockPos(c, "to")))))).
                         then(literal("stop").
                                 executes( (c) -> stopTracking(c.getSource()))).
+                        then(literal("restart").
+                                executes( (c) -> restartTracking(c.getSource()))).
                         then(argument("type", word()).
                                 suggests( (c, b) -> suggest(SpawnReporter.mob_groups,b)).
                                 executes( (c) -> recentSpawnsForType(c.getSource(), getString(c, "type"))))).
@@ -150,6 +152,19 @@ public class SpawnCommand
         SpawnReporter.lower_spawning_limit = null;
         SpawnReporter.upper_spawning_limit = null;
         Messenger.m(source, "gi Spawning tracking stopped.");
+        return 1;
+    }
+
+    private static int restartTracking(CommandSource source)
+    {
+        if (SpawnReporter.track_spawns == 0L){
+            Messenger.m(source, "r spawn tracking is not running.");
+        }
+        else{
+            SpawnReporter.reset_spawn_stats(false);
+            SpawnReporter.track_spawns = (long) source.getServer().getTickCounter();
+            Messenger.m(source, "gi Spawning tracking restarted.");
+        }
         return 1;
     }
 
