@@ -4,6 +4,7 @@ import carpet.helpers.HopperCounter;
 import carpet.helpers.TickSpeed;
 import carpet.logging.LoggerRegistry;
 import carpet.logging.logHelpers.PacketCounter;
+import carpet.settings.CarpetSettings;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,7 +50,7 @@ public class HUDController
 
     public static void update_hud(MinecraftServer server)
     {
-        if(server.getTickCounter() % 20 != 0)
+        if(server.getTickCounter() % CarpetSettings.HUDLoggerUpdateInterval != 0)
             return;
 
         player_huds.clear();

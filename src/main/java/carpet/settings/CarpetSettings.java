@@ -271,6 +271,12 @@ public class CarpetSettings
             return "You must choose a integer from 0 to 32767";
         }
     }
+
+    @Rule(
+            desc = "HUD Logger update interval",
+            category = FEATURE
+    )
+    public static int HUDLoggerUpdateInterval = 20;
     
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
