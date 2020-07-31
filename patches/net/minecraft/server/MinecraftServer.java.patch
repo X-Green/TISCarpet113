@@ -136,7 +136,7 @@
 +            CarpetProfiler.end_current_section();
 +
 +            // TISCM Autosave logger
-+            AutoSaveLogHelper.onAutoSave(this.getWorld(DimensionType.OVERWORLD).getGameTime(), tickCounter);
++            // AutoSaveLogHelper.onAutoSave(this.getWorld(DimensionType.OVERWORLD).getGameTime(), tickCounter);
          }
  
          this.profiler.startSection("snooper");

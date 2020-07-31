@@ -3,6 +3,7 @@ package carpet.utils;
 import carpet.helpers.HopperCounter;
 import carpet.helpers.TickSpeed;
 import carpet.logging.LoggerRegistry;
+import carpet.logging.logHelpers.AutoSaveLogHelper;
 import carpet.logging.logHelpers.PacketCounter;
 import carpet.settings.CarpetSettings;
 import net.minecraft.entity.EnumCreatureType;
@@ -80,13 +81,16 @@ public class HUDController
             LoggerRegistry.getLogger("counter").log((option)->send_counter_info(server, option));
 
         if (LoggerRegistry.__packets)
-            LoggerRegistry.getLogger("packets").log(()-> packetCounter());
+            LoggerRegistry.getLogger("packets").log(HUDController::packetCounter);
 
         if (LoggerRegistry.__villagecount)
             LoggerRegistry.getLogger("villagecount").log(() -> send_total_villages(server));
 
         if (LoggerRegistry.__memory)
-            LoggerRegistry.getLogger("memory").log(() -> send_mem_usage());
+            LoggerRegistry.getLogger("memory").log(HUDController::send_mem_usage);
+
+        if (LoggerRegistry.__autosave)
+            LoggerRegistry.getLogger("autosave").log(AutoSaveLogHelper::send_hud_info);
 
         for (EntityPlayer player: player_huds.keySet())
         {
