@@ -16,19 +16,7 @@
  import net.minecraft.inventory.IInventory;
  import net.minecraft.item.ItemStack;
  import net.minecraft.item.ItemUseContext;
-@@ -178,6 +181,11 @@
-             if (!iblockstate.isAir())
-             {
-                 iblockstate.onBlockClicked(this.world, pos, this.player);
-+                if (iblockstate.getBlock() == Blocks.SLIME_BLOCK)  // bedrock?
-+                {
-+                    world.setBlockState(pos, Blocks.BEDROCK.getDefaultState());
-+                }
-+
-                 f = iblockstate.getPlayerRelativeBlockHardness(this.player, this.player.world, pos);
-             }
- 
-@@ -241,12 +249,19 @@
+@@ -241,6 +244,12 @@
          {
              iblockstate.getBlock().onPlayerDestroy(this.world, pos, iblockstate);
          }
@@ -41,14 +29,7 @@
  
          return flag;
      }
- 
-     public boolean tryHarvestBlock(BlockPos pos)
-     {
-+        System.out.println("try harvest " + pos + " " + world.getBlockState(pos).getBlock()); // bedrock?
-         IBlockState iblockstate = this.world.getBlockState(pos);
- 
-         if (!this.player.getHeldItemMainhand().getItem().canPlayerBreakBlockWhileHolding(iblockstate, this.world, pos, this.player))
-@@ -401,11 +416,20 @@
+@@ -401,11 +410,20 @@
              boolean flag = !player.getHeldItemMainhand().isEmpty() || !player.getHeldItemOffhand().isEmpty();
              boolean flag1 = player.isSneaking() && flag;
  
