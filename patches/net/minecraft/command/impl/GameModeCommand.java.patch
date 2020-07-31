@@ -1,0 +1,23 @@
+--- a/net/minecraft/command/impl/GameModeCommand.java
++++ b/net/minecraft/command/impl/GameModeCommand.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.command.impl;
+ 
++import carpet.helpers.CommandPermissionHelper;
+ import com.mojang.brigadier.CommandDispatcher;
+ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+ import com.mojang.brigadier.context.CommandContext;
+@@ -17,10 +18,9 @@
+ {
+     public static void register(CommandDispatcher<CommandSource> dispatcher)
+     {
+-        LiteralArgumentBuilder<CommandSource> literalargumentbuilder = Commands.literal("gamemode").requires((p_198485_0_) ->
+-        {
+-            return p_198485_0_.hasPermissionLevel(2);
+-        });
++        LiteralArgumentBuilder<CommandSource> literalargumentbuilder = Commands.literal("gamemode").requires(
++            CommandPermissionHelper::canCheat  // TISCM opPlayerNoCheat
++        );
+ 
+         for (GameType gametype : GameType.values())
+         {

@@ -1,13 +1,14 @@
 --- a/net/minecraft/command/impl/SummonCommand.java
 +++ b/net/minecraft/command/impl/SummonCommand.java
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,7 @@
  package net.minecraft.command.impl;
  
++import carpet.helpers.CommandPermissionHelper;
 +import carpet.settings.CarpetSettings;
  import com.mojang.brigadier.CommandDispatcher;
  import com.mojang.brigadier.exceptions.CommandSyntaxException;
  import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-@@ -14,11 +15,14 @@
+@@ -14,11 +16,14 @@
  import net.minecraft.entity.EntityType;
  import net.minecraft.entity.IEntityLivingData;
  import net.minecraft.entity.effect.EntityLightningBolt;
@@ -22,6 +23,21 @@
  import net.minecraft.world.chunk.storage.AnvilChunkLoader;
  
  public class SummonCommand
+@@ -27,11 +32,10 @@
+ 
+     public static void register(CommandDispatcher<CommandSource> dispatcher)
+     {
+-        dispatcher.register(Commands.literal("summon").requires((p_198740_0_) ->
++        dispatcher.register(Commands.literal("summon").requires(
++            CommandPermissionHelper::canCheat  // TISCM opPlayerNoCheat
++        ).then(Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes((p_198738_0_) ->
+         {
+-            return p_198740_0_.hasPermissionLevel(2);
+-        }).then(Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(SuggestionProviders.SUMMONABLE_ENTITIES).executes((p_198738_0_) ->
+-        {
+             return summonEntity(p_198738_0_.getSource(), EntitySummonArgument.getEntityId(p_198738_0_, "entity"), p_198738_0_.getSource().getPos(), new NBTTagCompound(), true);
+         }).then(Commands.argument("pos", Vec3Argument.vec3()).executes((p_198735_0_) ->
+         {
 @@ -50,7 +54,35 @@
          if (EntityType.getId(EntityType.LIGHTNING_BOLT).equals(type))
          {

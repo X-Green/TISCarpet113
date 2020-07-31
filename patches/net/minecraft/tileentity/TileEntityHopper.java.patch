@@ -21,7 +21,33 @@
  import net.minecraft.item.ItemStack;
  import net.minecraft.nbt.NBTTagCompound;
  import net.minecraft.util.EntitySelectors;
-@@ -197,6 +204,29 @@
+@@ -150,6 +157,25 @@
+ 
+                 if (flag)
+                 {
++                    if (CarpetSettings.hopperCounters && CarpetSettings.hopperCountersUnlimitedSpeed)  // TISCM hopperCountersUnlimitedSpeed
++                    {
++                        for (int i = 0; i < Short.MAX_VALUE; i++)
++                        {
++                            boolean working = false;
++                            if (!this.isInventoryEmpty())
++                            {
++                                working = this.transferItemsOut();
++                            }
++                            if (!this.isFull())
++                            {
++                                working |= p_200109_1_.get();
++                            }
++                            if (!working)
++                            {
++                                break;
++                            }
++                        }
++                    }
+                     this.setTransferCooldown(8);
+                     this.markDirty();
+                     return true;
+@@ -197,6 +223,29 @@
  
      private boolean transferItemsOut()
      {
@@ -51,7 +77,18 @@
          IInventory iinventory = this.getInventoryForHopperTransfer();
  
          if (iinventory == null)
-@@ -396,6 +426,28 @@
+@@ -377,6 +426,10 @@
+ 
+     public static boolean captureItem(IInventory p_200114_0_, EntityItem p_200114_1_)
+     {
++        if (p_200114_1_.removed)  // TISCM to avoid repeatedly extraction an item entity in onEntityCollided for hopperCountersUnlimitedSpeed
++        {
++            return false;
++        }
+         boolean flag = false;
+         ItemStack itemstack = p_200114_1_.getItem().copy();
+         ItemStack itemstack1 = putStackInInventoryAllSlots((IInventory)null, p_200114_0_, itemstack, (EnumFacing)null);
+@@ -396,6 +449,28 @@
  
      public static ItemStack putStackInInventoryAllSlots(@Nullable IInventory source, IInventory destination, ItemStack stack, @Nullable EnumFacing direction)
      {

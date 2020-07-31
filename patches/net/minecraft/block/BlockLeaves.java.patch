@@ -1,0 +1,14 @@
+--- a/net/minecraft/block/BlockLeaves.java
++++ b/net/minecraft/block/BlockLeaves.java
+@@ -1,9 +1,11 @@
+ package net.minecraft.block;
+ 
++import java.util.Comparator;
+ import java.util.Random;
+ import javax.annotation.Nullable;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.entity.player.EntityPlayer;
++import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.init.Blocks;
+ import net.minecraft.init.Items;
+ import net.minecraft.init.Particles;

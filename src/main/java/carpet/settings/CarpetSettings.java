@@ -277,7 +277,24 @@ public class CarpetSettings
             category = FEATURE
     )
     public static int HUDLoggerUpdateInterval = 20;
-    
+
+    @Rule(
+            desc = "Disable some command to prevent accidently cheating",
+            extra = "Affects command list: /gamemode, /tp, /teleport, /give, /setblock, /summon",
+            category = SURVIVAL
+    )
+    public static boolean opPlayerNoCheat = false;
+
+    @Rule(
+            desc = "Make hopper pointing towards wool has infinity speed to suck in or transfer items",
+            extra = {
+                    "Only works when hopperCounters option in Carpet Mod is on"
+            },
+            category = CREATIVE
+    )
+    public static boolean hopperCountersUnlimitedSpeed = false;
+
+
     // /$$$$$$$$ /$$$$$$  /$$$$$$   /$$$$$$  /$$      /$$
     //|__  $$__/|_  $$_/ /$$__  $$ /$$__  $$| $$$    /$$$
     //   | $$     | $$  | $$  \__/| $$  \__/| $$$$  /$$$$

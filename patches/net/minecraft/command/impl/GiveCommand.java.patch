@@ -1,0 +1,24 @@
+--- a/net/minecraft/command/impl/GiveCommand.java
++++ b/net/minecraft/command/impl/GiveCommand.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.command.impl;
+ 
++import carpet.helpers.CommandPermissionHelper;
+ import com.mojang.brigadier.CommandDispatcher;
+ import com.mojang.brigadier.arguments.IntegerArgumentType;
+ import com.mojang.brigadier.exceptions.CommandSyntaxException;
+@@ -21,11 +22,10 @@
+ {
+     public static void register(CommandDispatcher<CommandSource> dispatcher)
+     {
+-        dispatcher.register(Commands.literal("give").requires((p_198496_0_) ->
++        dispatcher.register(Commands.literal("give").requires(
++            CommandPermissionHelper::canCheat
++        ).then(Commands.argument("targets", EntityArgument.players()).then(Commands.argument("item", ItemArgument.item()).executes((p_198493_0_) ->
+         {
+-            return p_198496_0_.hasPermissionLevel(2);
+-        }).then(Commands.argument("targets", EntityArgument.players()).then(Commands.argument("item", ItemArgument.item()).executes((p_198493_0_) ->
+-        {
+             return giveItem(p_198493_0_.getSource(), ItemArgument.getItem(p_198493_0_, "item"), EntityArgument.getPlayers(p_198493_0_, "targets"), 1);
+         }).then(Commands.argument("count", IntegerArgumentType.integer(1)).executes((p_198495_0_) ->
+         {
