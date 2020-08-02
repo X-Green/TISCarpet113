@@ -5,6 +5,7 @@
 /ForgeGradle/
 /.idea/
 /out/
+/run/
 /installer/*.zip
 /installer/*.tar.gz
 Carpetmod.iml
