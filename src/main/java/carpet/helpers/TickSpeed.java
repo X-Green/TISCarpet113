@@ -5,6 +5,7 @@ import carpet.utils.Messenger;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 
@@ -154,16 +155,13 @@ public class TickSpeed
                 process_entities = false;
             }
         }
-        else if (is_superHot)
-        {
-            if (player_active_timeout <= 0)
-            {
+        else if (is_superHot) {
+            if (player_active_timeout <= 0) {
                 process_entities = false;
 
             }
         }
-
-
     }
+
 }
 
