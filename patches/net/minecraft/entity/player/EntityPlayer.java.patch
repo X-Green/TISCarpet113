@@ -11,6 +11,18 @@
  import com.google.common.collect.Lists;
  import com.mojang.authlib.GameProfile;
  import java.nio.charset.StandardCharsets;
+@@ -180,9 +185,9 @@
+ 
+     public void tick()
+     {
+-        this.noClip = this.isSpectator();
++        this.noClip = this.isSpectator() || (CarpetSettings.creativeNoClip && this.abilities.isFlying);
+ 
+-        if (this.isSpectator())
++        if (this.noClip)
+         {
+             this.onGround = false;
+         }
 @@ -436,7 +441,17 @@
  
      public int getMaxInPortalTime()
@@ -30,6 +42,15 @@
      }
  
      protected SoundEvent getSwimSound()
+@@ -608,7 +623,7 @@
+         this.cameraYaw += (f - this.cameraYaw) * 0.4F;
+         this.cameraPitch += (f1 - this.cameraPitch) * 0.8F;
+ 
+-        if (this.getHealth() > 0.0F && !this.isSpectator())
++        if (this.getHealth() > 0.0F && !(this.isSpectator() || (CarpetSettings.creativeNoClip && this.abilities.isFlying)))
+         {
+             AxisAlignedBB axisalignedbb;
+ 
 @@ -637,8 +652,9 @@
          this.playShoulderEntityAmbientSound(this.getLeftShoulderEntity());
          this.playShoulderEntityAmbientSound(this.getRightShoulderEntity());

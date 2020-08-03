@@ -19,6 +19,7 @@ public final class ParsedRule<T> implements Comparable<ParsedRule> {
     public final ImmutableList<String> extraInfo;
     public final ImmutableList<String> categories;
     public final ImmutableList<String> options;
+    public final boolean inProtocol;
     public boolean isStrict;
     public final Class<T> type;
     public final List<Validator<T>> validators;
@@ -32,6 +33,7 @@ public final class ParsedRule<T> implements Comparable<ParsedRule> {
         this.type = (Class<T>) field.getType();
         this.description = rule.desc();
         this.isStrict = rule.strict();
+        this.inProtocol = rule.inProtocol();
         this.extraInfo = ImmutableList.copyOf(rule.extra());
         this.categories = ImmutableList.copyOf(rule.category());
         this.validators = new ArrayList<>();

@@ -1,5 +1,6 @@
 package carpet.settings;
 
+import carpet.network.CarpetServerNetworkHandler;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -61,6 +62,7 @@ public class SettingsManager
     static void notifyRuleChanged(CommandSource source, ParsedRule<?> rule, String userTypedValue) // unused in jarmod
     {
         observers.forEach(observer -> observer.accept(source, rule, userTypedValue));
+        CarpetServerNetworkHandler.updateRuleWithConnectedClients(rule);
     }
 
     public static Iterable<String> getCategories()

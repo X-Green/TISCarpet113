@@ -52,6 +52,8 @@ import java.lang.annotation.Target;
      */
     boolean strict() default false;
 
+    boolean inProtocol() default false;
+
     /**
      * The class of the validator checked when the rule is changed.
      */

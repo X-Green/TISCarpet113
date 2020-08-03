@@ -1,6 +1,7 @@
 package carpet.helpers;
 
 import carpet.CarpetServer;
+import carpet.network.CarpetServerNetworkHandler;
 import carpet.utils.Messenger;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -44,9 +45,10 @@ public class TickSpeed
         mspt = (long)(1000.0/tickrate);
         if (mspt <=0)
         {
-            mspt = 1l;
+            mspt = 1L;
             tickrate = 1000.0f;
         }
+        CarpetServerNetworkHandler.updateTickSpeedToConnectedPlayers();
     }
 
     public static ITextComponent tickrate_advance(EntityPlayer player, int advance, String callback, CommandSource source)

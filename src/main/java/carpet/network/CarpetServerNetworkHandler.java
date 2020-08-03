@@ -41,6 +41,21 @@ public class CarpetServerNetworkHandler {
         }
     }
 
+    public static void onPlayerJoin(EntityPlayerMP playerEntity)
+    {
+        if (!playerEntity.connection.netManager.isLocalChannel())
+        {
+            playerEntity.connection.sendPacket(new SPacketCustomPayload(
+                    CarpetNetwork.CARPET_CHANNEL,
+                    (new PacketBuffer(Unpooled.buffer())).writeVarInt(CarpetNetwork.HI).writeString(CarpetSettings.carpetVersion)
+            ));
+        }
+        else
+        {
+            validCarpetPlayers.add(playerEntity);
+        }
+
+    }
 
     public static void onHello(EntityPlayerMP playerEntity, PacketBuffer packetData)
     {
@@ -53,21 +68,11 @@ public class CarpetServerNetworkHandler {
         else
             CarpetSettings.LOG.warn("Player "+playerEntity.getName().getString()+" joined with another carpet version: "+clientVersion);
         DataBuilder data = DataBuilder.create().withTickRate();
-        CarpetServer.settingsManager.getRules().forEach(data::withRule);
+        CarpetServer.settingsManager.getRules().forEach(parsedRule -> {
+            if (parsedRule.inProtocol)
+                    data.withRule(parsedRule);
+        });
         playerEntity.connection.sendPacket(new SPacketCustomPayload(CarpetNetwork.CARPET_CHANNEL, data.build() ));
-    }
-
-    private static void onClientData(EntityPlayerMP player, PacketBuffer data)
-    {
-        NBTTagCompound compound = data.readCompoundTag();
-        if (compound == null) return;
-        for (String key: compound.keySet())
-        {
-            if (dataHandlers.containsKey(key))
-                dataHandlers.get(key).accept(player, compound.get(key));
-            else
-                CarpetSettings.LOG.warn("Unknown carpet client data: "+key);
-        }
     }
 
     private static void handleClientCommand(EntityPlayerMP player, NBTTagCompound commandData)
@@ -118,15 +123,30 @@ public class CarpetServerNetworkHandler {
     }
 
 
+    private static void onClientData(EntityPlayerMP player, PacketBuffer data)
+    {
+        NBTTagCompound compound = data.readCompoundTag();
+        if (compound == null) return;
+        for (String key: compound.keySet())
+        {
+            if (dataHandlers.containsKey(key))
+                dataHandlers.get(key).accept(player, compound.get(key));
+            else
+                CarpetSettings.LOG.warn("Unknown carpet client data: "+key);
+        }
+    }
+
     public static void updateRuleWithConnectedClients(ParsedRule<?> rule)
     {
         if (CarpetSettings.superSecretSetting) return;
+        if (! rule.inProtocol) return;
         for (EntityPlayerMP player : remoteCarpetPlayers.keySet())
         {
             player.connection.sendPacket(new SPacketCustomPayload(
                     CarpetNetwork.CARPET_CHANNEL,
                     DataBuilder.create().withRule(rule).build()
             ));
+            System.out.println("Rule "+ rule.name + " UPDATED to " + player.getName());
         }
     }
 
@@ -142,6 +162,26 @@ public class CarpetServerNetworkHandler {
         }
     }
 
+
+    public static void onPlayerLoggedOut(EntityPlayerMP player)
+    {
+        validCarpetPlayers.remove(player);
+        if (!player.connection.netManager.isLocalChannel())
+            remoteCarpetPlayers.remove(player);
+    }
+
+    public static void close()
+    {
+        remoteCarpetPlayers.clear();
+        validCarpetPlayers.clear();
+    }
+
+    public static boolean isValidCarpetPlayer(EntityPlayerMP player)
+    {
+        if (CarpetSettings.superSecretSetting) return false;
+        return validCarpetPlayers.contains(player);
+
+    }
 
     private static class DataBuilder
     {

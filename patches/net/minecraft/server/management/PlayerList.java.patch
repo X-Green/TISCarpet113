@@ -1,8 +1,10 @@
 --- a/net/minecraft/server/management/PlayerList.java
 +++ b/net/minecraft/server/management/PlayerList.java
-@@ -1,17 +1,17 @@
+@@ -1,17 +1,19 @@
  package net.minecraft.server.management;
  
++import carpet.CarpetServer;
++import carpet.network.CarpetServerNetworkHandler;
 +import carpet.patches.EntityPlayerMPFake;
 +import carpet.patches.NetHandlerPlayServerFake;
  import com.google.common.collect.Lists;
@@ -22,7 +24,7 @@
  import javax.annotation.Nullable;
  import net.minecraft.advancements.CriteriaTriggers;
  import net.minecraft.advancements.PlayerAdvancements;
-@@ -49,6 +49,7 @@
+@@ -49,6 +51,7 @@
  import net.minecraft.server.MinecraftServer;
  import net.minecraft.stats.StatList;
  import net.minecraft.stats.StatisticsManagerServer;
@@ -30,7 +32,7 @@
  import net.minecraft.util.math.BlockPos;
  import net.minecraft.util.math.MathHelper;
  import net.minecraft.util.text.ChatType;
-@@ -123,7 +124,9 @@
+@@ -123,7 +126,9 @@
          WorldServer worldserver = this.server.getWorld(playerIn.dimension);
          WorldInfo worldinfo = worldserver.getWorldInfo();
          this.setPlayerGameTypeBasedOnOther(playerIn, (EntityPlayerMP)null, worldserver);
@@ -41,7 +43,17 @@
          nethandlerplayserver.sendPacket(new SPacketJoinGame(playerIn.getEntityId(), playerIn.interactionManager.getGameType(), worldinfo.isHardcore(), worldserver.dimension.getType(), worldserver.getDifficulty(), this.getMaxPlayers(), worldinfo.getGenerator(), worldserver.getGameRules().getBoolean("reducedDebugInfo")));
          nethandlerplayserver.sendPacket(new SPacketCustomPayload(SPacketCustomPayload.BRAND, (new PacketBuffer(Unpooled.buffer())).writeString(this.getServer().getServerModName())));
          nethandlerplayserver.sendPacket(new SPacketServerDifficulty(worldinfo.getDifficulty(), worldinfo.isDifficultyLocked()));
-@@ -306,6 +309,10 @@
+@@ -201,6 +206,9 @@
+         }
+ 
+         playerIn.addSelfToInternalCraftingInventory();
++
++        //CM: onPlayerConnect
++        CarpetServerNetworkHandler.onPlayerJoin(playerIn);
+     }
+ 
+     protected void sendScoreboard(ServerScoreboard scoreboardIn, EntityPlayerMP playerIn)
+@@ -306,6 +314,10 @@
          {
              nbttagcompound1 = this.playerDataManager.readPlayerData(playerIn);
          }
@@ -52,7 +64,7 @@
  
          return nbttagcompound1;
      }
-@@ -454,6 +461,12 @@
+@@ -454,6 +466,12 @@
  
          for (EntityPlayerMP entityplayermp1 : list)
          {
@@ -65,7 +77,7 @@
              entityplayermp1.connection.disconnect(new TextComponentTranslation("multiplayer.disconnect.duplicate_login"));
          }
  
-@@ -721,6 +734,45 @@
+@@ -721,6 +739,45 @@
          }
      }
  
