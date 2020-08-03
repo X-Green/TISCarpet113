@@ -159,9 +159,9 @@ public class CarpetServerNetworkHandler {
                     CarpetNetwork.CARPET_CHANNEL,
                     DataBuilder.create().withTickRate().build()
             ));
+            System.out.println("Tickspeed " + TickSpeed.tickrate + " sent to " + player.getName());
         }
     }
-
 
     public static void onPlayerLoggedOut(EntityPlayerMP player)
     {
