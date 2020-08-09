@@ -279,7 +279,7 @@ public class CarpetSettings
     public static int HUDLoggerUpdateInterval = 20;
 
     @Rule(
-            desc = "Disable some command to prevent accidently cheating",
+            desc = "Disable some command to prevent accidentally cheating",
             extra = "Affects command list: /gamemode, /tp, /teleport, /give, /setblock, /summon",
             category = SURVIVAL
     )
