@@ -256,6 +256,29 @@
 
 分类: creative
 
+## opPlayerNoCheat
+
+禁用部分指令以避免op玩家意外地作弊
+
+影响的指令列表：`/gamemode`, `/tp`, `/teleport`, `/give`, `/setblock`, `/summon`
+
+默认值: `false`
+
+选项: `false`, `true`
+
+选项: survival
+
+## hopperCountersUnlimitedSpeed
+
+当漏斗指向羊毛方块时，漏斗将拥有无限的物品吸取以及传输速度
+
+仅当hopperCounters开启时有效
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: creative
 
 ## YEET
 

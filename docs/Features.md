@@ -259,6 +259,30 @@ Options: `0`, `80`, `32767`
 
 Categories: creative
 
+## opPlayerNoCheat
+
+Disable some command to prevent accidentally cheating
+
+Affects command list: `/gamemode`, `/tp`, `/teleport`, `/give`, `/setblock`, `/summon`
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: survival
+
+## hopperCountersUnlimitedSpeed
+
+Make hopper pointing towards wool has infinity speed to suck in or transfer items
+
+Only works when hopperCounters option in Carpet Mod is on
+
+Default: `false`
+
+Options: `false`, `true`
+
+Categories: creative
+
 ## YEET
 
 **Warn**: all yeet options will change vanilla behaviour, they WILL NOT behave like vanilla
