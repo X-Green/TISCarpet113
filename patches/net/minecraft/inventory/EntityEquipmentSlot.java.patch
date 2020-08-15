@@ -1,0 +1,19 @@
+--- a/net/minecraft/inventory/EntityEquipmentSlot.java
++++ b/net/minecraft/inventory/EntityEquipmentSlot.java
+@@ -13,6 +13,10 @@
+     private final int index;
+     private final int slotIndex;
+     private final String name;
++    /**
++     * Lithium change: Avoid cloning enum values
++     */
++    public static EntityEquipmentSlot[] SLOTS = EntityEquipmentSlot.values();
+ 
+     private EntityEquipmentSlot(EntityEquipmentSlot.Type slotTypeIn, int indexIn, int slotIndexIn, String nameIn)
+     {
+@@ -59,4 +63,5 @@
+         HAND,
+         ARMOR;
+     }
++
+ }

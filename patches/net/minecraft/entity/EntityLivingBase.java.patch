@@ -17,6 +17,24 @@
      public float moveStrafing;
      public float moveVertical;
      public float moveForward;
+@@ -539,7 +543,7 @@
+         compound.putShort("DeathTime", (short)this.deathTime);
+         compound.putFloat("AbsorptionAmount", this.getAbsorptionAmount());
+ 
+-        for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.values())
++        for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.SLOTS)
+         {
+             ItemStack itemstack = this.getItemStackFromSlot(entityequipmentslot);
+ 
+@@ -551,7 +555,7 @@
+ 
+         compound.put("Attributes", SharedMonsterAttributes.writeAttributes(this.getAttributeMap()));
+ 
+-        for (EntityEquipmentSlot entityequipmentslot1 : EntityEquipmentSlot.values())
++        for (EntityEquipmentSlot entityequipmentslot1 : EntityEquipmentSlot.SLOTS)
+         {
+             ItemStack itemstack1 = this.getItemStackFromSlot(entityequipmentslot1);
+ 
 @@ -917,12 +921,14 @@
          }
          else
@@ -102,6 +120,15 @@
                  this.setHealth(f2 - damageAmount);
                  this.getCombatTracker().trackDamage(damageSrc, f2, damageAmount);
                  this.setAbsorptionAmount(this.getAbsorptionAmount() - damageAmount);
+@@ -2171,7 +2197,7 @@
+                 }
+             }
+ 
+-            for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.values())
++            for (EntityEquipmentSlot entityequipmentslot : EntityEquipmentSlot.SLOTS)
+             {
+                 ItemStack itemstack;
+ 
 @@ -2530,9 +2556,15 @@
                      this.attackEntityFrom(DamageSource.CRAMMING, 6.0F);
                  }

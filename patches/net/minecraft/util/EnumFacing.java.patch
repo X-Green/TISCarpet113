@@ -8,6 +8,15 @@
  import com.google.common.collect.Iterators;
  import java.util.Arrays;
  import java.util.Comparator;
+@@ -32,7 +34,7 @@
+     private final EnumFacing.Axis axis;
+     private final EnumFacing.AxisDirection axisDirection;
+     private final Vec3i directionVec;
+-    private static final EnumFacing[] VALUES = values();
++    public static final EnumFacing[] VALUES = values();
+     private static final Map<String, EnumFacing> NAME_LOOKUP = Arrays.stream(VALUES).collect(Collectors.toMap(EnumFacing::getName2, (p_199787_0_) -> {
+         return p_199787_0_;
+     }));
 @@ -63,7 +65,17 @@
      public static EnumFacing[] getFacingDirections(Entity entityIn)
      {
