@@ -1,0 +1,352 @@
+--- a/net/minecraft/world/chunk/BlockStateContainer.java
++++ b/net/minecraft/world/chunk/BlockStateContainer.java
+@@ -1,13 +1,9 @@
+ package net.minecraft.world.chunk;
+ 
+-import java.util.Arrays;
+-import java.util.Objects;
+ import java.util.concurrent.locks.ReentrantLock;
+ import java.util.function.Function;
+-import java.util.stream.Collectors;
+-import net.minecraft.crash.CrashReport;
+-import net.minecraft.crash.CrashReportCategory;
+-import net.minecraft.crash.ReportedException;
++
++import me.jellysquid.mods.lithium.chunk.LithiumHashPalette;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.nbt.NBTTagList;
+ import net.minecraft.network.PacketBuffer;
+@@ -17,8 +13,7 @@
+ import net.minecraftforge.api.distmarker.Dist;
+ import net.minecraftforge.api.distmarker.OnlyIn;
+ 
+-public class BlockStateContainer<T> implements IBlockStatePaletteResizer<T>
+-{
++public class BlockStateContainer<T> implements IBlockStatePaletteResizer<T> {
+     private final IBlockStatePalette<T> field_205521_b;
+     private final IBlockStatePaletteResizer<T> field_205522_c = (p_205517_0_, p_205517_1_) ->
+     {
+@@ -33,8 +28,32 @@
+     private int bits;
+     private final ReentrantLock lock = new ReentrantLock();
+ 
+-    private void lock()
+-    {
++    /**
++     * Lithium stuff
++     */
++    private static final ThreadLocal<short[]> cachedCompactionArrays = ThreadLocal.withInitial(() -> new short[4096]);
++    private static final long[] EMPTY_PALETTE_DATA = new long[(4 * 4096) / 64];
++
++
++    /**
++     * Lithium change:
++     * <p>
++     * The implementation of {@link BlockStateContainer} performs a strange check to catch concurrent modification and throws
++     * an exception if it occurs. In practice, this never occurs and seems to be a left-over that was added when off-thread
++     * chunk generation was being developed and tested. However, a poorly behaved mod could violate the thread-safety
++     * contract and cause issues which would not be caught with this patch.
++     * <p>
++     * This locking (according to some individuals) can impact performance significantly, though my own testing shows it to
++     * have only a small impact (about 5% of the world generation time) in Java 11 on an AMD Piledriver-based system running
++     * Linux 5.4. As the locking code is platform (and even implementation) specific, it's hard to make an absolute statement
++     * about it. My experience has been that the Java locks tend to perform worse on Windows, which is what most players use.
++     * <p>
++     * This is a rather, well, dumb patch, to remove the locking mechanic. It would likely be wiser to implement a faster
++     * check against some counter after modification has occurred to see if something was updated beneath our feet, though
++     * that would not be guaranteed to catch the issue.
++     */
++    private void lock() {
++        /*
+         if (this.lock.isLocked() && !this.lock.isHeldByCurrentThread())
+         {
+             String s = Thread.getAllStackTraces().keySet().stream().filter(Objects::nonNull).map((p_210458_0_) ->
+@@ -50,15 +69,17 @@
+         {
+             this.lock.lock();
+         }
++         */
+     }
+ 
+-    private void unlock()
+-    {
+-        this.lock.unlock();
++    /**
++     * Same
++     */
++    private void unlock() {
++        // this.lock.unlock();
+     }
+ 
+-    public BlockStateContainer(IBlockStatePalette<T> p_i48961_1_, ObjectIntIdentityMap<T> p_i48961_2_, Function<NBTTagCompound, T> p_i48961_3_, Function<T, NBTTagCompound> p_i48961_4_, T p_i48961_5_)
+-    {
++    public BlockStateContainer(IBlockStatePalette<T> p_i48961_1_, ObjectIntIdentityMap<T> p_i48961_2_, Function<NBTTagCompound, T> p_i48961_3_, Function<T, NBTTagCompound> p_i48961_4_, T p_i48961_5_) {
+         this.field_205521_b = p_i48961_1_;
+         this.registry = p_i48961_2_;
+         this.deserializer = p_i48961_3_;
+@@ -67,13 +88,12 @@
+         this.setBits(4);
+     }
+ 
+-    private static int getIndex(int x, int y, int z)
+-    {
++    private static int getIndex(int x, int y, int z) {
+         return y << 8 | z << 4 | x;
+     }
+ 
+-    private void setBits(int bitsIn)
+-    {
++    private void setBits(int bitsIn) {
++        /*
+         if (bitsIn != this.bits)
+         {
+             this.bits = bitsIn;
+@@ -96,21 +116,35 @@
+             this.palette.idFor(this.defaultState);
+             this.storage = new BitArray(this.bits, 4096);
+         }
++         */
++        if (bitsIn != this.bits) {
++            this.bits = bitsIn;
++
++            if (this.bits <= 2) {
++                this.bits = 2;
++                this.palette = new BlockStatePaletteLinear<>(this.registry, this.bits, this, this.deserializer);
++            } else if (this.bits <= 8) {
++                this.palette = new LithiumHashPalette<>(this.registry, this.bits, this, this.deserializer, this.serializer);
++            } else {
++                this.bits = MathHelper.log2DeBruijn(this.registry.size());
++                this.palette = this.field_205521_b;
++            }
++
++            this.palette.idFor(this.defaultState);
++            this.storage = new BitArray(this.bits, 4096);
++        }
+     }
+ 
+-    public int onResize(int p_onResize_1_, T p_onResize_2_)
+-    {
++    public int onResize(int p_onResize_1_, T p_onResize_2_) {
+         this.lock();
+         BitArray bitarray = this.storage;
+         IBlockStatePalette<T> iblockstatepalette = this.palette;
+         this.setBits(p_onResize_1_);
+ 
+-        for (int i = 0; i < bitarray.size(); ++i)
+-        {
++        for (int i = 0; i < bitarray.size(); ++i) {
+             T t = iblockstatepalette.get(bitarray.getAt(i));
+ 
+-            if (t != null)
+-            {
++            if (t != null) {
+                 this.set(i, t);
+             }
+         }
+@@ -120,38 +154,32 @@
+         return j;
+     }
+ 
+-    public void set(int x, int y, int z, T state)
+-    {
++    public void set(int x, int y, int z, T state) {
+         this.lock();
+         this.set(getIndex(x, y, z), state);
+         this.unlock();
+     }
+ 
+-    protected void set(int index, T state)
+-    {
++    protected void set(int index, T state) {
+         int i = this.palette.idFor(state);
+         this.storage.setAt(index, i);
+     }
+ 
+-    public T get(int x, int y, int z)
+-    {
+-        return (T)this.get(getIndex(x, y, z));
++    public T get(int x, int y, int z) {
++        return (T) this.get(getIndex(x, y, z));
+     }
+ 
+-    protected T get(int index)
+-    {
++    protected T get(int index) {
+         T t = this.palette.get(this.storage.getAt(index));
+-        return (T)(t == null ? this.defaultState : t);
++        return (T) (t == null ? this.defaultState : t);
+     }
+ 
+     @OnlyIn(Dist.CLIENT)
+-    public void read(PacketBuffer buf)
+-    {
++    public void read(PacketBuffer buf) {
+         this.lock();
+         int i = buf.readByte();
+ 
+-        if (this.bits != i)
+-        {
++        if (this.bits != i) {
+             this.setBits(i);
+         }
+ 
+@@ -160,8 +188,7 @@
+         this.unlock();
+     }
+ 
+-    public void write(PacketBuffer buf)
+-    {
++    public void write(PacketBuffer buf) {
+         this.lock();
+         buf.writeByte(this.bits);
+         this.palette.write(buf);
+@@ -169,14 +196,12 @@
+         this.unlock();
+     }
+ 
+-    public void readBlockStates(NBTTagCompound nbt, String paletteKey, String blockStatesKey)
+-    {
++    public void readBlockStates(NBTTagCompound nbt, String paletteKey, String blockStatesKey) {
+         this.lock();
+         NBTTagList nbttaglist = nbt.getList(paletteKey, 10);
+         int i = Math.max(4, MathHelper.log2DeBruijn(nbttaglist.size()));
+ 
+-        if (i != this.bits)
+-        {
++        if (i != this.bits) {
+             this.setBits(i);
+         }
+ 
+@@ -184,27 +209,20 @@
+         long[] along = nbt.getLongArray(blockStatesKey);
+         int j = along.length * 64 / 4096;
+ 
+-        if (this.palette == this.field_205521_b)
+-        {
++        if (this.palette == this.field_205521_b) {
+             IBlockStatePalette<T> iblockstatepalette = new BlockStatePaletteHashMap<>(this.registry, i, this.field_205522_c, this.deserializer, this.serializer);
+             iblockstatepalette.read(nbttaglist);
+             BitArray bitarray = new BitArray(i, 4096, along);
+ 
+-            for (int k = 0; k < 4096; ++k)
+-            {
++            for (int k = 0; k < 4096; ++k) {
+                 this.storage.setAt(k, this.field_205521_b.idFor(iblockstatepalette.get(bitarray.getAt(k))));
+             }
+-        }
+-        else if (j == this.bits)
+-        {
++        } else if (j == this.bits) {
+             System.arraycopy(along, 0, this.storage.getBackingLongArray(), 0, along.length);
+-        }
+-        else
+-        {
++        } else {
+             BitArray bitarray1 = new BitArray(j, 4096, along);
+ 
+-            for (int l = 0; l < 4096; ++l)
+-            {
++            for (int l = 0; l < 4096; ++l) {
+                 this.storage.setAt(l, bitarray1.getAt(l));
+             }
+         }
+@@ -212,16 +230,14 @@
+         this.unlock();
+     }
+ 
+-    public void writeChunkPalette(NBTTagCompound compound, String paletteName, String paletteDataName)
+-    {
++    public void writeChunkPalette(NBTTagCompound compound, String paletteName, String paletteDataName) {
+         this.lock();
+         BlockStatePaletteHashMap<T> blockstatepalettehashmap = new BlockStatePaletteHashMap<>(this.registry, this.bits, this.field_205522_c, this.deserializer, this.serializer);
+         blockstatepalettehashmap.idFor(this.defaultState);
+         int[] aint = new int[4096];
+ 
+-        for (int i = 0; i < 4096; ++i)
+-        {
+-            aint[i] = blockstatepalettehashmap.idFor((T)this.get(i));
++        for (int i = 0; i < 4096; ++i) {
++            aint[i] = blockstatepalettehashmap.idFor((T) this.get(i));
+         }
+ 
+         NBTTagList nbttaglist = new NBTTagList();
+@@ -230,8 +246,7 @@
+         int j = Math.max(4, MathHelper.log2DeBruijn(nbttaglist.size()));
+         BitArray bitarray = new BitArray(j, 4096);
+ 
+-        for (int k = 0; k < aint.length; ++k)
+-        {
++        for (int k = 0; k < aint.length; ++k) {
+             bitarray.setAt(k, aint[k]);
+         }
+ 
+@@ -239,6 +254,69 @@
+         this.unlock();
+     }
+ 
++
++    /**
++     * This patch incorporates a number of changes to significantly reduce the time needed to serialize.
++     * - If a palette only contains one entry, do not attempt to repack it
++     * - The packed integer array is iterated over using a specialized consumer instead of a naive for-loop.
++     * - A temporary fixed array is used to cache palette lookups and remaps while compacting a data array.
++     * - If the palette didn't change after compaction, avoid the step of re-packing the integer array and instead do
++     * a simple memory copy.
++     */
++    public void writeChunkPalette_li(NBTTagCompound rootTag, String paletteKey, String dataKey) {
++        //TODO: This method will cause nullPointerException that should be fixed
++
++        this.lock();
++
++        // The palette that will be serialized
++        LithiumHashPalette<T> palette = null;
++        long[] dataArray = null;
++
++        if (this.palette instanceof LithiumHashPalette) {
++            palette = ((LithiumHashPalette<T>) this.palette);
++
++            // The palette only contains the default block, so don't re-pack
++            if (palette.getSize() == 1 && palette.get(0) == this.defaultState) {
++                dataArray = EMPTY_PALETTE_DATA;
++            }
++        }
++
++        // If we aren't going to use an empty data array, start a compaction
++        if (dataArray == null) {
++            LithiumHashPalette<T> compactedPalette = new LithiumHashPalette<>(this.registry, this.bits, null, this.deserializer, this.serializer);
++            compactedPalette.idFor(this.defaultState);
++
++            short[] array = cachedCompactionArrays.get();
++            (this.storage).compact(this.palette, compactedPalette, array);
++
++            // If the palette didn't change during compaction, do a simple copy of the data array
++            if (palette != null && palette.getSize() == compactedPalette.getSize()) {
++                dataArray = this.storage.getBackingLongArray().clone();
++            } else {
++                // Re-pack the integer array as the palette has changed size
++                int size = Math.max(4, MathHelper.log2DeBruijn(compactedPalette.getSize()));
++                BitArray copy = new BitArray(size, 4096);
++
++                for (int i = 0; i < array.length; ++i) {
++                    copy.setAt(i, array[i]);
++                }
++
++                // We don't need to clone the data array as we are the sole owner of it
++                dataArray = copy.getBackingLongArray();
++                palette = compactedPalette;
++            }
++        }
++
++        NBTTagList paletteTag = new NBTTagList();
++        palette.toTag(paletteTag);
++
++        rootTag.put(paletteKey, paletteTag);
++        rootTag.putLongArray(dataKey, dataArray);
++
++        this.unlock();
++    }
++
++
+     public int getSerializedSize()
+     {
+         return 1 + this.palette.getSerializedSize() + PacketBuffer.getVarIntSize(this.storage.size()) + this.storage.getBackingLongArray().length * 8;

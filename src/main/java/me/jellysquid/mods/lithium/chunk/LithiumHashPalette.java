@@ -1,4 +1,4 @@
-package me.jellysquid.mods.lithium.util.world.chunk;
+package me.jellysquid.mods.lithium.chunk;
 
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;

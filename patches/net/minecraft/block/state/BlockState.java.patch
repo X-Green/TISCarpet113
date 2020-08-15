@@ -1,0 +1,50 @@
+--- a/net/minecraft/block/state/BlockState.java
++++ b/net/minecraft/block/state/BlockState.java
+@@ -2,11 +2,15 @@
+ 
+ import com.google.common.collect.ImmutableMap;
+ import net.minecraft.block.Block;
++import net.minecraft.fluid.FluidState;
++import net.minecraft.fluid.IFluidState;
+ import net.minecraft.state.AbstractStateHolder;
+ import net.minecraft.state.IProperty;
+ 
+ public class BlockState extends AbstractStateHolder<Block, IBlockState> implements IBlockState
+ {
++    private IFluidState cachedFluidState = null;
++
+     public BlockState(Block blockIn, ImmutableMap < IProperty<?>, Comparable<? >> properties)
+     {
+         super(blockIn, properties);
+@@ -16,4 +20,31 @@
+     {
+         return this.object;
+     }
++
++    /**
++     * Lithium
++     *
++     * We can avoid excessive overhead in looking up the fluid state of a block by caching those values in the
++     * BlockState itself. This notably improves performance when scanning for fluid blocks by eliminating the pointer
++     * dereferences, dynamic dispatch, and bounds check of calling into BaseFluid to retrieve a fluid.
++     * <p>
++     * The fluid state is constant for any given block state, therefore making it safe to cache it. However, the block
++     * implementation may not be initialized fully before this block state is constructed.
++     * <p>
++     * If this value is null, it is assumed that the value has not been cached and that we should fall back to calling
++     * Block#getFluidState(BlockState).
++     */
++    @Override
++    public IFluidState getFluidState()
++    {
++        if (cachedFluidState != null)
++        {
++            return cachedFluidState;
++        }
++        else {
++            IFluidState fluidState = this.getBlock().getFluidState(this);
++            this.cachedFluidState = fluidState;
++            return fluidState;
++        }
++    }
+ }
